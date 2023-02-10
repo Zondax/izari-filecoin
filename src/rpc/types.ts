@@ -38,10 +38,7 @@ export type GasEstimationResponse =
     }
   | RpcError
 
-export type SendSignMessageResponse =
-  | {
-      ['/']: string
-    }
+export type StateWaitMsgResponse =
   | {
       Message: { '/': string }
       Receipt: { ExitCode: number; Return: string; GasUsed: number }
@@ -50,5 +47,13 @@ export type SendSignMessageResponse =
       Height: number
     }
   | RpcError
+
+export type MpoolPushResponse =
+  | {
+      ['/']: string
+    }
+  | RpcError
+
+export type SendSignMessageResponse = StateWaitMsgResponse | MpoolPushResponse
 
 export type ReadStateResponse = { Balance: string; Code: { '/': string } } | RpcError
