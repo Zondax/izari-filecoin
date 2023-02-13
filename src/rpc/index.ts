@@ -4,6 +4,7 @@ import {
   GetNonceResponse,
   MpoolPushResponse,
   ReadStateResponse,
+  RpcError,
   SendSignMessageResponse,
   SignedMessage,
   StateWaitMsgResponse,
@@ -32,53 +33,73 @@ export class RPC {
       })
       return response.data as GetNonceResponse
     } catch (e: unknown) {
-      if (axios.isAxiosError(e) && e.response) return e.response.data as GetNonceResponse
-      throw e
+      return this.handleError<RpcError>(e)
     }
   }
 
   async broadcastTransaction(signedMessage: SignedMessage, skipStateWaitMsg?: boolean): Promise<SendSignMessageResponse> {
-    const mpoolResponse = await this.fetcher.post<MpoolPushResponse>('', {
-      jsonrpc: '2.0',
-      method: 'Filecoin.MpoolPush',
-      id: 1,
-      params: [signedMessage],
-    })
+    try {
+      const mpoolResponse = await this.fetcher.post<MpoolPushResponse>('', {
+        jsonrpc: '2.0',
+        method: 'Filecoin.MpoolPush',
+        id: 1,
+        params: [signedMessage],
+      })
 
-    if (skipStateWaitMsg) return mpoolResponse.data
-    if ('error' in mpoolResponse.data) return mpoolResponse.data
+      if (skipStateWaitMsg) return mpoolResponse.data
+      if ('error' in mpoolResponse.data) return mpoolResponse.data
 
-    if (!('result' in mpoolResponse.data)) throw new Error('response is empty')
+      if (!('result' in mpoolResponse.data)) throw new Error('response is empty')
 
-    const stateWaitResponse = await this.fetcher.post<StateWaitMsgResponse>('', {
-      jsonrpc: '2.0',
-      method: 'Filecoin.StateWaitMsg',
-      id: 1,
-      params: [mpoolResponse.data.result, 0, null, false],
-    })
+      const stateWaitResponse = await this.fetcher.post<StateWaitMsgResponse>('', {
+        jsonrpc: '2.0',
+        method: 'Filecoin.StateWaitMsg',
+        id: 1,
+        params: [mpoolResponse.data.result, 0, null, false],
+      })
 
-    return stateWaitResponse.data
+      return stateWaitResponse.data
+    } catch (e: unknown) {
+      return this.handleError<RpcError>(e)
+    }
   }
 
   async getGasEstimation(message: TransactionRaw): Promise<GasEstimationResponse> {
-    const response = await this.fetcher.post('', {
-      jsonrpc: '2.0',
-      method: 'Filecoin.GasEstimateMessageGas',
-      id: 1,
-      params: [message, { MaxFee: '0' }, null],
-    })
+    try {
+      const response = await this.fetcher.post('', {
+        jsonrpc: '2.0',
+        method: 'Filecoin.GasEstimateMessageGas',
+        id: 1,
+        params: [message, { MaxFee: '0' }, null],
+      })
 
-    return response.data as GasEstimationResponse
+      return response.data as GasEstimationResponse
+    } catch (e: unknown) {
+      return this.handleError<RpcError>(e)
+    }
   }
 
   async readState(address: string): Promise<ReadStateResponse> {
-    const response = await this.fetcher.post('', {
-      jsonrpc: '2.0',
-      method: 'Filecoin.StateReadState',
-      id: 1,
-      params: [address, null],
-    })
+    try {
+      const response = await this.fetcher.post('', {
+        jsonrpc: '2.0',
+        method: 'Filecoin.StateReadState',
+        id: 1,
+        params: [address, null],
+      })
 
-    return response.data as ReadStateResponse
+      return response.data as ReadStateResponse
+    } catch (e: unknown) {
+      return this.handleError<RpcError>(e)
+    }
+  }
+
+  private handleError<T>(e: unknown): T {
+    if (axios.isAxiosError(e)) {
+      if (e.response) return e.response.data as T
+      if (e.request) return { error: { message: 'request made but no response received' } } as T
+      if (e.message) return { error: { message: e.message } } as T
+    }
+    throw e
   }
 }
