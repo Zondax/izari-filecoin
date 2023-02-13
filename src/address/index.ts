@@ -10,7 +10,7 @@ export class Address {
   }
 
   toString = (): string => {
-    const protocolHex = Buffer.from('0' + this.protocol, 'hex')
+    const protocolHex = Buffer.from('0' + this.protocol.toString(), 'hex')
     return bytesToAddress(Buffer.concat([protocolHex, this.payload]), this.isTestnet)
   }
 

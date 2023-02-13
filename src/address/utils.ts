@@ -54,8 +54,7 @@ export function addressAsBytes(address: string): [Buffer, boolean] {
 
       break
     case ProtocolIndicator.DELEGATED:
-      const result = delegatedAddressAsBytes(address)
-      return [result, isTestnet]
+      return [delegatedAddressAsBytes(address), isTestnet]
     default:
       throw new UnknownProtocolIndicator()
   }
@@ -109,15 +108,13 @@ export function bytesToAddress(payload: Buffer, testnet: boolean): string {
   prefix += protocolIndicator
 
   if (Number(protocolIndicator) === ProtocolIndicator.DELEGATED) {
-    let namespaceLength = getLeb128Length(restOfPayload)
-    if (namespaceLength < 0) {
-      throw new InvalidNamespace()
-    }
-    let namespace = leb.unsigned.decode(restOfPayload.slice(0, namespaceLength))
-    let subaddress = payload.slice(namespaceLength + 1)
-    if (subaddress.length === 0 || subaddress.length > MaxSubaddressBytes) {
-      throw new InvalidSubAddress()
-    }
+    const namespaceLength = getLeb128Length(restOfPayload)
+    if (namespaceLength < 0) throw new InvalidNamespace()
+
+    const namespace = leb.unsigned.decode(restOfPayload.slice(0, namespaceLength))
+    const subaddress = payload.slice(namespaceLength + 1)
+    if (subaddress.length === 0 || subaddress.length > MaxSubaddressBytes) throw new InvalidSubAddress()
+
     return (
       prefix +
       namespace +
@@ -144,11 +141,9 @@ export function getChecksum(payload: Buffer): Buffer {
 function getLeb128Length(input: Buffer): number {
   let count = 0
   while (count < input.length) {
-    let byte = input[count]
+    const byte = input[count]
     count++
-    if (byte < 128) {
-      break
-    }
+    if (byte < 128) break
   }
   if (count == input.length) {
     return -1
@@ -159,15 +154,15 @@ function getLeb128Length(input: Buffer): number {
 function delegatedAddressAsBytes(address: string): Buffer {
   const protocolIndicator = address[1]
 
-  let namespaceRaw = address.slice(2, address.indexOf('f', 2))
-  let subAddressRaw = address.slice(address.indexOf('f', 2) + 1)
-  let address_decoded = base32Decode(subAddressRaw.toUpperCase(), 'RFC4648')
+  const namespaceRaw = address.slice(2, address.indexOf('f', 2))
+  const subAddressRaw = address.slice(address.indexOf('f', 2) + 1)
+  const address_decoded = base32Decode(subAddressRaw.toUpperCase(), 'RFC4648')
 
-  let namespaceBuff = new BN(namespaceRaw, 10).toBuffer('be', 8)
-  let namespaceBytes = Buffer.from(leb.unsigned.encode(namespaceBuff))
-  let protocolBytes = Buffer.from(leb.unsigned.encode(protocolIndicator))
-  let bytes_address = Buffer.concat([protocolBytes, namespaceBytes, Buffer.from(address_decoded.slice(0, -4))])
-  let checksum = Buffer.from(address_decoded.slice(-4))
+  const namespaceBuff = new BN(namespaceRaw, 10).toBuffer('be', 8)
+  const namespaceBytes = Buffer.from(leb.unsigned.encode(namespaceBuff))
+  const protocolBytes = Buffer.from(leb.unsigned.encode(protocolIndicator))
+  const bytes_address = Buffer.concat([protocolBytes, namespaceBytes, Buffer.from(address_decoded.slice(0, -4))])
+  const checksum = Buffer.from(address_decoded.slice(-4))
 
   if (getChecksum(bytes_address).toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
 
