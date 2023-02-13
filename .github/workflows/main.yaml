@@ -32,3 +32,6 @@ jobs:
         run: yarn build
       - name: Test
         run: yarn test
+        env:
+          NODE_RPC_URL: ${{ secrets.NODE_RPC_URL }}
+          NODE_RPC_TOKEN: ${{ secrets.NODE_RPC_TOKEN }}
