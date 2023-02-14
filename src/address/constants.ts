@@ -6,4 +6,12 @@ export enum ProtocolIndicator {
   DELEGATED = 4,
 }
 
-export const MaxSubaddressBytes = 54
+export enum Network {
+  Mainnet = 'f',
+  Testnet = 't',
+}
+
+export const SUB_ADDRESS_MAX_LEN = 54
+export const BLS_PAYLOAD_MAX_LEN = 48
+export const ACTOR_PAYLOAD_MAX_LEN = 20
+export const SECP256K1_PAYLOAD_MAX_LEN = 20

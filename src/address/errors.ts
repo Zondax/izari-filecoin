@@ -1,3 +1,10 @@
+export class InvalidProtocolIndicator extends Error {
+  constructor() {
+    super()
+    this.message = 'Invalid protocol indicator byte.'
+  }
+}
+
 export class UnknownProtocolIndicator extends Error {
   constructor() {
     super()
@@ -16,6 +23,12 @@ export class InvalidNamespace extends Error {
   constructor() {
     super()
     this.message = 'Invalid namespace.'
+  }
+}
+export class InvalidNetwork extends Error {
+  constructor() {
+    super()
+    this.message = 'Invalid network'
   }
 }
 
