@@ -43,20 +43,40 @@ describe('Address', () => {
 
   describe('Manual', () => {
     describe('Type ID', () => {
-      test('Testnet', async () => {
-        const addr = Address.fromString('t08666')
-        expect(addr.toString()).toBe('t08666')
-        expect(addr.toBytes().toString('hex')).toBe('00da43')
-        expect(addr.protocol).toBe(ProtocolIndicator.ID)
-        expect(addr.network).toBe(Network.Testnet)
+      describe('From string', () => {
+        test('Testnet', async () => {
+          const addr = Address.fromString('t08666')
+          expect(addr.toString()).toBe('t08666')
+          expect(addr.toBytes().toString('hex')).toBe('00da43')
+          expect(addr.protocol).toBe(ProtocolIndicator.ID)
+          expect(addr.network).toBe(Network.Testnet)
+        })
+
+        test('Mainnet', async () => {
+          const addr = Address.fromString('f08666')
+          expect(addr.toString()).toBe('f08666')
+          expect(addr.toBytes().toString('hex')).toBe('00da43')
+          expect(addr.protocol).toBe(ProtocolIndicator.ID)
+          expect(addr.network).toBe(Network.Mainnet)
+        })
       })
 
-      test('Mainnet', async () => {
-        const addr = Address.fromString('f08666')
-        expect(addr.toString()).toBe('f08666')
-        expect(addr.toBytes().toString('hex')).toBe('00da43')
-        expect(addr.protocol).toBe(ProtocolIndicator.ID)
-        expect(addr.network).toBe(Network.Mainnet)
+      describe('From bytes', () => {
+        test('Testnet', async () => {
+          const addr = Address.fromBytes(Network.Testnet, Buffer.from('00da43', 'hex'))
+          expect(addr.toString()).toBe('t08666')
+          expect(addr.toBytes().toString('hex')).toBe('00da43')
+          expect(addr.protocol).toBe(ProtocolIndicator.ID)
+          expect(addr.network).toBe(Network.Testnet)
+        })
+
+        test('Mainnet', async () => {
+          const addr = Address.fromBytes(Network.Mainnet, Buffer.from('00da43', 'hex'))
+          expect(addr.toString()).toBe('f08666')
+          expect(addr.toBytes().toString('hex')).toBe('00da43')
+          expect(addr.protocol).toBe(ProtocolIndicator.ID)
+          expect(addr.network).toBe(Network.Mainnet)
+        })
       })
     })
 
