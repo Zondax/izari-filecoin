@@ -1,9 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Address } from '../src/address'
+import { Address, AddressActor, AddressBls, AddressId, AddressSecp256k1 } from '../src/address'
 import { Network, ProtocolIndicator } from '../src/address/constants'
 import { TestCase } from './utils/generator'
+import { InvalidProtocolIndicator } from '../src/address/errors'
 
 describe('Address', () => {
   describe('Vectors', () => {
@@ -54,6 +55,30 @@ describe('Address', () => {
         expect(addr.protocol).toBe(ProtocolIndicator.ID)
         expect(addr.network).toBe(Network.Mainnet)
       })
+    })
+
+    test('Wrong protocol for ID', async () => {
+      expect(() => {
+        AddressId.fromString('f18666')
+      }).toThrow(InvalidProtocolIndicator)
+    })
+
+    test('Wrong protocol for BLS', async () => {
+      expect(() => {
+        AddressBls.fromString('f48666')
+      }).toThrow(InvalidProtocolIndicator)
+    })
+
+    test('Wrong protocol for SECP256K1', async () => {
+      expect(() => {
+        AddressSecp256k1.fromString('f08666')
+      }).toThrow(InvalidProtocolIndicator)
+    })
+
+    test('Wrong protocol for Actor', async () => {
+      expect(() => {
+        AddressActor.fromString('f08666')
+      }).toThrow(InvalidProtocolIndicator)
     })
   })
 })
