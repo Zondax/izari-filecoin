@@ -6,6 +6,10 @@
         "tx_to": "f02"
       },
       {
+        "tx_from": "f08666",
+        "tx_to": "f08666"
+      },
+      {
         "tx_from": "f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq",
         "tx_to": "f010"
       },

@@ -26,6 +26,7 @@ import { getChecksum, getLeb128Length, validateNetwork } from './utils'
 export abstract class Address {
   constructor(public network: Network, public protocol: ProtocolIndicator) {}
 
+  abstract payload: Buffer
   abstract toBytes: () => Buffer
   abstract toString: () => string
 
@@ -240,11 +241,14 @@ export class AddressActor extends Address {
 }
 
 export class AddressDelegated extends Address {
+  public payload: Buffer
   constructor(public network: Network, public namespace: number, public subAddress: Buffer) {
     super(network, ProtocolIndicator.DELEGATED)
 
     if (namespace < 0) throw new InvalidNamespace()
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
+
+    this.payload = this.toBytes().slice(1)
   }
 
   toBytes = (): Buffer => {

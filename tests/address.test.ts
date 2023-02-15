@@ -14,10 +14,12 @@ describe('Address', () => {
       vectors.forEach(({ string, payload, bytes, protocol, network }, index) => {
         test(`Test case ${index}: ${string}`, () => {
           const addr = Address.fromString(string)
+
           expect(addr.toString()).toBe(string)
           expect(addr.toBytes().toString('hex')).toBe(bytes)
           expect(addr.protocol).toBe(protocol)
           expect(addr.network).toBe(network)
+          expect(addr.payload.toString('hex')).toBe(payload)
         })
       })
     })
@@ -33,6 +35,7 @@ describe('Address', () => {
           expect(addr.toBytes().toString('hex')).toBe(bytes)
           expect(addr.protocol).toBe(protocol)
           expect(addr.network).toBe(network)
+          expect(addr.payload.toString('hex')).toBe(payload)
         })
       })
     })

@@ -18,7 +18,7 @@ function generateAddressTestCases() {
 
   function createTestCase(address: string): TestCase {
     const addr = glif.newFromString(address)
-    const payload = Buffer.from(addr.payload()).toString('hex').replace('04000000000000000a', '040a')
+    const payload = Buffer.from(addr.payload()).toString('hex').replace('000000000000000a', '0a')
     const bytes = Buffer.from(addr.bytes).toString('hex').replace('04000000000000000a', '040a')
 
     return {
