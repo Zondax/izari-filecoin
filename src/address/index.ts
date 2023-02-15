@@ -123,8 +123,12 @@ export class AddressBls extends Address {
 }
 
 export class AddressId extends Address {
+  public id: string
+
   constructor(network: Network, public payload: Buffer) {
     super(network, ProtocolIndicator.ID)
+
+    this.id = this.toString().slice(2)
   }
 
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
