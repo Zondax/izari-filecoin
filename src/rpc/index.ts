@@ -9,7 +9,7 @@ import {
   SignedMessage,
   StateWaitMsgResponse,
   TransactionRaw,
-} from './types'
+} from './types.js'
 
 type Args = { url: string; token: string }
 

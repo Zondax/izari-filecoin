@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "packages": {
+    "izari-filecoin-tools": {
+      "version": "0.0.0",
+      "signature": "d1455c988c1013137bb7ea85e6d2dde8",
+      "file": true
+    },
+    "@zondax/izari-filecoin-tools": {
+      "version": "0.0.0",
+      "signature": "3306e1c015cc9511287175b9df7c9569",
+      "file": true
+    }
+  }
+}

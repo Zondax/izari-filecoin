@@ -1,15 +1,27 @@
 {
-  "name": "izari-filecoin-tools",
+  "name": "@zondax/izari-filecoin-tools",
   "version": "0.0.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "build:mjs": "rm -fr dist/mjs && tsc -p tsconfig.json && echo '{ \"type\": \"module\" }' > dist/mjs/package.json",
+    "build:cjs": "rm -fr dist/cjs && tsc -p tsconfig-cjs.json && echo '{ \"type\": \"commonjs\" }' > dist/cjs/package.json",
+    "build": "yarn build:mjs && yarn build:cjs",
     "lint": "eslint .",
     "lint:fix": "eslint --fix . ",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "test": "jest",
+    "test:jest": "jest",
+    "test:node:cjs": "yarn build && yalc publish && cd tests/package/cjs && yalc add @zondax/izari-filecoin-tools@0.0.0 && node index.js",
+    "test:node:mjs": "yarn build && yalc publish && cd tests/package/mjs && yalc add @zondax/izari-filecoin-tools@0.0.0 && node index.js",
+    "test:node": "yarn test:package:cjs && yarn test:package:mjs",
+    "test": "yarn test:jest && yarn test:node",
     "test:generate": "ts-node tests/utils/generator.ts"
   },
   "repository": {
@@ -52,5 +64,8 @@
     "base32-decode": "^1.0.0",
     "blakejs": "^1.2.1",
     "leb128": "^0.0.5"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

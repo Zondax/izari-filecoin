@@ -1,7 +1,7 @@
 import base32Decode from 'base32-decode'
 import leb from 'leb128'
 
-import { encode as base32Encode } from '../utils/base32'
+import { encode as base32Encode } from '../utils/base32.js'
 
 import {
   ACTOR_PAYLOAD_MAX_LEN,
@@ -10,7 +10,7 @@ import {
   ProtocolIndicator,
   SECP256K1_PAYLOAD_MAX_LEN,
   SUB_ADDRESS_MAX_LEN,
-} from './constants'
+} from './constants.js'
 
 import {
   InvalidChecksumAddress,
@@ -20,8 +20,8 @@ import {
   InvalidProtocolIndicator,
   InvalidSubAddress,
   UnknownProtocolIndicator,
-} from './errors'
-import { getChecksum, getLeb128Length, validateNetwork } from './utils'
+} from './errors.js'
+import { getChecksum, getLeb128Length, validateNetwork } from './utils.js'
 
 export abstract class Address {
   constructor(public network: Network, public protocol: ProtocolIndicator) {}
