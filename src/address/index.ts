@@ -127,10 +127,9 @@ export class AddressId extends Address {
     super(network, ProtocolIndicator.ID)
   }
 
-  toBytes = (): Buffer =>
-    Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), Buffer.from(leb.unsigned.encode(this.payload.toString()))])
+  toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
 
-  toString = (): string => this.network + this.protocol.toString() + this.payload.toString()
+  toString = (): string => this.network + this.protocol.toString() + leb.unsigned.decode(this.payload)
 
   static fromString(address: string): AddressId {
     const network = address[0]
@@ -141,13 +140,14 @@ export class AddressId extends Address {
 
     if (address.length > 18) throw new InvalidPayloadLength()
 
-    return new AddressId(network, Buffer.from(address.substr(2), 'ascii'))
+    const payload = leb.unsigned.encode(address.substr(2))
+    return new AddressId(network, payload)
   }
 
   static fromBytes(network: Network, bytes: Buffer): AddressId {
     if (bytes[0] != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
 
-    const payload = Buffer.from(leb.unsigned.decode(bytes.slice(1)))
+    const payload = bytes.slice(1)
     return new AddressId(network, payload)
   }
 }
@@ -242,10 +242,10 @@ export class AddressActor extends Address {
 
 export class AddressDelegated extends Address {
   public payload: Buffer
-  constructor(public network: Network, public namespace: number, public subAddress: Buffer) {
+  constructor(public network: Network, public namespace: string, public subAddress: Buffer) {
     super(network, ProtocolIndicator.DELEGATED)
 
-    if (namespace < 0) throw new InvalidNamespace()
+    //if (namespace < 0) throw new InvalidNamespace()
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
 
     this.payload = this.toBytes().slice(1)
@@ -264,7 +264,7 @@ export class AddressDelegated extends Address {
     return (
       this.network +
       this.protocol.toString() +
-      this.namespace.toString() +
+      this.namespace +
       'f' +
       base32Encode(Buffer.concat([this.subAddress, checksum]), 'RFC4648', {
         padding: false,
@@ -279,7 +279,7 @@ export class AddressDelegated extends Address {
     if (!validateNetwork(network)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
-    const namespace = parseInt(address.slice(2, address.indexOf('f', 2)))
+    const namespace = address.slice(2, address.indexOf('f', 2))
     const dataEncoded = address.slice(address.indexOf('f', 2) + 1)
     const dataDecoded = base32Decode(dataEncoded.toUpperCase(), 'RFC4648')
 
@@ -297,7 +297,7 @@ export class AddressDelegated extends Address {
     if (bytes[0] != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
     const namespaceLength = getLeb128Length(bytes.slice(1))
-    const namespace = parseInt(leb.unsigned.decode(bytes.slice(1, 1 + namespaceLength)))
+    const namespace = leb.unsigned.decode(bytes.slice(1, 1 + namespaceLength))
     const subAddress = bytes.slice(namespaceLength + 1)
 
     return new AddressDelegated(network, namespace, subAddress)
