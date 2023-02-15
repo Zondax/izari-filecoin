@@ -1,7 +1,7 @@
 import base32Decode from 'base32-decode'
-import base32Encode from 'base32-encode'
 import leb from 'leb128'
 
+import { encode as base32Encode } from '../utils/base32'
 import {
   ACTOR_PAYLOAD_MAX_LEN,
   BLS_PAYLOAD_MAX_LEN,
