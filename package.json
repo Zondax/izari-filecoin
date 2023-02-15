@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix . ",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:generate": "ts-node tests/utils/generator.ts"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/Zondax/izari-filecoin-tools#readme",
   "devDependencies": {
+    "@glif/filecoin-address": "^2.0.37",
     "@types/bn.js": "^5.1.1",
     "@types/jest": "^29.4.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
