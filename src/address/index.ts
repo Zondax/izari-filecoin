@@ -2,6 +2,7 @@ import base32Decode from 'base32-decode'
 import leb from 'leb128'
 
 import { encode as base32Encode } from '../utils/base32'
+
 import {
   ACTOR_PAYLOAD_MAX_LEN,
   BLS_PAYLOAD_MAX_LEN,
@@ -22,7 +23,7 @@ import {
 } from './errors'
 import { getChecksum, getLeb128Length, validateNetwork } from './utils'
 
-abstract class Address {
+export abstract class Address {
   constructor(public network: Network, public protocol: ProtocolIndicator) {}
 
   abstract toBytes: () => Buffer
@@ -125,7 +126,8 @@ export class AddressId extends Address {
     super(network, ProtocolIndicator.ID)
   }
 
-  toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), Buffer.from(leb.unsigned.encode(this.payload))])
+  toBytes = (): Buffer =>
+    Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), Buffer.from(leb.unsigned.encode(this.payload.toString()))])
 
   toString = (): string => this.network + this.protocol.toString() + this.payload.toString()
 
@@ -291,7 +293,7 @@ export class AddressDelegated extends Address {
     if (bytes[0] != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
     const namespaceLength = getLeb128Length(bytes.slice(1))
-    const namespace = parseInt(leb.unsigned.decode(bytes.slice(1, namespaceLength)))
+    const namespace = parseInt(leb.unsigned.decode(bytes.slice(1, 1 + namespaceLength)))
     const subAddress = bytes.slice(namespaceLength + 1)
 
     return new AddressDelegated(network, namespace, subAddress)
