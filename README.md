@@ -20,45 +20,19 @@
 | Read tx state            | :white_check_mark: |
 
 
-### ID Addresses (f0)
-| Feature           | Supported?         |
-|-------------------|--------------------|
-| Parse from string | :white_check_mark: |
-| Parse from bytes  | :white_check_mark: |
-| Encode to bytes   | :white_check_mark: |
-| Encode to string  | :white_check_mark: |
+### Addresses
+| Feature           | ID (f0)              | SECP256K1 (f1)         | Actor (f2)            | BLS (f3)             | Delegated (f4)     |
+|-------------------|----------------------|------------------------|-----------------------|----------------------|--------------------|
+| Parse from string | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
+| Parse from bytes  | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
+| Encode to bytes   | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
+| Encode to string  | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
+| Get payload       | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
+| Get protocol      | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
+| Get network type  | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
+| Get namespace     | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
+| Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 
-### SECP256K1 Addresses (f1)
-| Feature           | Supported?         |
-|-------------------|--------------------|
-| Parse from string | :white_check_mark: |
-| Parse from bytes  | :white_check_mark: |
-| Encode to bytes   | :white_check_mark: |
-| Encode to string  | :white_check_mark: |
-
-### Actor Addresses (f2)
-| Feature           | Supported?         |
-|-------------------|--------------------|
-| Parse from string | :white_check_mark: |
-| Parse from bytes  | :white_check_mark: |
-| Encode to bytes   | :white_check_mark: |
-| Encode to string  | :white_check_mark: |
-
-### BLS Addresses (f3)
-| Feature           | Supported?         |
-|-------------------|--------------------|
-| Parse from string | :white_check_mark: |
-| Parse from bytes  | :white_check_mark: |
-| Encode to bytes   | :white_check_mark: |
-| Encode to string  | :white_check_mark: |
-
-### Delegated Addresses (f4)
-| Feature           | Supported?         |
-|-------------------|--------------------|
-| Parse from string | :white_check_mark: |
-| Parse from bytes  | :white_check_mark: |
-| Encode to bytes   | :white_check_mark: |
-| Encode to string  | :white_check_mark: |
 
 ## Development
 ### Build
