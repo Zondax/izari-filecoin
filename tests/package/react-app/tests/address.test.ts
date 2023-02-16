@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer'
 describe('Addresses', () => {
   test('Type ID', async () => {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     })
     let page = await browser.newPage()
 
