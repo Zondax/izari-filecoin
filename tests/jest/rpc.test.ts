@@ -1,4 +1,4 @@
-import { RPC } from '../src/rpc'
+import { RPC } from '../../src/rpc'
 
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
