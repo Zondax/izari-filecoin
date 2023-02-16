@@ -1,7 +1,11 @@
 import React from 'react'
 import { Address } from '@zondax/izari-filecoin-tools'
+
 import logo from './logo.svg'
 import './App.css'
+
+// Inject NodeJS Buffer API implementation on the react app
+window.Buffer = window.Buffer || require('buffer').Buffer
 
 function App() {
   const add = Address.fromString('t08666')
