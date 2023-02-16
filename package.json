@@ -17,12 +17,15 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix . ",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "test:jest": "jest",
-    "test:node:cjs": "yarn build && yalc publish && cd tests/package/cjs && yalc add @zondax/izari-filecoin-tools@0.0.0 && node index.js",
-    "test:node:mjs": "yarn build && yalc publish && cd tests/package/mjs && yalc add @zondax/izari-filecoin-tools@0.0.0 && node index.js",
+    "react:start": "yarn test:prepare && cd tests/package/react-app && yarn test:install && yarn start",
+    "test:generate": "ts-node tests/utils/generator.ts",
+    "test:prepare": "yarn build && yalc publish",
+    "test:react": "yarn test:prepare && cd tests/package/react-app && yarn test:install && yarn test",
+    "test:node:cjs": "yarn test:prepare && cd tests/package/cjs && yarn test:install && node index.js",
+    "test:node:mjs": "yarn test:prepare && cd tests/package/mjs && yarn test:install && node index.js",
     "test:node": "yarn test:node:cjs && yarn test:node:mjs",
-    "test": "yarn test:jest && yarn test:node",
-    "test:generate": "ts-node tests/utils/generator.ts"
+    "test:jest": "jest ./tests/jest",
+    "test": "yarn test:jest && yarn test:node && yarn test:react"
   },
   "repository": {
     "type": "git",
@@ -63,6 +66,7 @@
     "axios": "^1.3.2",
     "base32-decode": "^1.0.0",
     "blakejs": "^1.2.1",
+    "buffer": "^6.0.3",
     "leb128": "^0.0.5"
   },
   "files": [

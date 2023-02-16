@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:install": "rm -rf .yacl yalc.lock && yalc remove @zondax/izari-filecoin-tools && yalc add @zondax/izari-filecoin-tools@0.0.0 && yarn install"
   },
   "author": "",
   "license": "ISC",
