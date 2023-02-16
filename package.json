@@ -20,7 +20,7 @@
     "test:jest": "jest",
     "test:node:cjs": "yarn build && yalc publish && cd tests/package/cjs && yalc add @zondax/izari-filecoin-tools@0.0.0 && node index.js",
     "test:node:mjs": "yarn build && yalc publish && cd tests/package/mjs && yalc add @zondax/izari-filecoin-tools@0.0.0 && node index.js",
-    "test:node": "yarn test:package:cjs && yarn test:package:mjs",
+    "test:node": "yarn test:node:cjs && yarn test:node:mjs",
     "test": "yarn test:jest && yarn test:node",
     "test:generate": "ts-node tests/utils/generator.ts"
   },
@@ -47,13 +47,13 @@
   "homepage": "https://github.com/Zondax/izari-filecoin-tools#readme",
   "devDependencies": {
     "@glif/filecoin-address": "^2.0.37",
-    "@types/bn.js": "^5.1.1",
     "@types/jest": "^29.4.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "dotenv": "^16.0.3",
     "eslint": "^8.33.0",
     "jest": "^29.4.2",
+    "jest-ts-webcompat-resolver": "^1.0.0",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
