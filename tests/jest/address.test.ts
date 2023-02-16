@@ -1,15 +1,17 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Address, AddressActor, AddressBls, AddressId, AddressSecp256k1 } from '../src/address'
-import { Network, ProtocolIndicator } from '../src/address/constants'
-import { TestCase } from './utils/generator'
-import { InvalidProtocolIndicator } from '../src/address/errors'
+import { Address, AddressActor, AddressBls, AddressId, AddressSecp256k1 } from '../../src/address'
+import { Network, ProtocolIndicator } from '../../src/address/constants'
+import { TestCase } from '../utils/generator'
+import { InvalidProtocolIndicator } from '../../src/address/errors'
+
+const ADDRESSES_VECTOR = '../vectors/addresses.json'
 
 describe('Address', () => {
   describe('Vectors', () => {
     describe('From string', () => {
-      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, './vectors/addresses.json'), 'utf-8')) as TestCase[]
+      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_VECTOR), 'utf-8')) as TestCase[]
 
       vectors.forEach(({ string, payload, bytes, protocol, network }, index) => {
         test(`Test case ${index}: ${string}`, () => {
@@ -25,7 +27,7 @@ describe('Address', () => {
     })
 
     describe('From bytes', () => {
-      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, './vectors/addresses.json'), 'utf-8')) as TestCase[]
+      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_VECTOR), 'utf-8')) as TestCase[]
 
       vectors.forEach(({ string, payload, bytes, protocol, network }, index) => {
         test(`Test case ${index}: 0x${bytes}`, () => {

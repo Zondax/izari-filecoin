@@ -10,8 +10,11 @@ export type TestCase = {
   payload: string
 }
 
+const RAW_TXS_FILE_PATH = './raw/txs.json'
+const ADDRESSES_VECTOR_FILE_PATH = '../vectors/addresses.json'
+
 function generateAddressTestCases() {
-  const txsRaw = JSON.parse(fs.readFileSync(path.join(__dirname, '../raw/txs.json'), 'utf-8')) as any
+  const txsRaw = JSON.parse(fs.readFileSync(path.join(__dirname, RAW_TXS_FILE_PATH), 'utf-8')) as any
   const txs = txsRaw.data.hyperspace_transactions
 
   const testCases: TestCase[] = []
@@ -38,7 +41,7 @@ function generateAddressTestCases() {
     if (tx_to) testCases.push(createTestCase(tx_to))
   }
 
-  fs.writeFileSync(path.join(__dirname, '../vectors/addresses.json'), JSON.stringify(testCases, null, 2))
+  fs.writeFileSync(path.join(__dirname, ADDRESSES_VECTOR_FILE_PATH), JSON.stringify(testCases, null, 2))
 }
 
 generateAddressTestCases()

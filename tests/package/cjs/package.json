@@ -5,10 +5,10 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:install": "rm -rf .yacl yalc.lock && yalc remove @zondax/izari-filecoin-tools && yalc add @zondax/izari-filecoin-tools@0.0.0 && yarn install"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "@zondax/izari-filecoin-tools": "file:.yalc/@zondax/izari-filecoin-tools"
   }
