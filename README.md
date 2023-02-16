@@ -84,10 +84,13 @@ Besides the linter, a formatter is set in place to assure the same code style th
 yarn format
 ```
 
-Finally, in order to run tests, just do it by simply running the next command
+Finally, in order to run tests, just do it by simply running the next command. 
 ```yarn
 yarn test
 ```
+
+**Notes**
+- Please, there are some env vars you need to set first in order to run the tests. Check it first. 
 
 ## Tests
 
