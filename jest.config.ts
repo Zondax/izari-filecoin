@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
+  resolver: 'jest-ts-webcompat-resolver',
   setupFiles: ['dotenv/config'],
 }
 
