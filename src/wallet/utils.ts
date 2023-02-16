@@ -1,6 +1,5 @@
 import blake from 'blakejs'
-import assert from 'assert'
-import { InvalidPrivateKeyFormat } from '../address/errors'
+import { InvalidPrivateKeyFormat } from '../address/errors.js'
 
 export const getCoinTypeFromPath = (path: string): string => path.split('/')[2].slice(0, -1)
 

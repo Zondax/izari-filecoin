@@ -1,4 +1,4 @@
-import bip39 from 'bip39'
+import * as bip39 from 'bip39'
 import * as bip32Default from 'bip32'
 import * as ecc from 'tiny-secp256k1'
 
@@ -9,6 +9,11 @@ import { getCoinTypeFromPath, tryToPrivateKeyBuffer } from './utils.js'
 const bip32 = bip32Default.BIP32Factory(ecc)
 
 export class Wallet {
+  static generateMnemonic(): string {
+    // 256 so it generate 24 words
+    return bip39.generateMnemonic(256)
+  }
+
   static keyDeriveFromSeed(seed: string | Buffer, path: string): ExtendedKey {
     if (typeof seed === 'string') seed = Buffer.from(seed, 'hex')
 
