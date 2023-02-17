@@ -13,6 +13,7 @@
 
 - In order to use this package in browsers (like react, react-native, etc), some modules need to be polyfill (like Buffer, stream, etc). Most projects use
 webpack to bundle JS code.  If your project uses it, please refer to [this](https://webpack.js.org/configuration/resolve/#resolvefallback) doc in order to configure it correctly. 
+Besides, you could check [this blog post](https://viglucci.io/articles/how-to-polyfill-buffer-with-webpack-5) too. 
 
 ## Features
 
