@@ -9,6 +9,11 @@
    - **CommonJS (es2015)** 
    - **ESM (esnext)**
 
+## Requisites 
+
+- In order to use this package in browsers (like react, react-native, etc), some modules need to be polyfill (like Buffer, stream, etc). Most projects use
+webpack to bundle JS code.  If your project uses it, please refer to [this](https://webpack.js.org/configuration/resolve/#resolvefallback) doc in order to configure it correctly. 
+
 ## Features
 
 ### Filecoin Node Comms
@@ -78,6 +83,11 @@ So far, the package has been tested in different environments. We are trying to 
 | Integration tests (Jest) | :white_check_mark: |
 | React app                | :white_check_mark: |
 | NextJS                   | :x:                |
+
+**Notes**:
+- React app is based on create-react-app utility. It has been [ejected](https://create-react-app.dev/docs/available-scripts/#npm-run-eject) in order 
+to configure webpack to polyfill some NodeJS native modules. 
+
 
 ### Web Browsers
 | Web browsers    | Tested?            |
