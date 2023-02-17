@@ -64,14 +64,14 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@bitcoinerlab/secp256k1": "^1.0.2",
     "axios": "^1.3.2",
     "base32-decode": "^1.0.0",
     "bip32": "^3.1.0",
     "bip39": "^3.0.4",
     "blakejs": "^1.2.1",
-    "secp256k1": "^5.0.0",
-    "tiny-secp256k1": "^2.2.1",
-    "leb128": "^0.0.5"
+    "leb128": "^0.0.5",
+    "secp256k1": "^5.0.0"
   },
   "files": [
     "dist"

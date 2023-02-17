@@ -1,6 +1,6 @@
 import * as bip39 from 'bip39'
 import * as bip32Default from 'bip32'
-import * as ecc from 'tiny-secp256k1'
+import * as ecc from '@bitcoinerlab/secp256k1'
 
 import { ExtendedKey } from './extendedkey.js'
 import { getCoinTypeFromPath, tryToPrivateKeyBuffer } from './utils.js'
