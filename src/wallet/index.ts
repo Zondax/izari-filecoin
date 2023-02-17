@@ -28,15 +28,12 @@ export class Wallet {
     return new ExtendedKey(childKey.privateKey, testnet)
   }
 
-  static keyDerive(mnemonic: string, path: string, password: string | undefined): ExtendedKey {
-    if (password === undefined)
-      throw new Error("'password' argument must be of type string or an instance of Buffer or ArrayBuffer. Received undefined")
-
+  static keyDerive(mnemonic: string, path: string, password?: string): ExtendedKey {
     const seed = bip39.mnemonicToSeedSync(mnemonic, password)
     return Wallet.keyDeriveFromSeed(seed, path)
   }
 
-  static keyRecover(privateKey: Buffer, testnet: boolean): ExtendedKey {
+  static keyRecover(privateKey: string | Buffer, testnet: boolean): ExtendedKey {
     privateKey = tryToPrivateKeyBuffer(privateKey)
     return new ExtendedKey(privateKey, testnet)
   }
