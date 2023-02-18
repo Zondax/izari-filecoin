@@ -1,14 +1,16 @@
 import React from 'react'
-import { Address } from '@zondax/izari-filecoin-tools'
+import { Address, Wallet } from '@zondax/izari-filecoin-tools'
 
 import logo from './logo.svg'
 import './App.css'
 
-// Inject NodeJS Buffer API implementation on the react app
-window.Buffer = window.Buffer || require('buffer').Buffer
-
 function App() {
   const add = Address.fromString('t08666')
+  const mnemonic = Wallet.generateMnemonic()
+  const extendedKey = Wallet.keyDerive(
+    'bundle hour bird man lyrics glare shrug pepper leader better illegal expect outdoor duck crew universe amount language model cabbage inhale shine accident inmate',
+    "44'/461'/1'/0/0"
+  )
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +20,10 @@ function App() {
         <div id={'string'}>{`String: ${add.toString()}`}</div>
         <div id={'bytes'}>{`Bytes: ${add.toBytes().toString('hex')}`}</div>
         <div id={'payload'}>{`Payload: ${add.payload.toString('hex')}`}</div>
+        <br />
+
+        <div id={'mnemonic'}>{`Mnemonic: ${mnemonic}`}</div>
+        <div id={'address'}>{`Address: ${extendedKey.address}`}</div>
       </header>
     </div>
   )
