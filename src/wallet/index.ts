@@ -4,6 +4,7 @@ import * as ecc from '@bitcoinerlab/secp256k1'
 
 import { ExtendedKey } from './extendedkey.js'
 import { getCoinTypeFromPath, tryToPrivateKeyBuffer } from './utils.js'
+import { Network, ProtocolIndicator } from '../address/constants'
 
 // You must wrap a tiny-secp256k1 compatible implementation
 const bip32 = bip32Default.BIP32Factory(ecc)
@@ -23,9 +24,9 @@ export class Wallet {
 
     if (!childKey.privateKey) throw new Error('privateKey not generated')
 
-    const testnet = getCoinTypeFromPath(path) === '1'
+    const network = getCoinTypeFromPath(path) === '1' ? Network.Testnet : Network.Mainnet
 
-    return new ExtendedKey(childKey.privateKey, testnet)
+    return new ExtendedKey(network, childKey.privateKey)
   }
 
   static keyDerive(mnemonic: string, path: string, password?: string): ExtendedKey {
@@ -33,7 +34,10 @@ export class Wallet {
     return Wallet.keyDeriveFromSeed(seed, path)
   }
 
-  static keyRecover(privateKey: string | Buffer, testnet: boolean): ExtendedKey {
+  static keyRecover(network: Network, privateKey: string | Buffer): ExtendedKey {
+    privateKey = tryToPrivateKeyBuffer(privateKey)
+    return new ExtendedKey(network, privateKey)
+  }
     privateKey = tryToPrivateKeyBuffer(privateKey)
     return new ExtendedKey(privateKey, testnet)
   }
