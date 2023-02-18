@@ -4,32 +4,7 @@ import path from 'path'
 import glif from '@glif/filecoin-address'
 import * as fst from '@zondax/filecoin-signing-tools/js'
 
-export type AddressTestCase = {
-  string: string
-  bytes: string
-  network: string
-  protocol: number
-  payload: string
-}
-
-export type TransactionJSON = {
-  To: string
-  From: string
-  Nonce: number
-  Value: string
-  GasLimit: number
-  GasFeeCap: string
-  GasPremium: string
-  Method: number
-  Params: string
-}
-
-export type TxTestCase = {
-  tx: TransactionJSON
-  cbor: string
-  signature: string
-  privKey: string
-}
+import { AddressTestCase, TxTestCase } from './types'
 
 const RAW_TXS_FILE_PATH = './raw/txs.json'
 const ADDRESSES_VECTOR_FILE_PATH = './output/addresses.json'
