@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Wallet } from '../../src/wallet'
+import { Wallet, Network, Address, Transaction } from '../../src'
 
 const WALLET_TEST_CASES_PATH = '../vectors/wallets.json'
 
@@ -58,7 +58,7 @@ describe('Wallet', () => {
     vectors.forEach(({ addresses, mnemonic }) => {
       addresses.forEach(([path, address]) => {
         const extendedKey = Wallet.keyDerive(mnemonic, path, undefined)
-        const recoveredKey = Wallet.keyRecover(extendedKey.privateKey.toString('base64'), false)
+        const recoveredKey = Wallet.keyRecover(Network.Mainnet, extendedKey.privateKey.toString('base64'))
 
         expect(extendedKey.address).toStrictEqual(recoveredKey.address)
         expect(extendedKey.publicKey).toStrictEqual(recoveredKey.publicKey)

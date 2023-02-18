@@ -1,10 +1,13 @@
 import * as bip39 from 'bip39'
 import * as bip32Default from 'bip32'
 import * as ecc from '@bitcoinerlab/secp256k1'
+import secp256k1 from 'secp256k1'
 
 import { ExtendedKey } from './extendedkey.js'
-import { getCoinTypeFromPath, tryToPrivateKeyBuffer } from './utils.js'
+import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer } from './utils.js'
+import { Transaction } from '../transaction'
 import { Network, ProtocolIndicator } from '../address/constants'
+import { Signature } from './types'
 
 // You must wrap a tiny-secp256k1 compatible implementation
 const bip32 = bip32Default.BIP32Factory(ecc)
@@ -38,7 +41,21 @@ export class Wallet {
     privateKey = tryToPrivateKeyBuffer(privateKey)
     return new ExtendedKey(network, privateKey)
   }
+
+  static signTransaction = (privateKey: string | Buffer, tx: string | Transaction): Signature => {
+    const serializedTx: ArrayLike<number> = typeof tx === 'string' ? Buffer.from(tx, 'hex') : tx.serialize()
+
+    // verify format and convert to buffer if needed
     privateKey = tryToPrivateKeyBuffer(privateKey)
-    return new ExtendedKey(privateKey, testnet)
+
+    const txDigest = getDigest(serializedTx)
+    const signature = secp256k1.ecdsaSign(txDigest, privateKey)
+
+    const result: Signature = {
+      Data: Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]).toString('base64'),
+      Type: ProtocolIndicator.SECP256K1,
+    }
+
+    return result
   }
 }
