@@ -18,7 +18,7 @@
     "lint:fix": "eslint --fix . ",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "react:start": "yarn test:prepare && cd tests/package/react-app && yarn test:install && yarn start",
-    "test:generate": "ts-node tests/utils/generator.ts",
+    "test:generate": "cd tests/utils && yarn execute",
     "test:prepare": "yarn build && yalc publish",
     "test:react": "yarn test:prepare && cd tests/package/react-app && yarn test:install && yarn test",
     "test:node:cjs": "yarn test:prepare && cd tests/package/cjs && yarn test:install && node index.js",
@@ -49,7 +49,6 @@
   },
   "homepage": "https://github.com/Zondax/izari-filecoin-tools#readme",
   "devDependencies": {
-    "@glif/filecoin-address": "^2.0.37",
     "@types/bn.js": "^5.1.1",
     "@types/jest": "^29.4.0",
     "@types/secp256k1": "^4.0.3",

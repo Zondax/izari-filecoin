@@ -1,0 +1,17 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "module": "index.ts",
+  "type":  "module",
+  "scripts": {
+    "execute": "tsc && node dist/index.js && mv output/* ../vectors"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@glif/filecoin-address": "^2.0.37",
+    "@zondax/filecoin-signing-tools": "^2.3.0"
+  }
+}
