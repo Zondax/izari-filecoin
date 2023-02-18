@@ -1,4 +1,4 @@
-import { ProtocolIndicator } from '../address/constants'
+import { ProtocolIndicator } from '../address/constants.js'
 
 export type Signature = {
   Data: string

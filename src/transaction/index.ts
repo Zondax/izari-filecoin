@@ -2,11 +2,11 @@ import * as cbor from '@ipld/dag-cbor'
 import { ByteView } from '@ipld/dag-cbor'
 import BN from 'bn.js'
 
-import { Address } from '../address'
-import { serializeBigNum } from './utils'
-import { Network } from '../address/constants'
-import { RPC } from '../rpc'
-import { TransactionJSON, TxVersion, TxInputData } from './types'
+import { Address } from '../address/index.js'
+import { serializeBigNum } from './utils.js'
+import { Network } from '../address/constants.js'
+import { RPC } from '../rpc/index.js'
+import { TransactionJSON, TxVersion, TxInputData } from './types.js'
 
 export class Transaction {
   constructor(

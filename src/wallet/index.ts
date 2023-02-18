@@ -5,9 +5,9 @@ import secp256k1 from 'secp256k1'
 
 import { ExtendedKey } from './extendedkey.js'
 import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer } from './utils.js'
-import { Transaction } from '../transaction'
-import { Network, ProtocolIndicator } from '../address/constants'
-import { Signature } from './types'
+import { Transaction } from '../transaction/index.js'
+import { Network, ProtocolIndicator } from '../address/constants.js'
+import { Signature } from './types.js'
 
 // You must wrap a tiny-secp256k1 compatible implementation
 const bip32 = bip32Default.BIP32Factory(ecc)
