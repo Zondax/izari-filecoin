@@ -4,13 +4,17 @@ import { Address } from '../address/index.js'
 import { serializeBigNum } from './utils.js'
 import { Network } from '../address/constants.js'
 import { RPC } from '../rpc/index.js'
-import { TransactionJSON, TxVersion, TxInputData } from './types.js'
+import { TransactionJSON, TxInputData, TxVersion } from './types.js'
 import { IpldDagCbor } from '../external/dag-cbor.js'
+import { waitFor } from '../utils/sleep'
 
 // Loading this module dynamically as it has no support to CJS
 // The only way to keep CJS supported on our side is to load it dynamically
 // The interface has been copied from the repo itself
-let cbor: IpldDagCbor | undefined
+let globalCbor: IpldDagCbor | undefined
+import('@ipld/dag-cbor').then(localCbor => {
+  globalCbor = localCbor
+})
 
 export class Transaction {
   constructor(
@@ -29,10 +33,10 @@ export class Transaction {
   static getDefault = (to: Address, from: Address, value: string, method: number) =>
     new Transaction(TxVersion.Zero, to, from, 0, value, 0, '0', '0', method, '')
 
-  static parse = async (network: Network, cborMessage: Buffer | string): Promise<Transaction> => {
+  static fromCBOR = async (network: Network, cborMessage: Buffer | string): Promise<Transaction> => {
     if (typeof cborMessage === 'string') cborMessage = Buffer.from(cborMessage, 'hex')
 
-    if (!cbor) cbor = await import('@ipld/dag-cbor')
+    const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
 
     const decoded = cbor.decode<TxInputData>(cborMessage)
     if (!(decoded instanceof Array)) throw new Error('Decoded raw tx should be an array')
@@ -86,7 +90,7 @@ export class Transaction {
   })
 
   serialize = async (): Promise<Buffer> => {
-    if (!cbor) cbor = await import('@ipld/dag-cbor')
+    const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
 
     const message_to_encode: TxInputData = [
       this.version,
@@ -104,7 +108,7 @@ export class Transaction {
     return Buffer.from(cbor.encode(message_to_encode))
   }
 
-  prepare = async (nodeRpc: RPC) => {
+  prepareToSend = async (nodeRpc: RPC) => {
     const nonceResult = await nodeRpc.getNonce(this.from.toString())
     if ('error' in nonceResult) throw new Error(nonceResult.error.message)
 
