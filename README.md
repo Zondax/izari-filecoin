@@ -65,6 +65,12 @@ Besides the linter, a formatter is set in place to assure the same code style th
 yarn format
 ```
 
+Test cases generated automatically and are written in json files. Those files are consumed by jest to create on case for each scenario. In order to create those files
+from a raw input file, just run the following command.
+```yarn
+yarn test:generate
+```
+
 Finally, in order to run tests, just do it by simply running the next command. 
 ```yarn
 yarn test
@@ -105,6 +111,9 @@ According to the [ts-jest documentation site](https://kulshekhar.github.io/ts-je
 
 TypeScript allows importing other TypeScript files with a .js extension, for compatibility with the ES6 modules loader specification. Unfortunately, Jest gets confused by this and complains that it's not able to find the JavaScript file. 
 `jest-ts-webcompat-resolver` is the actual resolver we use in order to be able to handle imports with extensions. More info [here](https://github.com/AyogoHealth/jest-ts-webcompat-resolver).
+
+In order to generate test cases for addresses features, we are using a glif package called `@glif/filecoin-address`. Besides, generating transaction test cases is done by using zondax package called `@zondax/filecoin-signing-tools`
+
 
 #### React
 - React app is based on create-react-app utility. It has been [ejected](https://create-react-app.dev/docs/available-scripts/#npm-run-eject) in order
