@@ -1,5 +1,6 @@
 # Izari Filecoin Tools
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin-tools)
 [![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin-tools.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin-tools)
 [![GithubActions](https://github.com/Zondax/izari-filecoin-tools/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin-tools/blob/master/.github/workflows/main.yaml)
 
