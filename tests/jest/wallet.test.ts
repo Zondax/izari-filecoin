@@ -79,7 +79,7 @@ describe('Wallet', () => {
   describe('Sign transactions', () => {
     const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, TXS_TEST_CASES_PATH), 'utf-8')) as TxTestCase[]
 
-    describe('From JSON', () => {
+    describe('From raw JSON', () => {
       vectors.forEach(({ tx: txJSON, signature, privKey }, i) => {
         test('Tx ' + i, async () => {
           const tx = Transaction.fromJSON(txJSON)
@@ -90,7 +90,7 @@ describe('Wallet', () => {
       })
     })
 
-    describe('From CBOR', () => {
+    describe('From CBOR encoded', () => {
       vectors.forEach(({ cbor, signature, privKey }, i) => {
         test('Tx ' + i, async () => {
           const tx = await Transaction.fromCBOR(Network.Mainnet, cbor)

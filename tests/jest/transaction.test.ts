@@ -16,7 +16,7 @@ type TxTestCase = {
 describe('Transaction', () => {
   const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, TXS_VECTOR), 'utf-8')) as TxTestCase[]
 
-  describe('From encoded data', () => {
+  describe('From CBOR encoded', () => {
     vectors.forEach(({ cbor, tx }, i) => {
       test('Tx ' + i, async () => {
         const parseTx = await Transaction.fromCBOR(Network.Mainnet, cbor)
@@ -33,7 +33,7 @@ describe('Transaction', () => {
     })
   })
 
-  describe('From JSON data', () => {
+  describe('From raw JSON', () => {
     vectors.forEach(({ cbor, tx }, i) => {
       test('Tx ' + i, async () => {
         const parseTx = Transaction.fromJSON(tx)
