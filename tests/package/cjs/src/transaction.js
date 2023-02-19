@@ -1,5 +1,6 @@
-import { Transaction, Network } from '@zondax/izari-filecoin-tools'
-import assert from 'assert'
+const { Transaction, Network } = require('@zondax/izari-filecoin-tools')
+const assert = require('assert')
+
 ;(async function test() {
   const tx = await Transaction.parse(
     Network.Mainnet,
