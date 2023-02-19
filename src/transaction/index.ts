@@ -58,6 +58,20 @@ export class Transaction {
       decoded[9].toString('base64')
     )
   }
+  static fromJSON = (txJson: TransactionJSON) => {
+    return new Transaction(
+      TxVersion.Zero,
+      Address.fromString(txJson.To),
+      Address.fromString(txJson.From),
+      txJson.Nonce,
+      txJson.Value,
+      txJson.GasLimit,
+      txJson.GasFeeCap,
+      txJson.GasPremium,
+      txJson.Method,
+      txJson.Params
+    )
+  }
 
   toJSON = (): TransactionJSON => ({
     To: this.to.toString(),
