@@ -1,13 +1,22 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Wallet, Network, Address, Transaction } from '../../src'
+import { Network, Transaction, Wallet } from '../../src'
+import { TransactionJSON } from '../../src/transaction/types'
 
 const WALLET_TEST_CASES_PATH = './vectors/wallets.json'
+const TXS_TEST_CASES_PATH = './vectors/txs.json'
 
-type TestCase = {
+type WalletTestCase = {
   mnemonic: string
   addresses: [path: string, address: string][]
+}
+
+type TxTestCase = {
+  tx: TransactionJSON
+  cbor: string
+  signature: string
+  privKey: string
 }
 
 describe('Wallet', () => {
@@ -21,7 +30,7 @@ describe('Wallet', () => {
 
   describe('Derive addresses', () => {
     test('Bip39 mnemonic', () => {
-      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, WALLET_TEST_CASES_PATH), 'utf-8')) as TestCase[]
+      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, WALLET_TEST_CASES_PATH), 'utf-8')) as WalletTestCase[]
 
       vectors.forEach(({ addresses, mnemonic }) => {
         addresses.forEach(([path, address]) => {
@@ -53,7 +62,7 @@ describe('Wallet', () => {
   })
 
   test('Key recover', () => {
-    const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, WALLET_TEST_CASES_PATH), 'utf-8')) as TestCase[]
+    const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, WALLET_TEST_CASES_PATH), 'utf-8')) as WalletTestCase[]
 
     vectors.forEach(({ addresses, mnemonic }) => {
       addresses.forEach(([path, address]) => {
@@ -63,6 +72,32 @@ describe('Wallet', () => {
         expect(extendedKey.address).toStrictEqual(recoveredKey.address)
         expect(extendedKey.publicKey).toStrictEqual(recoveredKey.publicKey)
         expect(extendedKey.privateKey).toStrictEqual(recoveredKey.privateKey)
+      })
+    })
+  })
+
+  describe('Sign transactions', () => {
+    const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, TXS_TEST_CASES_PATH), 'utf-8')) as TxTestCase[]
+
+    describe('From JSON', () => {
+      vectors.forEach(({ tx: txJSON, signature, privKey }, i) => {
+        test('Tx ' + i, async () => {
+          const tx = Transaction.fromJSON(txJSON)
+          const sig = await Wallet.signTransaction(privKey, tx)
+
+          expect(sig.Data).toBe(signature)
+        })
+      })
+    })
+
+    describe('From CBOR', () => {
+      vectors.forEach(({ cbor, signature, privKey }, i) => {
+        test('Tx ' + i, async () => {
+          const tx = await Transaction.fromCBOR(Network.Mainnet, cbor)
+          const sig = await Wallet.signTransaction(privKey, tx)
+
+          expect(sig.Data).toBe(signature)
+        })
       })
     })
   })

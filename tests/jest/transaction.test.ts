@@ -19,7 +19,7 @@ describe('Transaction', () => {
   describe('From encoded data', () => {
     vectors.forEach(({ cbor, tx }, i) => {
       test('Tx ' + i, async () => {
-        const parseTx = await Transaction.parse(Network.Mainnet, cbor)
+        const parseTx = await Transaction.fromCBOR(Network.Mainnet, cbor)
 
         expect(parseTx.to.toString()).toBe(tx.To)
         expect(parseTx.from.toString()).toBe(tx.From)
@@ -29,6 +29,17 @@ describe('Transaction', () => {
         expect(parseTx.method).toBe(tx.Method)
         expect(parseTx.params).toBe(tx.Params)
         expect(parseTx.nonce).toBe(tx.Nonce)
+      })
+    })
+  })
+
+  describe('From JSON data', () => {
+    vectors.forEach(({ cbor, tx }, i) => {
+      test('Tx ' + i, async () => {
+        const parseTx = Transaction.fromJSON(tx)
+        const serializedTx = await parseTx.serialize()
+
+        expect(serializedTx.toString('hex')).toBe(cbor)
       })
     })
   })
