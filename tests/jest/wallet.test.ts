@@ -3,7 +3,7 @@ import path from 'path'
 
 import { Wallet, Network, Address, Transaction } from '../../src'
 
-const WALLET_TEST_CASES_PATH = '../vectors/wallets.json'
+const WALLET_TEST_CASES_PATH = './vectors/wallets.json'
 
 type TestCase = {
   mnemonic: string
