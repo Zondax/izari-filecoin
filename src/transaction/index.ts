@@ -12,9 +12,13 @@ import { waitFor } from '../utils/sleep'
 // The only way to keep CJS supported on our side is to load it dynamically
 // The interface has been copied from the repo itself
 let globalCbor: IpldDagCbor | undefined
-import('@ipld/dag-cbor').then(localCbor => {
-  globalCbor = localCbor
-})
+import('@ipld/dag-cbor')
+  .then(localCbor => {
+    globalCbor = localCbor
+  })
+  .catch(e => {
+    throw e
+  })
 
 export class Transaction {
   constructor(
