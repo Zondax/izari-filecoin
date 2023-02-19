@@ -3,7 +3,7 @@ import path from 'path'
 
 import { Address, AddressActor, AddressBls, AddressId, AddressSecp256k1 } from '../../src/address'
 import { Network, ProtocolIndicator } from '../../src/address/constants'
-import { AddressTestCase } from '../utils/src/types'
+//import { AddressTestCase } from '../utils/src/types'
 import { InvalidProtocolIndicator } from '../../src/address/errors'
 
 const ADDRESSES_VECTOR = '../vectors/addresses.json'
@@ -11,7 +11,7 @@ const ADDRESSES_VECTOR = '../vectors/addresses.json'
 describe('Address', () => {
   describe('Vectors', () => {
     describe('From string', () => {
-      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_VECTOR), 'utf-8')) as AddressTestCase[]
+      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_VECTOR), 'utf-8')) as any[]
 
       vectors.forEach(({ string, payload, bytes, protocol, network }, index) => {
         test(`Test case ${index}: ${string}`, () => {
@@ -27,7 +27,7 @@ describe('Address', () => {
     })
 
     describe('From bytes', () => {
-      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_VECTOR), 'utf-8')) as AddressTestCase[]
+      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_VECTOR), 'utf-8')) as any[]
 
       vectors.forEach(({ string, payload, bytes, protocol, network }, index) => {
         test(`Test case ${index}: 0x${bytes}`, () => {

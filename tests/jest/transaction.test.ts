@@ -1,13 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 
-import { TxTestCase } from '../utils/src/types'
 import { Network, Transaction } from '../../src'
 
 const TXS_VECTOR = '../vectors/txs.json'
 
 describe('Transaction', () => {
-  const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, TXS_VECTOR), 'utf-8')) as TxTestCase[]
+  const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, TXS_VECTOR), 'utf-8')) as any[]
 
   describe('From encoded data', () => {
     vectors.forEach(({ cbor, tx }, i) => {
