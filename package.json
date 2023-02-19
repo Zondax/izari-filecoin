@@ -25,6 +25,7 @@
     "test:node:mjs": "yarn test:prepare && cd tests/packages/mjs && yarn test:install && node index.js",
     "test:node": "yarn test:node:cjs && yarn test:node:mjs",
     "test:jest": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest",
+    "test:jest:silent": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest --reporters=jest-silent-reporter",
     "test": "yarn test:jest && yarn test:node && yarn test:react"
   },
   "repository": {
@@ -57,6 +58,7 @@
     "dotenv": "^16.0.3",
     "eslint": "^8.33.0",
     "jest": "^29.4.2",
+    "jest-silent-reporter": "^0.5.0",
     "jest-ts-webcompat-resolver": "^1.0.0",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
