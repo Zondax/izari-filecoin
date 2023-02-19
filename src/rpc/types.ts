@@ -1,22 +1,8 @@
-export type TransactionRaw = {
-  To: string
-  From: string
-  Nonce: number
-  Value: string
-  GasLimit: number
-  GasFeeCap: string
-  GasPremium: string
-  Method: number
-  Params: string
-}
+import { TransactionJSON } from '../transaction/types'
+import { Signature } from '../wallet/types'
 
-export type Signature = {
-  Data: string
-  Type: number
-}
-
-export type SignedMessage = {
-  Message: TransactionRaw
+export type SignedTransaction = {
+  Message: TransactionJSON
   Signature: Signature
 }
 

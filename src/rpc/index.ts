@@ -6,10 +6,10 @@ import {
   ReadStateResponse,
   RpcError,
   SendSignMessageResponse,
-  SignedMessage,
+  SignedTransaction,
   StateWaitMsgResponse,
-  TransactionRaw,
 } from './types.js'
+import { TransactionJSON } from '../transaction/types'
 
 type Args = { url: string; token: string }
 
@@ -37,13 +37,13 @@ export class RPC {
     }
   }
 
-  async broadcastTransaction(signedMessage: SignedMessage, skipStateWaitMsg?: boolean): Promise<SendSignMessageResponse> {
+  async broadcastTransaction(signedTx: SignedTransaction, skipStateWaitMsg?: boolean): Promise<SendSignMessageResponse> {
     try {
       const mpoolResponse = await this.fetcher.post<MpoolPushResponse>('', {
         jsonrpc: '2.0',
         method: 'Filecoin.MpoolPush',
         id: 1,
-        params: [signedMessage],
+        params: [signedTx],
       })
 
       if (skipStateWaitMsg) return mpoolResponse.data
@@ -64,13 +64,13 @@ export class RPC {
     }
   }
 
-  async getGasEstimation(message: TransactionRaw): Promise<GasEstimationResponse> {
+  async getGasEstimation(txJson: TransactionJSON): Promise<GasEstimationResponse> {
     try {
       const response = await this.fetcher.post('', {
         jsonrpc: '2.0',
         method: 'Filecoin.GasEstimateMessageGas',
         id: 1,
-        params: [message, { MaxFee: '0' }, null],
+        params: [txJson, { MaxFee: '0' }, null],
       })
 
       return response.data as GasEstimationResponse

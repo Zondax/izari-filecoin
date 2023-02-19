@@ -9,14 +9,13 @@ export class ExtendedKey {
   privateKey: Buffer
   address: string
 
-  constructor(privateKey: Buffer, testnet: boolean) {
+  constructor(network: Network, privateKey: Buffer) {
     const pubKey = secp256k1.publicKeyCreate(privateKey)
 
     const uncompressedPublicKey = new Uint8Array(65)
     secp256k1.publicKeyConvert(pubKey, false, uncompressedPublicKey)
     const uncompressedPublicKeyBuf = Buffer.from(uncompressedPublicKey)
 
-    const network = testnet ? Network.Testnet : Network.Mainnet
     const payload = getPayloadSECP256K1(uncompressedPublicKey)
 
     this.publicKey = uncompressedPublicKeyBuf // Buffer

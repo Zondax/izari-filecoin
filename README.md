@@ -11,6 +11,7 @@
 
 ## Requisites 
 
+### React
 - In order to use this package in browsers (like react, react-native, etc), some modules need to be polyfill (like Buffer, stream, etc). Most projects use
 webpack to bundle JS code.  If your project uses it, please refer to [this](https://webpack.js.org/configuration/resolve/#resolvefallback) doc in order to configure it correctly. 
 Besides, you could check [this blog post](https://viglucci.io/articles/how-to-polyfill-buffer-with-webpack-5) too. 
@@ -64,6 +65,12 @@ Besides the linter, a formatter is set in place to assure the same code style th
 yarn format
 ```
 
+Test cases generated automatically and are written in json files. Those files are consumed by jest to create on case for each scenario. In order to create those files
+from a raw input file, just run the following command.
+```yarn
+yarn test:generate
+```
+
 Finally, in order to run tests, just do it by simply running the next command. 
 ```yarn
 yarn test
@@ -85,9 +92,6 @@ So far, the package has been tested in different environments. We are trying to 
 | React app                | :white_check_mark: |
 | NextJS                   | :x:                |
 
-**Notes**:
-- React app is based on create-react-app utility. It has been [ejected](https://create-react-app.dev/docs/available-scripts/#npm-run-eject) in order 
-to configure webpack to polyfill some NodeJS native modules. 
 
 
 ### Web Browsers
@@ -97,6 +101,25 @@ to configure webpack to polyfill some NodeJS native modules.
 | Firefox         | :x:                |
 | Safari          | :x:                |
 
+### Notes
+
+#### Jest
+It was necessary to load ESM support on jest in order to be able to load some modules that has no support to CJS anymore. In particular, `@ipld/dag-cbor` is the one 
+that forced us to do it. It was done following the [jest documentation site](https://jestjs.io/docs/ecmascript-modules).
+
+According to the [ts-jest documentation site](https://kulshekhar.github.io/ts-jest/docs/getting-started/options/tsconfig), we are using a custom `tsconfig.json` file. 
+
+TypeScript allows importing other TypeScript files with a .js extension, for compatibility with the ES6 modules loader specification. Unfortunately, Jest gets confused by this and complains that it's not able to find the JavaScript file. 
+`jest-ts-webcompat-resolver` is the actual resolver we use in order to be able to handle imports with extensions. More info [here](https://github.com/AyogoHealth/jest-ts-webcompat-resolver).
+
+In order to generate test cases for addresses features, we are using a glif package called `@glif/filecoin-address`. Besides, generating transaction test cases is done by using zondax package called `@zondax/filecoin-signing-tools`
 
 
+#### React
+- React app is based on create-react-app utility. It has been [ejected](https://create-react-app.dev/docs/available-scripts/#npm-run-eject) in order
+to configure webpack to polyfill some NodeJS native modules. In particular, you can find the custom configs added [here](https://github.com/Zondax/izari-filecoin-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L308)
+and [here](https://github.com/Zondax/izari-filecoin-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L693).
+
+
+https://jestjs.io/docs/ecmascript-modules
 
