@@ -3,7 +3,7 @@ import * as bip32Default from 'bip32'
 import * as ecc from '@bitcoinerlab/secp256k1'
 import secp256k1 from 'secp256k1'
 
-import { ExtendedKey } from './extendedkey.js'
+import { ExtendedKey } from './extendedKey.js'
 import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer } from './utils.js'
 import { Transaction } from '../transaction/index.js'
 import { Network, ProtocolIndicator } from '../address/constants.js'
