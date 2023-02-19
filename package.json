@@ -24,7 +24,7 @@
     "test:node:cjs": "yarn test:prepare && cd tests/package/cjs && yarn test:install && node index.js",
     "test:node:mjs": "yarn test:prepare && cd tests/package/mjs && yarn test:install && node index.js",
     "test:node": "yarn test:node:cjs && yarn test:node:mjs",
-    "test:jest": "jest ./tests/jest",
+    "test:jest": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest",
     "test": "yarn test:jest && yarn test:node && yarn test:react"
   },
   "repository": {

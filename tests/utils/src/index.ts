@@ -49,7 +49,7 @@ function generateTransactions() {
     'bundle hour bird man lyrics glare shrug pepper leader better illegal expect outdoor duck crew universe amount language model cabbage inhale shine accident inmate'
 
   const keys = []
-  for (let i = 0; i < 10; i++) keys.push(fst.keyDerive(mnemonic, "44'/461'/1'/0/" + i, ''))
+  for (let i = 0; i < 10; i++) keys.push(fst.keyDerive(mnemonic, "44'/461'/0'/0/" + i, ''))
 
   const testCases: TxTestCase[] = []
 
