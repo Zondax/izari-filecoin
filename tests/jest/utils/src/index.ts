@@ -70,7 +70,7 @@ function generateTransactions() {
       }
       const cbor = fst.transactionSerialize(tx)
       const privKey = key.privateKey.toString('base64')
-      const signature = fst.transactionSignRaw(tx, privKey).toString('hex')
+      const signature = fst.transactionSignRaw(tx, privKey).toString('base64')
 
       testCases.push({ tx, cbor, signature, privKey })
     }
