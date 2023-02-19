@@ -10,6 +10,7 @@
    - **ESM (esnext)**
 
 ## Requisites 
+- NodeJS >= 16.0.0
 
 ### React
 - In order to use this package in browsers (like react, react-native, etc), some modules need to be polyfill (like Buffer, stream, etc). Most projects use
