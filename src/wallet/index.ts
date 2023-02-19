@@ -46,10 +46,10 @@ export class Wallet {
     const serializedTx = typeof tx === 'string' ? Buffer.from(tx, 'hex') : await tx.serialize()
 
     // verify format and convert to buffer if needed
-    privateKey = tryToPrivateKeyBuffer(privateKey)
+    const privateKeyBuff = tryToPrivateKeyBuffer(privateKey)
 
     const txDigest = getDigest(serializedTx)
-    const signature = secp256k1.ecdsaSign(txDigest, privateKey)
+    const signature = secp256k1.ecdsaSign(txDigest, privateKeyBuff)
 
     const result: Signature = {
       Data: Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]).toString('base64'),
