@@ -1,7 +1,7 @@
 import { Transaction, Network } from '@zondax/izari-filecoin-tools'
 import assert from 'assert'
 ;(async function test() {
-  const tx = await Transaction.parse(
+  const tx = await Transaction.fromCBOR(
     Network.Mainnet,
     '8a0042006355013bfb6c6d897dc4104539164b155378463cdc5faa197c58440001733519cbac4400011d0f4300028f1a0001257e40'
   )

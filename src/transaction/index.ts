@@ -6,7 +6,7 @@ import { Network } from '../address/constants.js'
 import { RPC } from '../rpc/index.js'
 import { TransactionJSON, TxInputData, TxVersion } from './types.js'
 import { IpldDagCbor } from '../external/dag-cbor.js'
-import { waitFor } from '../utils/sleep'
+import { waitFor } from '../utils/sleep.js'
 
 // Loading this module dynamically as it has no support to CJS
 // The only way to keep CJS supported on our side is to load it dynamically
