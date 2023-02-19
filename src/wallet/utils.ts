@@ -12,7 +12,7 @@ export function getCID(message: ArrayLike<number>): Buffer {
   return Buffer.concat([CID_PREFIX, hash])
 }
 
-export function getDigest(message: ArrayLike<number>): Buffer {
+export function getDigest(message: Buffer): Buffer {
   // digest = blake2-256( prefix + blake2b-256(tx) )
 
   const blakeCtx = blake.blake2bInit(32)

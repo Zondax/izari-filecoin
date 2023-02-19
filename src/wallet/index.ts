@@ -42,8 +42,8 @@ export class Wallet {
     return new ExtendedKey(network, privateKey)
   }
 
-  static signTransaction = (privateKey: string | Buffer, tx: string | Transaction): Signature => {
-    const serializedTx: ArrayLike<number> = typeof tx === 'string' ? Buffer.from(tx, 'hex') : tx.serialize()
+  static signTransaction = async (privateKey: string | Buffer, tx: string | Transaction): Promise<Signature> => {
+    const serializedTx = typeof tx === 'string' ? Buffer.from(tx, 'hex') : await tx.serialize()
 
     // verify format and convert to buffer if needed
     privateKey = tryToPrivateKeyBuffer(privateKey)

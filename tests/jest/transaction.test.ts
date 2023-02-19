@@ -11,8 +11,8 @@ describe('Transaction', () => {
 
   describe('From encoded data', () => {
     vectors.forEach(({ cbor, tx }, i) => {
-      test('Tx ' + i, () => {
-        const parseTx = Transaction.parse(Network.Mainnet, cbor)
+      test('Tx ' + i, async () => {
+        const parseTx = await Transaction.parse(Network.Mainnet, cbor)
 
         expect(parseTx.to.toString()).toBe(tx.To)
         expect(parseTx.from.toString()).toBe(tx.From)
