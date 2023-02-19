@@ -104,15 +104,12 @@ So far, the package has been tested in different environments. We are trying to 
 ### Notes
 
 #### Jest
-It was necessary to load ESM support on jest in order to be able to load some modules that has no support to CJS anymore. In particular, `@ipld/dag-cbor` is the one 
+- It was necessary to load ESM support on jest in order to be able to load some modules that has no support to CJS anymore. In particular, `@ipld/dag-cbor` is the one 
 that forced us to do it. It was done following the [jest documentation site](https://jestjs.io/docs/ecmascript-modules).
-
-According to the [ts-jest documentation site](https://kulshekhar.github.io/ts-jest/docs/getting-started/options/tsconfig), we are using a custom `tsconfig.json` file. 
-
-TypeScript allows importing other TypeScript files with a .js extension, for compatibility with the ES6 modules loader specification. Unfortunately, Jest gets confused by this and complains that it's not able to find the JavaScript file. 
+- According to the [ts-jest documentation site](https://kulshekhar.github.io/ts-jest/docs/getting-started/options/tsconfig), we are using a custom `tsconfig.json` file.
+- TypeScript allows importing other TypeScript files with a .js extension, for compatibility with the ES6 modules loader specification. Unfortunately, Jest gets confused by this and complains that it's not able to find the JavaScript file. 
 `jest-ts-webcompat-resolver` is the actual resolver we use in order to be able to handle imports with extensions. More info [here](https://github.com/AyogoHealth/jest-ts-webcompat-resolver).
-
-In order to generate test cases for addresses features, we are using a glif package called `@glif/filecoin-address`. Besides, generating transaction test cases is done by using zondax package called `@zondax/filecoin-signing-tools`
+- In order to generate test cases for addresses features, we are using a glif package called `@glif/filecoin-address`. Besides, generating transaction test cases is done by using zondax package called `@zondax/filecoin-signing-tools`
 
 
 #### React
