@@ -5,7 +5,8 @@
 [![GithubActions](https://github.com/Zondax/izari-tools/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-tools/blob/master/.github/workflows/main.yaml)
 
 ## Introduction
-Izari Tools is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, from web projects using React to backend applications using NodeJS. Izari Tools enables developers to easily manage and access blockchain data, including transactions, smart contracts, and assets.
+Izari Tools is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
+from web projects using React to backend applications using NodeJS. It enables developers to easily manage and access blockchain data, including transactions, smart contracts, and assets.
 
 Izari Tools makes it easy for developers to incorporate blockchain technology into their projects, unlocking new possibilities for innovation and growth.
 
@@ -27,7 +28,8 @@ Besides, you could check [this blog post](https://viglucci.io/articles/how-to-po
 
 ## Features
 
-### Filecoin Node Comms
+### Filecoin 
+#### Node Comms
 
 Allow you to communicate to the filecoin node in order to fetch on-chain data (miners, fees, nonce, etc), broadcast new transactions and more. 
 
@@ -39,7 +41,7 @@ Allow you to communicate to the filecoin node in order to fetch on-chain data (m
 | Read tx state            | :white_check_mark: |
 
 
-### Addresses
+#### Addresses
 
 Allow you to easily handle the entire set of filecoin address types available. You will be able to inspect how each address is composed, convert from 
 string format to bytes format, parse from both formats, etc. For more information about filecoin addresses, please 
@@ -57,7 +59,7 @@ refer to [this doc](https://spec.filecoin.io/appendix/address/)
 | Get namespace     | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 | Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 
-### Transactions
+#### Transactions
 
 In order to interact to the Filecoin network, transactions need to be sent to it. These features will allow you to create and manipulate them in an easy and
 intuitive way. From creating new ones with minimum arguments or serializing them to CBOR or JSON, to fetch values from the network that they need in order to 
@@ -72,7 +74,7 @@ be valid to be sent.
 | Serialize (to cbor)                  | :white_check_mark: |
 | Prepare to send (get nonce and fees) | :white_check_mark: |
 
-### Wallet
+#### Wallet
 
 These features group actions related to wallets itself: from creating new ones, deriving addresses 
 from it, and signing new txs to be broadcasted.   
