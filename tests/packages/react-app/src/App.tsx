@@ -25,7 +25,7 @@ const rawTx = {
 }
 
 function App() {
-  const [signature, setSignature] = useState<{ Data: string; Type: number } | null>(null)
+  const [signature, setSignature] = useState<{ Data: Buffer; Type: number } | null>(null)
   const address = Address.fromString('t08666')
   const mnemonic = Wallet.generateMnemonic()
   const extendedKey = Wallet.keyDerive(
@@ -56,8 +56,8 @@ function App() {
 
         <br />
 
-        {signature ? <div id={'signature.data'}>{`Signature Data: ${signature.Data}`}</div> : null}
-        {signature ? <div id={'signature.type'}>{`Signature Type: ${signature.Type}`}</div> : null}
+        {signature ? <div id={'signature-data'}>{`Signature Data: ${signature.Data.toString('base64')}`}</div> : null}
+        {signature ? <div id={'signature-type'}>{`Signature Type: ${signature.Type}`}</div> : null}
       </header>
     </div>
   )

@@ -1,6 +1,6 @@
 import { ProtocolIndicator } from '../address/constants.js'
 
 export type Signature = {
-  Data: string
+  Data: Buffer
   Type: ProtocolIndicator
 }

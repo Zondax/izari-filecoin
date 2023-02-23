@@ -35,7 +35,7 @@ async function run() {
   }
 
   const signature = await Wallet.signTransaction(rawTx.privKey, Transaction.fromJSON(rawTx.tx))
-  assert(signature.Data === rawTx.signature.data)
+  assert(signature.Data.toString('base64') === rawTx.signature.data)
   assert(signature.Type === rawTx.signature.type)
 }
 
