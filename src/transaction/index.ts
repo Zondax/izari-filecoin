@@ -34,8 +34,11 @@ export class Transaction {
     public params: string
   ) {}
 
-  static getDefault = (to: Address, from: Address, value: string, method: number) =>
-    new Transaction(TxVersion.Zero, to, from, 0, value, 0, '0', '0', method, '')
+  static getNew = (to: Address, from: Address, value: string, method: number): Transaction => {
+    if (value === '' || value.includes('-')) throw new Error('value must not be empty or negative')
+
+    return new Transaction(TxVersion.Zero, to, from, 0, value, 0, '0', '0', method, '')
+  }
 
   static fromCBOR = async (network: Network, cborMessage: Buffer | string): Promise<Transaction> => {
     if (typeof cborMessage === 'string') cborMessage = Buffer.from(cborMessage, 'hex')
@@ -66,6 +69,7 @@ export class Transaction {
       decoded[9].toString('base64')
     )
   }
+
   static fromJSON = (message: unknown): Transaction => {
     if (typeof message !== 'object' || message == null) throw new Error('tx should be an json object')
 
@@ -139,7 +143,7 @@ export class Transaction {
     return Buffer.from(cbor.encode(message_to_encode))
   }
 
-  prepareToSend = async (nodeRpc: RPC) => {
+  prepareToSend = async (nodeRpc: RPC): Promise<void> => {
     const nonceResult = await nodeRpc.getNonce(this.from.toString())
     if ('error' in nonceResult) throw new Error(nonceResult.error.message)
 
