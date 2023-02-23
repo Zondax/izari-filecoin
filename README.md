@@ -6,6 +6,7 @@
 
 ## Short description
  - It is written in **Typescript**
+ - It is composed by **pure JS**
  - It is transpiled to two different flavours: 
    - **CommonJS (es2015)** 
    - **ESM (esnext)**
@@ -41,6 +42,25 @@ Besides, you could check [this blog post](https://viglucci.io/articles/how-to-po
 | Get network type  | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
 | Get namespace     | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 | Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
+
+### Transactions
+| Feature                              | Supported?         |
+|--------------------------------------|--------------------|
+| Create new instance                  | :white_check_mark: |
+| Parse from raw json                  | :white_check_mark: |
+| Parse from serialized                | :white_check_mark: |
+| Export to json                       | :white_check_mark: |
+| Serialize (to cbor)                  | :white_check_mark: |
+| Prepare to send (get nonce and fees) | :white_check_mark: |
+
+### Wallet
+| Feature                              | Supported?         |
+|--------------------------------------|--------------------|
+| Generate new mnemonic                | :white_check_mark: |
+| Derive key from seed                 | :white_check_mark: |
+| Derive key from mnemonic             | :white_check_mark: |
+| Sign transactions (f1/secp256k1)     | :white_check_mark: |
+
 
 
 ## Development
