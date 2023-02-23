@@ -1,7 +1,7 @@
 const { Transaction, Network } = require('@zondax/izari-filecoin-tools')
 const assert = require('assert')
 
-;(async function test() {
+async function run() {
   const tx = await Transaction.fromCBOR(
     Network.Mainnet,
     '8a0042006355013bfb6c6d897dc4104539164b155378463cdc5faa197c58440001733519cbac4400011d0f4300028f1a0001257e40'
@@ -14,4 +14,6 @@ const assert = require('assert')
   assert(tx.gasLimit === 52140)
   assert(tx.nonce === 31832)
   assert(tx.method === 75134)
-})()
+}
+
+module.exports = { run }

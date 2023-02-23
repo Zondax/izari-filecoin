@@ -26,7 +26,8 @@
     "test:node": "yarn test:node:cjs && yarn test:node:mjs",
     "test:jest": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest",
     "test:jest:silent": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest --reporters=jest-silent-reporter",
-    "test": "yarn test:jest && yarn test:node && yarn test:react"
+    "test": "yarn test:jest && yarn test:node && yarn test:react",
+    "test:silent": "yarn test:jest:silent && yarn test:node && yarn test:react"
   },
   "repository": {
     "type": "git",

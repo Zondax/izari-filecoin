@@ -52,7 +52,7 @@ export class Wallet {
     const signature = secp256k1.ecdsaSign(txDigest, privateKeyBuff)
 
     const result: Signature = {
-      Data: Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]).toString('base64'),
+      Data: Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]),
       Type: ProtocolIndicator.SECP256K1,
     }
 
