@@ -21,6 +21,9 @@ export type TransactionJSON = {
 export type TxTestCase = {
   tx: TransactionJSON
   cbor: string
-  signature: string
+  signature: {
+    data: string
+    type: number
+  }
   privKey: string
 }

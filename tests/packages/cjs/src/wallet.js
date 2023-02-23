@@ -30,12 +30,13 @@ async function run() {
       Method: 7283,
     },
     cbor: '8a0042006355010b52d566f94082c3addc6c8d30ba5c25dd29e5d91917f144000115cb1a00010e7844000165bb430052b8191c7340',
-    signature: 'wW6G6jykbQQWL+J8V/TcbmTvgN7e71EM8WxC54nfv5gd1nc0CvPGFND1ndfWmVQ1Fl6W1Liyc3pD4jAYTz/Z9AE=',
+    signature: { data: 'wW6G6jykbQQWL+J8V/TcbmTvgN7e71EM8WxC54nfv5gd1nc0CvPGFND1ndfWmVQ1Fl6W1Liyc3pD4jAYTz/Z9AE=', type: 1 },
     privKey: '/mTHfeTNwxj1EYjBgbk7ZORx5nKe4ShunXXtvVQ58CA=',
   }
 
   const signature = await Wallet.signTransaction(rawTx.privKey, Transaction.fromJSON(rawTx.tx))
-  assert(signature.Data === rawTx.signature)
+  assert(signature.Data === rawTx.signature.data)
+  assert(signature.Type === rawTx.signature.type)
 }
 
 module.exports = { run }

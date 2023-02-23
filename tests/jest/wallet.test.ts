@@ -15,7 +15,10 @@ type WalletTestCase = {
 type TxTestCase = {
   tx: TransactionJSON
   cbor: string
-  signature: string
+  signature: {
+    data: string
+    type: number
+  }
   privKey: string
 }
 
@@ -85,7 +88,8 @@ describe('Wallet', () => {
           const tx = Transaction.fromJSON(txJSON)
           const sig = await Wallet.signTransaction(privKey, tx)
 
-          expect(sig.Data).toBe(signature)
+          expect(sig.Data).toBe(signature.data)
+          expect(sig.Type).toBe(signature.type)
         })
       })
     })
@@ -96,7 +100,8 @@ describe('Wallet', () => {
           const tx = await Transaction.fromCBOR(Network.Mainnet, cbor)
           const sig = await Wallet.signTransaction(privKey, tx)
 
-          expect(sig.Data).toBe(signature)
+          expect(sig.Data).toBe(signature.data)
+          expect(sig.Type).toBe(signature.type)
         })
       })
     })
