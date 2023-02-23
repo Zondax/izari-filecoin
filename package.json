@@ -1,5 +1,5 @@
 {
-  "name": "@zondax/izari-filecoin-tools",
+  "name": "@zondax/izari-tools",
   "version": "0.0.0",
   "description": "",
   "main": "dist/cjs/index.js",
@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Zondax/izari-filecoin-tools.git"
+    "url": "git+https://github.com/Zondax/izari-tools.git"
   },
   "keywords": [
     "Izari",
@@ -47,9 +47,9 @@
   "author": "Zondax AG",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/Zondax/izari-filecoin-tools/issues"
+    "url": "https://github.com/Zondax/izari-tools/issues"
   },
-  "homepage": "https://github.com/Zondax/izari-filecoin-tools#readme",
+  "homepage": "https://github.com/Zondax/izari-tools#readme",
   "devDependencies": {
     "@types/bn.js": "^5.1.1",
     "@types/jest": "^29.4.0",

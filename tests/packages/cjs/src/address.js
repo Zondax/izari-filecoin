@@ -1,4 +1,4 @@
-const { Address, ProtocolIndicator, Network } = require('@zondax/izari-filecoin-tools')
+const { Address, ProtocolIndicator, Network } = require('@zondax/izari-tools')
 const assert = require('assert')
 
 function run() {

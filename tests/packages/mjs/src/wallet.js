@@ -1,4 +1,4 @@
-import { Wallet, Transaction } from '@zondax/izari-filecoin-tools'
+import { Wallet, Transaction } from '@zondax/izari-tools'
 import assert from 'assert'
 
 export async function run() {
