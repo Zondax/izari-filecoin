@@ -66,18 +66,45 @@ export class Transaction {
       decoded[9].toString('base64')
     )
   }
-  static fromJSON = (txJson: TransactionJSON) => {
+  static fromJSON = (message: unknown): Transaction => {
+    if (typeof message !== 'object' || message == null) throw new Error('tx should be an json object')
+
+    if (!('To' in message) || typeof message['To'] !== 'string') throw new Error("'To' is a required field and has to be a 'string'")
+
+    if (!('From' in message) || typeof message['From'] !== 'string') throw new Error("'From' is a required field and has to be a 'string'")
+
+    if (!('Nonce' in message) || typeof message['Nonce'] !== 'number')
+      throw new Error("'Nonce' is a required field and has to be a 'number'")
+
+    if (!('Value' in message) || typeof message['Value'] !== 'string' || message['Value'] === '' || message['Value'].includes('-'))
+      throw new Error("'Value' is a required field and has to be a 'string' but not empty or negative")
+
+    if (!('GasFeeCap' in message) || typeof message['GasFeeCap'] !== 'string')
+      throw new Error("'GasFeeCap' is a required field and has to be a 'string'")
+
+    if (!('GasPremium' in message) || typeof message['GasPremium'] !== 'string')
+      throw new Error("'GasPremium' is a required field and has to be a 'string'")
+
+    if (!('GasLimit' in message) || typeof message['GasLimit'] !== 'number')
+      throw new Error("'GasLimit' is a required field and has to be a 'number'")
+
+    if (!('Method' in message) || typeof message['Method'] !== 'number')
+      throw new Error("'Method' is a required field and has to be a 'number'")
+
+    if (!('Params' in message) || typeof message['Params'] !== 'string')
+      throw new Error("'Params' is a required field and has to be a 'string'")
+
     return new Transaction(
       TxVersion.Zero,
-      Address.fromString(txJson.To),
-      Address.fromString(txJson.From),
-      txJson.Nonce,
-      txJson.Value,
-      txJson.GasLimit,
-      txJson.GasFeeCap,
-      txJson.GasPremium,
-      txJson.Method,
-      txJson.Params
+      Address.fromString(message.To),
+      Address.fromString(message.From),
+      message.Nonce,
+      message.Value,
+      message.GasLimit,
+      message.GasFeeCap,
+      message.GasPremium,
+      message.Method,
+      message.Params
     )
   }
 
