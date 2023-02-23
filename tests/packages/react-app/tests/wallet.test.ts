@@ -24,6 +24,10 @@ describe('Wallet', () => {
 
       expect(mnemonic).toBeDefined()
       expect(address).toBe('Address: t1hp5wy3mjpxcbarjzczfrku3yiy6nyx5kej4fwei')
+
+      await page.waitForSelector('#signature', { timeout: 10000 })
+      const signature = await page.$eval('#signature', e => e.innerHTML)
+      expect(signature).toBe('Signature: wW6G6jykbQQWL+J8V/TcbmTvgN7e71EM8WxC54nfv5gd1nc0CvPGFND1ndfWmVQ1Fl6W1Liyc3pD4jAYTz/Z9AE=')
     } finally {
       await browser.close()
     }
