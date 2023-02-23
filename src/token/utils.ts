@@ -13,7 +13,7 @@ export const bnToString = (value: BN, precision: number) => {
   return `${sign}${parsedValue}`
 }
 
-const trimTrailingZeros = (value: string): string => {
+export const trimTrailingZeros = (value: string): string => {
   for (let i = value.length - 1; i >= 0; i--) {
     if (value[i] == '.') return value.substr(0, i)
     if (value[i] != '0' || i === 1) return value.substr(0, i + 1)

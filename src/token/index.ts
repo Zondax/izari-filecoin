@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { bnToString, trimTrailingZeros } from './utils'
+import { bnToString } from './utils'
 
 const ATTO_PRECISION = 18
 const NANO_PRECISION = 9
