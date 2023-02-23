@@ -1,12 +1,18 @@
-# Izari Filecoin Tools
+# Izari Tools
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin-tools)
-[![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin-tools.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin-tools)
-[![GithubActions](https://github.com/Zondax/izari-filecoin-tools/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin-tools/blob/master/.github/workflows/main.yaml)
+![node-current](https://img.shields.io/node/v/@zondax/izari-tools)
+[![Package](https://badge.fury.io/js/%40zondax%2Fizari-tools.svg)](https://badge.fury.io/js/%40zondax%2Fizari-tools)
+[![GithubActions](https://github.com/Zondax/izari-tools/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-tools/blob/master/.github/workflows/main.yaml)
 
-## Short description
+## Introduction
+Izari Tools is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, from web projects using React to backend applications using NodeJS. Izari Tools enables developers to easily manage and access blockchain data, including transactions, smart contracts, and assets.
+
+Izari Tools makes it easy for developers to incorporate blockchain technology into their projects, unlocking new possibilities for innovation and growth.
+
+Some key points: 
  - It is written in **Typescript**
  - It is composed by **pure JS**
+ - It is tested on **many environments**
  - It is transpiled to two different flavours: 
    - **CommonJS (es2015)** 
    - **ESM (esnext)**
@@ -22,6 +28,9 @@ Besides, you could check [this blog post](https://viglucci.io/articles/how-to-po
 ## Features
 
 ### Filecoin Node Comms
+
+Allow you to communicate to the filecoin node in order to fetch on-chain data (miners, fees, nonce, etc), broadcast new transactions and more. 
+
 | Feature                  | Supported?         |
 |--------------------------|--------------------|
 | Get next nonce           | :white_check_mark: |
@@ -31,6 +40,11 @@ Besides, you could check [this blog post](https://viglucci.io/articles/how-to-po
 
 
 ### Addresses
+
+Allow you to easily handle the entire set of filecoin address types available. You will be able to inspect how each address is composed, convert from 
+string format to bytes format, parse from both formats, etc. For more information about filecoin addresses, please 
+refer to [this doc](https://spec.filecoin.io/appendix/address/)
+
 | Feature           | ID (f0)              | SECP256K1 (f1)         | Actor (f2)            | BLS (f3)             | Delegated (f4)     |
 |-------------------|----------------------|------------------------|-----------------------|----------------------|--------------------|
 | Parse from string | :white_check_mark:   | :white_check_mark:     | :white_check_mark:    | :white_check_mark:   | :white_check_mark: |
@@ -44,6 +58,11 @@ Besides, you could check [this blog post](https://viglucci.io/articles/how-to-po
 | Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 
 ### Transactions
+
+In order to interact to the Filecoin network, transactions need to be sent to it. These features will allow you to create and manipulate them in an easy and
+intuitive way. From creating new ones with minimum arguments or serializing them to CBOR or JSON, to fetch values from the network that they need in order to 
+be valid to be sent. 
+
 | Feature                              | Supported?         |
 |--------------------------------------|--------------------|
 | Create new instance                  | :white_check_mark: |
@@ -54,6 +73,10 @@ Besides, you could check [this blog post](https://viglucci.io/articles/how-to-po
 | Prepare to send (get nonce and fees) | :white_check_mark: |
 
 ### Wallet
+
+These features group actions related to wallets itself: from creating new ones, deriving addresses 
+from it, and signing new txs to be broadcasted.   
+
 | Feature                              | Supported?         |
 |--------------------------------------|--------------------|
 | Generate new mnemonic                | :white_check_mark: |
@@ -136,8 +159,8 @@ that forced us to do it. It was done following the [jest documentation site](htt
 
 #### React
 - React app is based on create-react-app utility. It has been [ejected](https://create-react-app.dev/docs/available-scripts/#npm-run-eject) in order
-to configure webpack to polyfill some NodeJS native modules. In particular, you can find the custom configs added [here](https://github.com/Zondax/izari-filecoin-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L308)
-and [here](https://github.com/Zondax/izari-filecoin-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L693).
+to configure webpack to polyfill some NodeJS native modules. In particular, you can find the custom configs added [here](https://github.com/Zondax/izari-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L308)
+and [here](https://github.com/Zondax/izari-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L693).
 
 
 https://jestjs.io/docs/ecmascript-modules

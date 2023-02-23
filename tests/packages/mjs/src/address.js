@@ -1,4 +1,4 @@
-import { Address, ProtocolIndicator, Network, AddressDelegated } from '@zondax/izari-filecoin-tools'
+import { Address, ProtocolIndicator, Network, AddressDelegated } from '@zondax/izari-tools'
 import assert from 'assert'
 
 export async function run() {

@@ -1,4 +1,4 @@
-const { Wallet, Transaction } = require('@zondax/izari-filecoin-tools')
+const { Wallet, Transaction } = require('@zondax/izari-tools')
 const assert = require('assert')
 
 async function run() {
