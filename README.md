@@ -59,6 +59,17 @@ refer to [this doc](https://spec.filecoin.io/appendix/address/)
 | Get namespace     | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 | Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 
+#### Tokens
+
+Allow you to easily manage magnitudes used within Filecoin to do conversions between them, arithmetical operations, etc.
+
+| Feature                     | Atto               | Nano fil           | Whole              |
+|-----------------------------|--------------------|--------------------|--------------------|
+| Parse from string           | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Addition, subtraction, etc  | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Convert to other magnitudes | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Positive, negative, zero    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+
 #### Transactions
 
 In order to interact to the Filecoin network, transactions need to be sent to it. These features will allow you to create and manipulate them in an easy and
