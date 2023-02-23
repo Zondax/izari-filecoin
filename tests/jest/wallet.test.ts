@@ -88,7 +88,7 @@ describe('Wallet', () => {
           const tx = Transaction.fromJSON(txJSON)
           const sig = await Wallet.signTransaction(privKey, tx)
 
-          expect(sig.Data).toBe(signature.data)
+          expect(sig.Data.toString('base64')).toBe(signature.data)
           expect(sig.Type).toBe(signature.type)
         })
       })
@@ -100,7 +100,7 @@ describe('Wallet', () => {
           const tx = await Transaction.fromCBOR(Network.Mainnet, cbor)
           const sig = await Wallet.signTransaction(privKey, tx)
 
-          expect(sig.Data).toBe(signature.data)
+          expect(sig.Data.toString('base64')).toBe(signature.data)
           expect(sig.Type).toBe(signature.type)
         })
       })
