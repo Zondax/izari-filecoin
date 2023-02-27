@@ -3,59 +3,105 @@ import * as bip32Default from 'bip32'
 import * as ecc from '@bitcoinerlab/secp256k1'
 import secp256k1 from 'secp256k1'
 
-import { ExtendedKey } from './extendedKey.js'
-import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer } from './utils.js'
+import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer, getPayloadSECP256K1 } from './utils.js'
+import { Network, SignatureType } from '../address/constants.js'
+import { AccountData } from './types.js'
+import { AddressSecp256k1 } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
-import { Network, ProtocolIndicator } from '../address/constants.js'
 import { Signature } from './types.js'
 
 // You must wrap a tiny-secp256k1 compatible implementation
-const bip32 = bip32Default.BIP32Factory(ecc)
+const bip32_Secp256k1 = bip32Default.BIP32Factory(ecc)
 
 export class Wallet {
-  static generateMnemonic(): string {
-    // 256 so it generate 24 words
-    return bip39.generateMnemonic(256)
+  static generateMnemonic = (): string => bip39.generateMnemonic(256)
+
+  static mnemonicToSeed = (mnemonic: string, password?: string) => bip39.mnemonicToSeedSync(mnemonic, password)
+
+  static deriveAccount = (mnemonic: string, type: SignatureType, path: string, password?: string): AccountData => {
+    const seed = Wallet.mnemonicToSeed(mnemonic, password)
+    return Wallet.deriveAccountFromSeed(seed, type, path)
   }
 
-  static keyDeriveFromSeed(seed: string | Buffer, path: string): ExtendedKey {
+  static deriveAccountFromSeed = (seed: string | Buffer, type: SignatureType, path: string): AccountData => {
     if (typeof seed === 'string') seed = Buffer.from(seed, 'hex')
 
-    const masterKey = bip32.fromSeed(seed)
+    switch (type) {
+      case SignatureType.SECP256K1:
+        const masterKey = bip32_Secp256k1.fromSeed(seed)
+        const { privateKey } = masterKey.derivePath(path)
 
-    const childKey = masterKey.derivePath(path)
+        if (!privateKey) throw new Error('privateKey not generated')
 
-    if (!childKey.privateKey) throw new Error('privateKey not generated')
+        const network = getCoinTypeFromPath(path) === '1' ? Network.Testnet : Network.Mainnet
 
-    const network = getCoinTypeFromPath(path) === '1' ? Network.Testnet : Network.Mainnet
+        const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(network, privateKey)
 
-    return new ExtendedKey(network, childKey.privateKey)
-  }
+        return {
+          type,
+          privateKey,
+          publicKey,
+          address,
+          path,
+        }
 
-  static keyDerive(mnemonic: string, path: string, password?: string): ExtendedKey {
-    const seed = bip39.mnemonicToSeedSync(mnemonic, password)
-    return Wallet.keyDeriveFromSeed(seed, path)
-  }
-
-  static keyRecover(network: Network, privateKey: string | Buffer): ExtendedKey {
-    privateKey = tryToPrivateKeyBuffer(privateKey)
-    return new ExtendedKey(network, privateKey)
-  }
-
-  static signTransaction = async (privateKey: string | Buffer, tx: string | Transaction): Promise<Signature> => {
-    const serializedTx = typeof tx === 'string' ? Buffer.from(tx, 'hex') : await tx.serialize()
-
-    // verify format and convert to buffer if needed
-    const privateKeyBuff = tryToPrivateKeyBuffer(privateKey)
-
-    const txDigest = getDigest(serializedTx)
-    const signature = secp256k1.ecdsaSign(txDigest, privateKeyBuff)
-
-    const result: Signature = {
-      Data: Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]),
-      Type: ProtocolIndicator.SECP256K1,
+      default:
+        throw new Error('not supported yet')
     }
+  }
 
-    return result
+  static recoverAccount(network: Network, type: SignatureType, privateKey: string | Buffer, path?: string): AccountData {
+    switch (type) {
+      case SignatureType.SECP256K1:
+        privateKey = tryToPrivateKeyBuffer(privateKey)
+        const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(network, privateKey)
+
+        return {
+          type,
+          privateKey,
+          address,
+          publicKey,
+          path,
+        }
+
+      default:
+        throw new Error('not supported yet')
+    }
+  }
+
+  static signTransaction = async (accountData: Pick<AccountData, 'privateKey' | 'type'>, tx: Transaction): Promise<Signature> => {
+    const serializedTx = await tx.serialize()
+    const txDigest = getDigest(serializedTx)
+    const { privateKey, type } = accountData
+
+    switch (type) {
+      case SignatureType.SECP256K1:
+        const signature = secp256k1.ecdsaSign(txDigest, privateKey)
+
+        const result: Signature = {
+          Data: Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]),
+          Type: type,
+        }
+
+        return result
+
+      default:
+        throw new Error('not supported yet')
+    }
+  }
+
+  protected static getPublicSecp256k1FromPrivKey = (network: Network, privateKey: Buffer) => {
+    const pubKey = secp256k1.publicKeyCreate(privateKey)
+
+    const uncompressedPublicKey = new Uint8Array(65)
+    secp256k1.publicKeyConvert(pubKey, false, uncompressedPublicKey)
+    const uncompressedPublicKeyBuf = Buffer.from(uncompressedPublicKey)
+
+    const payload = getPayloadSECP256K1(uncompressedPublicKey)
+
+    return {
+      publicKey: uncompressedPublicKeyBuf,
+      address: new AddressSecp256k1(network, payload),
+    }
   }
 }

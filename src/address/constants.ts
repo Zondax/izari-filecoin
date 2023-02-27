@@ -1,3 +1,8 @@
+export enum SignatureType {
+  SECP256K1 = 1,
+  BLS = 3,
+}
+
 export enum ProtocolIndicator {
   ID = 0,
   SECP256K1 = 1,
