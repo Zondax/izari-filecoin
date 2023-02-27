@@ -1,9 +1,9 @@
 import { TransactionJSON } from '../transaction/types'
-import { Signature } from '../wallet/types'
+import { SignatureJSON } from '../wallet/types'
 
 export type SignedTransaction = {
   Message: TransactionJSON
-  Signature: Signature
+  Signature: SignatureJSON
 }
 
 export type RpcError = {

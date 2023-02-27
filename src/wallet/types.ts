@@ -1,5 +1,4 @@
 import { AddressBls, AddressSecp256k1 } from '../address/index.js'
-import { SignatureType } from '../address/constants.js'
 
 export type AccountData = AccountSecp256k1 | AccountBls
 
@@ -22,4 +21,14 @@ export type AccountBls = {
 export type Signature = {
   Data: Buffer
   Type: SignatureType
+}
+
+export type SignatureJSON = {
+  Data: string
+  Type: SignatureType
+}
+
+export enum SignatureType {
+  SECP256K1 = 1,
+  BLS = 3,
 }
