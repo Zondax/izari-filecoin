@@ -5,6 +5,8 @@ import { Address, AddressActor, AddressBls, AddressId, AddressSecp256k1 } from '
 import { Network, ProtocolIndicator } from '../../src/address/constants'
 import { InvalidProtocolIndicator } from '../../src/address/errors'
 
+jest.setTimeout(60 * 1000)
+
 const ADDRESSES_VECTOR = './vectors/addresses.json'
 
 type AddressTestCase = {

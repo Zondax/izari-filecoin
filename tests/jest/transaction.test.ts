@@ -4,6 +4,8 @@ import path from 'path'
 import { Network, Transaction } from '../../src'
 import { TransactionJSON } from '../../src/transaction/types'
 
+jest.setTimeout(60 * 1000)
+
 const TXS_VECTOR = './vectors/txs.json'
 
 type TxTestCase = {

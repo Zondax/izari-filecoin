@@ -5,6 +5,8 @@ import { Network, Transaction, Wallet } from '../../src'
 import { TransactionJSON } from '../../src/transaction/types'
 import { SignatureType } from '../../src/wallet/types'
 
+jest.setTimeout(60 * 1000)
+
 const WALLET_TEST_CASES_PATH = './vectors/wallets.json'
 const TXS_TEST_CASES_PATH = './vectors/txs.json'
 

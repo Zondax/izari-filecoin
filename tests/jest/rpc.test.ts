@@ -1,5 +1,7 @@
 import { RPC } from '../../src/rpc'
 
+jest.setTimeout(60 * 1000)
+
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
 if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
