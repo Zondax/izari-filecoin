@@ -1,9 +1,9 @@
-import { TransactionJSON } from '../transaction/types'
-import { Signature } from '../wallet/types'
+import { TransactionJSON } from '../transaction/types.js'
+import { SignatureJSON } from '../wallet/types.js'
 
 export type SignedTransaction = {
   Message: TransactionJSON
-  Signature: Signature
+  Signature: SignatureJSON
 }
 
 export type RpcError = {
@@ -26,20 +26,21 @@ export type GasEstimationResponse =
 
 export type StateWaitMsgResponse =
   | {
-      Message: { '/': string }
-      Receipt: { ExitCode: number; Return: string; GasUsed: number }
-      ReturnDec: string
-      TipSet: { '/': string }[]
-      Height: number
+      result: {
+        Message: { '/': string }
+        Receipt: { ExitCode: number; Return: string; GasUsed: number }
+        ReturnDec: string
+        TipSet: { '/': string }[]
+        Height: number
+      }
     }
   | RpcError
 
-export type MpoolPushResponse =
-  | {
-      ['/']: string
-    }
-  | RpcError
-
-export type SendSignMessageResponse = StateWaitMsgResponse | MpoolPushResponse
+export type MpoolPushOk = {
+  result: {
+    ['/']: string
+  }
+}
+export type MpoolPushResponse = MpoolPushOk | RpcError
 
 export type ReadStateResponse = { Balance: string; Code: { '/': string } } | RpcError

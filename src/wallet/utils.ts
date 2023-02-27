@@ -1,5 +1,6 @@
 import blake from 'blakejs'
 import { InvalidPrivateKeyFormat } from '../address/errors.js'
+import { SignatureType } from './types.js'
 
 const CID_PREFIX = Buffer.from([0x01, 0x71, 0xa0, 0xe4, 0x02, 0x20])
 
@@ -38,3 +39,5 @@ export const getPayloadSECP256K1 = (uncompressedPublicKey: Uint8Array): Buffer =
   blake.blake2bUpdate(blakeCtx, uncompressedPublicKey)
   return Buffer.from(blake.blake2bFinal(blakeCtx))
 }
+
+export const isSignatureType = (type: number): type is SignatureType => SignatureType.BLS === type || SignatureType.SECP256K1 === type

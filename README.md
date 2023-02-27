@@ -87,8 +87,8 @@ be valid to be sent.
 
 #### Wallet
 
-These features group actions related to wallets itself: from creating new ones, deriving addresses 
-from it, and signing new txs to be broadcast.   
+These features group actions related to wallets itself: from creating new ones, deriving addresses
+from it, and signing new txs to be broadcast.
 
 | Feature                  | f1/secp256k1       | f3/bls             |
 |--------------------------|--------------------|--------------------|
@@ -96,6 +96,15 @@ from it, and signing new txs to be broadcast.
 | Derive key from seed     | :white_check_mark: | :x:                |
 | Derive key from mnemonic | :white_check_mark: | :x:                |
 | Sign transactions        | :white_check_mark: | :x:                |
+
+#### Account
+
+These features group actions related to high-level account features like send funds, fetch balances, etc.
+
+| Feature               | Supported?         |
+|-----------------------|--------------------|
+| Send funds to address | :white_check_mark: |
+| Fetch current balance | :x:                |
 
 
 

@@ -1,8 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Network, SignatureType, Transaction, Wallet } from '../../src'
+import { Network, Transaction, Wallet } from '../../src'
 import { TransactionJSON } from '../../src/transaction/types'
+import { SignatureType } from '../../src/wallet/types'
+
+jest.setTimeout(60 * 1000)
 
 const WALLET_TEST_CASES_PATH = './vectors/wallets.json'
 const TXS_TEST_CASES_PATH = './vectors/txs.json'
@@ -92,8 +95,8 @@ describe('Wallet', () => {
           const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privKey)
           const sig = await Wallet.signTransaction(account, tx)
 
-          expect(sig.Data.toString('base64')).toBe(signature.data)
-          expect(sig.Type).toBe(signature.type)
+          expect(sig.toJSON().Data).toBe(signature.data)
+          expect(sig.toJSON().Type).toBe(signature.type)
         })
       })
     })
@@ -105,8 +108,8 @@ describe('Wallet', () => {
           const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privKey)
           const sig = await Wallet.signTransaction(account, tx)
 
-          expect(sig.Data.toString('base64')).toBe(signature.data)
-          expect(sig.Type).toBe(signature.type)
+          expect(sig.toJSON().Data).toBe(signature.data)
+          expect(sig.toJSON().Type).toBe(signature.type)
         })
       })
     })

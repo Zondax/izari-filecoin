@@ -3,12 +3,11 @@ import * as bip32Default from 'bip32'
 import * as ecc from '@bitcoinerlab/secp256k1'
 import secp256k1 from 'secp256k1'
 
-import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer, getPayloadSECP256K1 } from './utils.js'
-import { Network, SignatureType } from '../address/constants.js'
-import { AccountData } from './types.js'
+import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer, getPayloadSECP256K1, isSignatureType } from './utils.js'
+import { Network } from '../address/constants.js'
+import { AccountData, SignatureType } from './types.js'
 import { AddressSecp256k1 } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
-import { Signature } from './types.js'
 
 // You must wrap a tiny-secp256k1 compatible implementation
 const bip32_Secp256k1 = bip32Default.BIP32Factory(ecc)
@@ -80,12 +79,7 @@ export class Wallet {
       case SignatureType.SECP256K1: {
         const signature = secp256k1.ecdsaSign(txDigest, privateKey)
 
-        const result: Signature = {
-          Data: Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]),
-          Type: type,
-        }
-
-        return result
+        return new Signature(type, Buffer.concat([Buffer.from(signature.signature), Buffer.from([signature.recid])]))
       }
 
       default:
@@ -107,4 +101,18 @@ export class Wallet {
       address: new AddressSecp256k1(network, payload),
     }
   }
+}
+
+export class Signature {
+  constructor(protected type: SignatureType, protected data: Buffer) {}
+
+  fromJSON = (input: unknown): Signature => {
+    if (typeof input !== 'object' || input === null) throw new Error('input should be an object')
+    if (!('Type' in input) || typeof input.Type !== 'number' || isSignatureType(input.Type)) throw new Error("'Type' should be a number")
+    if (!('Data' in input) || typeof input.Data !== 'string') throw new Error("'Data' should be a base64 encoded string")
+
+    return new Signature(input.Type, Buffer.from(input.Data, 'base64'))
+  }
+
+  toJSON = () => ({ Type: this.type, Data: this.data.toString('base64') })
 }

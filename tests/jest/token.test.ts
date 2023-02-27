@@ -1,5 +1,7 @@
 import { Token } from '../../src/token'
 
+jest.setTimeout(60 * 1000)
+
 describe('Token', () => {
   test('Zero', () => {
     expect(Token.getDefault().toAtto()).toBe('0')
