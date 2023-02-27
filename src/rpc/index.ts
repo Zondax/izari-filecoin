@@ -96,7 +96,10 @@ export class RPC {
 
   private handleError<T>(e: unknown): T {
     if (axios.isAxiosError(e)) {
-      if (e.response) return e.response.data as T
+      if (e.response) {
+        if (e.response.data) return e.response.data as T
+        if (e.response.statusText) return { error: { message: `${e.response.status} - ${e.response.statusText}` } } as T
+      }
       if (e.request) return { error: { message: 'request made but no response received' } } as T
       if (e.message) return { error: { message: e.message } } as T
     }
