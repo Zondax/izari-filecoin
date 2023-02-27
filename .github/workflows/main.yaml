@@ -38,3 +38,6 @@ jobs:
         env:
           NODE_RPC_URL: ${{ secrets.NODE_RPC_URL }}
           NODE_RPC_TOKEN: ${{ secrets.NODE_RPC_TOKEN }}
+          ACCOUNT_MNEMONIC: ${{ secrets.ACCOUNT_MNEMONIC }}
+          SENDER_ACCOUNT_PATH: ${{ secrets.SENDER_ACCOUNT_PATH }}
+          RECEIVER_ACCOUNT_PATH: ${{ secrets.RECEIVER_ACCOUNT_PATH }}
