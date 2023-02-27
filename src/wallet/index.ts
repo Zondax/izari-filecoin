@@ -27,7 +27,7 @@ export class Wallet {
     if (typeof seed === 'string') seed = Buffer.from(seed, 'hex')
 
     switch (type) {
-      case SignatureType.SECP256K1:
+      case SignatureType.SECP256K1: {
         const masterKey = bip32_Secp256k1.fromSeed(seed)
         const { privateKey } = masterKey.derivePath(path)
 
@@ -44,6 +44,7 @@ export class Wallet {
           address,
           path,
         }
+      }
 
       default:
         throw new Error('not supported yet')
@@ -52,7 +53,7 @@ export class Wallet {
 
   static recoverAccount(network: Network, type: SignatureType, privateKey: string | Buffer, path?: string): AccountData {
     switch (type) {
-      case SignatureType.SECP256K1:
+      case SignatureType.SECP256K1: {
         privateKey = tryToPrivateKeyBuffer(privateKey)
         const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(network, privateKey)
 
@@ -63,6 +64,7 @@ export class Wallet {
           publicKey,
           path,
         }
+      }
 
       default:
         throw new Error('not supported yet')
@@ -75,7 +77,7 @@ export class Wallet {
     const { privateKey, type } = accountData
 
     switch (type) {
-      case SignatureType.SECP256K1:
+      case SignatureType.SECP256K1: {
         const signature = secp256k1.ecdsaSign(txDigest, privateKey)
 
         const result: Signature = {
@@ -84,6 +86,7 @@ export class Wallet {
         }
 
         return result
+      }
 
       default:
         throw new Error('not supported yet')
