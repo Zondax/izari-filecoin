@@ -2,14 +2,14 @@ import axios, { AxiosInstance } from 'axios'
 import {
   GasEstimationResponse,
   GetNonceResponse,
+  MpoolPushOk,
   MpoolPushResponse,
   ReadStateResponse,
   RpcError,
-  SendSignMessageResponse,
   SignedTransaction,
   StateWaitMsgResponse,
 } from './types.js'
-import { TransactionJSON } from '../transaction/types'
+import { TransactionJSON } from '../transaction/types.js'
 
 type Args = { url: string; token: string }
 
@@ -37,7 +37,7 @@ export class RPC {
     }
   }
 
-  async broadcastTransaction(signedTx: SignedTransaction, waitTxToBeConfirmed?: boolean): Promise<SendSignMessageResponse> {
+  async broadcastTransaction(signedTx: SignedTransaction): Promise<MpoolPushResponse> {
     try {
       const mpoolResponse = await this.fetcher.post<MpoolPushResponse>('', {
         jsonrpc: '2.0',
@@ -46,19 +46,7 @@ export class RPC {
         params: [signedTx],
       })
 
-      if (!waitTxToBeConfirmed) return mpoolResponse.data
-      if ('error' in mpoolResponse.data) return mpoolResponse.data
-
-      if (!('result' in mpoolResponse.data)) throw new Error('response is empty')
-
-      const stateWaitResponse = await this.fetcher.post<StateWaitMsgResponse>('', {
-        jsonrpc: '2.0',
-        method: 'Filecoin.StateWaitMsg',
-        id: 1,
-        params: [mpoolResponse.data.result, 0, null, false],
-      })
-
-      return stateWaitResponse.data
+      return mpoolResponse.data
     } catch (e: unknown) {
       return this.handleError<RpcError>(e)
     }
@@ -89,6 +77,20 @@ export class RPC {
       })
 
       return response.data as ReadStateResponse
+    } catch (e: unknown) {
+      return this.handleError<RpcError>(e)
+    }
+  }
+
+  async waitMsgState(cid: MpoolPushOk['result']): Promise<StateWaitMsgResponse> {
+    try {
+      const response = await this.fetcher.post('', {
+        jsonrpc: '2.0',
+        method: 'Filecoin.StateWaitMsg',
+        id: 1,
+        params: [cid, 0, null, false],
+      })
+      return response.data as StateWaitMsgResponse
     } catch (e: unknown) {
       return this.handleError<RpcError>(e)
     }
