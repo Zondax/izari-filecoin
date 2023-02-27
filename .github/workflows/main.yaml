@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install libnss3
+          sudo apt install -y libnss3
           yarn install
       - name: Lint
         run: yarn lint
