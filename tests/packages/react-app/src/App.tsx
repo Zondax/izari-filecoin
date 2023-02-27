@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Address, Wallet, Transaction, SignatureType } from '@zondax/izari-tools'
+import { Address, Wallet, Transaction, Signature, SignatureType } from '@zondax/izari-tools'
 
 import logo from './logo.svg'
 import './App.css'
@@ -25,7 +25,7 @@ const rawTx = {
 }
 
 function App() {
-  const [signature, setSignature] = useState<{ Data: Buffer; Type: number } | null>(null)
+  const [signature, setSignature] = useState<Signature | null>(null)
   const address = Address.fromString('t08666')
   const mnemonic = Wallet.generateMnemonic()
   const account = Wallet.deriveAccount(
@@ -58,8 +58,8 @@ function App() {
 
         <br />
 
-        {signature ? <div id={'signature-data'}>{`Signature Data: ${signature.Data.toString('base64')}`}</div> : null}
-        {signature ? <div id={'signature-type'}>{`Signature Type: ${signature.Type}`}</div> : null}
+        {signature ? <div id={'signature-data'}>{`Signature Data: ${signature.toJSON().Data}`}</div> : null}
+        {signature ? <div id={'signature-type'}>{`Signature Type: ${signature.toJSON().Type}`}</div> : null}
       </header>
     </div>
   )
