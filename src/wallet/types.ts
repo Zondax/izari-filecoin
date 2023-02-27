@@ -18,11 +18,6 @@ export type AccountBls = {
   address: AddressBls
 }
 
-export type Signature = {
-  Data: Buffer
-  Type: SignatureType
-}
-
 export type SignatureJSON = {
   Data: string
   Type: SignatureType

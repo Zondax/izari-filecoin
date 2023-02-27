@@ -40,6 +40,6 @@ export async function run() {
 
   const accountData = Wallet.recoverAccount(Network.Mainnet, 1, rawTx.privKey)
   const signature = await Wallet.signTransaction(accountData, Transaction.fromJSON(rawTx.tx))
-  assert(signature.Data.toString('base64') === rawTx.signature.data)
-  assert(signature.Type === rawTx.signature.type)
+  assert(signature.toJSON().Data === rawTx.signature.data)
+  assert(signature.toJSON().Type === rawTx.signature.type)
 }
