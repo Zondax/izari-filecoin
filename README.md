@@ -88,14 +88,14 @@ be valid to be sent.
 #### Wallet
 
 These features group actions related to wallets itself: from creating new ones, deriving addresses 
-from it, and signing new txs to be broadcasted.   
+from it, and signing new txs to be broadcast.   
 
-| Feature                              | Supported?         |
-|--------------------------------------|--------------------|
-| Generate new mnemonic                | :white_check_mark: |
-| Derive key from seed                 | :white_check_mark: |
-| Derive key from mnemonic             | :white_check_mark: |
-| Sign transactions (f1/secp256k1)     | :white_check_mark: |
+| Feature                  | f1/secp256k1       | f3/bls             |
+|--------------------------|--------------------|--------------------|
+| Generate new mnemonic    | :white_check_mark: | :white_check_mark: |
+| Derive key from seed     | :white_check_mark: | :x:                |
+| Derive key from mnemonic | :white_check_mark: | :x:                |
+| Sign transactions        | :white_check_mark: | :x:                |
 
 
 
