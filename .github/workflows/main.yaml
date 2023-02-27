@@ -27,7 +27,7 @@ jobs:
         run: npm install -g yalc
       - name: Install dependencies
         run: |
-          sudo apt install libnss
+          sudo apt-get install libnss
           yarn install
       - name: Lint
         run: yarn lint
