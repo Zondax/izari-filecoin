@@ -1,4 +1,4 @@
-const { Wallet, Transaction } = require('@zondax/izari-tools')
+const { Wallet, Transaction, Network } = require('@zondax/izari-tools')
 const assert = require('assert')
 
 async function run() {
@@ -8,14 +8,17 @@ async function run() {
     assert(words.length === 24)
   }
 
-  const extendedKey = Wallet.keyDerive(
+  const account = Wallet.deriveAccount(
     'raw include ecology social turtle still perfect trip dance food welcome aunt patient very toss very program estate diet portion city camera loop guess',
+    1,
     "44'/461'/0'/0/0",
     undefined
   )
-  assert(extendedKey.address === 'f17levgrkmq7jeloew44ixqokvl4qdozvmacidp7i')
-  assert(extendedKey.publicKey.length > 0)
-  assert(extendedKey.privateKey.length > 0)
+  assert(account.address.toString() === 'f17levgrkmq7jeloew44ixqokvl4qdozvmacidp7i')
+  assert(account.type === 1)
+  assert(account.path === "44'/461'/0'/0/0")
+  assert(account.publicKey.length > 0)
+  assert(account.privateKey.length > 0)
 
   const rawTx = {
     tx: {
@@ -34,7 +37,8 @@ async function run() {
     privKey: '/mTHfeTNwxj1EYjBgbk7ZORx5nKe4ShunXXtvVQ58CA=',
   }
 
-  const signature = await Wallet.signTransaction(rawTx.privKey, Transaction.fromJSON(rawTx.tx))
+  const accountData = Wallet.recoverAccount(Network.Mainnet, 1, rawTx.privKey)
+  const signature = await Wallet.signTransaction(accountData, Transaction.fromJSON(rawTx.tx))
   assert(signature.Data.toString('base64') === rawTx.signature.data)
   assert(signature.Type === rawTx.signature.type)
 }

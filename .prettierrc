@@ -3,7 +3,7 @@
   "arrowParens": "avoid",
   "semi": false,
   "useTabs": false,
-  "printWidth": 140,
+  "printWidth": 160,
   "tabWidth": 2,
   "importOrder": [
     "^@(.*)/(.*)$",

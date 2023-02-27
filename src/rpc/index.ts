@@ -37,7 +37,7 @@ export class RPC {
     }
   }
 
-  async broadcastTransaction(signedTx: SignedTransaction, skipStateWaitMsg?: boolean): Promise<SendSignMessageResponse> {
+  async broadcastTransaction(signedTx: SignedTransaction, waitTxToBeConfirmed?: boolean): Promise<SendSignMessageResponse> {
     try {
       const mpoolResponse = await this.fetcher.post<MpoolPushResponse>('', {
         jsonrpc: '2.0',
@@ -46,7 +46,7 @@ export class RPC {
         params: [signedTx],
       })
 
-      if (skipStateWaitMsg) return mpoolResponse.data
+      if (!waitTxToBeConfirmed) return mpoolResponse.data
       if ('error' in mpoolResponse.data) return mpoolResponse.data
 
       if (!('result' in mpoolResponse.data)) throw new Error('response is empty')

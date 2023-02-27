@@ -20,13 +20,6 @@ export function getDigest(message: Buffer): Buffer {
   return Buffer.from(blake.blake2bFinal(blakeCtx))
 }
 
-export const getPayloadSECP256K1 = (uncompressedPublicKey: Uint8Array): Buffer => {
-  // blake2b-160
-  const blakeCtx = blake.blake2bInit(20)
-  blake.blake2bUpdate(blakeCtx, uncompressedPublicKey)
-  return Buffer.from(blake.blake2bFinal(blakeCtx))
-}
-
 export const tryToPrivateKeyBuffer = (privateKey: string | Buffer): Buffer => {
   if (typeof privateKey === 'string') {
     // We should have a padding!
@@ -37,4 +30,11 @@ export const tryToPrivateKeyBuffer = (privateKey: string | Buffer): Buffer => {
   if (privateKey.length !== 32) throw new InvalidPrivateKeyFormat()
 
   return privateKey
+}
+
+export const getPayloadSECP256K1 = (uncompressedPublicKey: Uint8Array): Buffer => {
+  // blake2b-160
+  const blakeCtx = blake.blake2bInit(20)
+  blake.blake2bUpdate(blakeCtx, uncompressedPublicKey)
+  return Buffer.from(blake.blake2bFinal(blakeCtx))
 }

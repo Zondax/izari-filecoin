@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Network, Transaction, Wallet } from '../../src'
+import { Network, SignatureType, Transaction, Wallet } from '../../src'
 import { TransactionJSON } from '../../src/transaction/types'
 
 const WALLET_TEST_CASES_PATH = './vectors/wallets.json'
@@ -9,7 +9,7 @@ const TXS_TEST_CASES_PATH = './vectors/txs.json'
 
 type WalletTestCase = {
   mnemonic: string
-  addresses: [path: string, address: string][]
+  addresses: [type: number, path: string, address: string][]
 }
 
 type TxTestCase = {
@@ -36,30 +36,33 @@ describe('Wallet', () => {
       const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, WALLET_TEST_CASES_PATH), 'utf-8')) as WalletTestCase[]
 
       vectors.forEach(({ addresses, mnemonic }) => {
-        addresses.forEach(([path, address]) => {
-          const extendedKey = Wallet.keyDerive(mnemonic, path, undefined)
-          expect(extendedKey.address).toBe(address)
-          expect(extendedKey.publicKey.length).toBeGreaterThan(0)
-          expect(extendedKey.privateKey.length).toBeGreaterThan(0)
+        addresses.forEach(([type, path, address]) => {
+          const account = Wallet.deriveAccount(mnemonic, type, path)
+
+          expect(account.address.toString()).toBe(address)
+          expect(account.publicKey.length).toBeGreaterThan(0)
+          expect(account.privateKey.length).toBeGreaterThan(0)
+          expect(account.path).toBe(path)
         })
       })
     })
 
     test('Short mnemonic', () => {
       const path = "44'/461'/0'/0/1"
-      const extendedKey = Wallet.keyDerive('asadsd', path, undefined)
+      const account = Wallet.deriveAccount('asadsd', SignatureType.SECP256K1, path)
 
-      expect(extendedKey.address).toBeDefined()
-      expect(extendedKey.address.length).toBeGreaterThan(0)
-      expect(extendedKey.publicKey.length).toBeGreaterThan(0)
-      expect(extendedKey.privateKey.length).toBeGreaterThan(0)
+      expect(account.address).toBeDefined()
+      expect(account.address.toBytes().length).toBeGreaterThan(0)
+      expect(account.publicKey.length).toBeGreaterThan(0)
+      expect(account.privateKey.length).toBeGreaterThan(0)
+      expect(account.path).toBe(path)
     })
 
     test('Wrong path', () => {
       expect(() => {
         const mnemonic =
           'raw include ecology social turtle still perfect trip dance food welcome aunt patient very toss very program estate diet portion city camera loop guess'
-        const extendedKey = Wallet.keyDerive(mnemonic, 'aaaa', undefined)
+        const extendedKey = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, 'aaaa')
       }).toThrow('Expected BIP32Path, got String "aaaa"')
     })
   })
@@ -68,13 +71,13 @@ describe('Wallet', () => {
     const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, WALLET_TEST_CASES_PATH), 'utf-8')) as WalletTestCase[]
 
     vectors.forEach(({ addresses, mnemonic }) => {
-      addresses.forEach(([path, address]) => {
-        const extendedKey = Wallet.keyDerive(mnemonic, path, undefined)
-        const recoveredKey = Wallet.keyRecover(Network.Mainnet, extendedKey.privateKey.toString('base64'))
+      addresses.forEach(([type, path, address]) => {
+        const account = Wallet.deriveAccount(mnemonic, type, path)
+        const recoveredAccount = Wallet.recoverAccount(Network.Mainnet, type, account.privateKey.toString('base64'))
 
-        expect(extendedKey.address).toStrictEqual(recoveredKey.address)
-        expect(extendedKey.publicKey).toStrictEqual(recoveredKey.publicKey)
-        expect(extendedKey.privateKey).toStrictEqual(recoveredKey.privateKey)
+        expect(recoveredAccount.address.toString()).toBe(account.address.toString())
+        expect(recoveredAccount.publicKey).toStrictEqual(account.publicKey)
+        expect(recoveredAccount.privateKey).toStrictEqual(account.privateKey)
       })
     })
   })
@@ -86,7 +89,8 @@ describe('Wallet', () => {
       vectors.forEach(({ tx: txJSON, signature, privKey }, i) => {
         test('Tx ' + i, async () => {
           const tx = Transaction.fromJSON(txJSON)
-          const sig = await Wallet.signTransaction(privKey, tx)
+          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privKey)
+          const sig = await Wallet.signTransaction(account, tx)
 
           expect(sig.Data.toString('base64')).toBe(signature.data)
           expect(sig.Type).toBe(signature.type)
@@ -98,7 +102,8 @@ describe('Wallet', () => {
       vectors.forEach(({ cbor, signature, privKey }, i) => {
         test('Tx ' + i, async () => {
           const tx = await Transaction.fromCBOR(Network.Mainnet, cbor)
-          const sig = await Wallet.signTransaction(privKey, tx)
+          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privKey)
+          const sig = await Wallet.signTransaction(account, tx)
 
           expect(sig.Data.toString('base64')).toBe(signature.data)
           expect(sig.Type).toBe(signature.type)

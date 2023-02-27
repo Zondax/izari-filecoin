@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Address, Wallet, Transaction } from '@zondax/izari-tools'
+import { Address, Wallet, Transaction, SignatureType } from '@zondax/izari-tools'
 
 import logo from './logo.svg'
 import './App.css'
@@ -28,13 +28,15 @@ function App() {
   const [signature, setSignature] = useState<{ Data: Buffer; Type: number } | null>(null)
   const address = Address.fromString('t08666')
   const mnemonic = Wallet.generateMnemonic()
-  const extendedKey = Wallet.keyDerive(
+  const account = Wallet.deriveAccount(
     'bundle hour bird man lyrics glare shrug pepper leader better illegal expect outdoor duck crew universe amount language model cabbage inhale shine accident inmate',
+    SignatureType.SECP256K1,
     "44'/461'/1'/0/0"
   )
 
   useEffect(() => {
-    Wallet.signTransaction(rawTx.privKey, Transaction.fromJSON(rawTx.tx)).then(sig => {
+    const partialAccount = { privateKey: Buffer.from(rawTx.privKey, 'base64'), type: 1 }
+    Wallet.signTransaction(partialAccount, Transaction.fromJSON(rawTx.tx)).then(sig => {
       setSignature(sig)
     })
   }, [])
@@ -52,7 +54,7 @@ function App() {
         <br />
 
         <div id={'mnemonic'}>{`Mnemonic: ${mnemonic}`}</div>
-        <div id={'address'}>{`Address: ${extendedKey.address}`}</div>
+        <div id={'address'}>{`Address: ${account.address.toString()}`}</div>
 
         <br />
 

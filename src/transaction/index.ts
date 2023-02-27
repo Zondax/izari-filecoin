@@ -143,7 +143,7 @@ export class Transaction {
     return Buffer.from(cbor.encode(message_to_encode))
   }
 
-  prepareToSend = async (nodeRpc: RPC): Promise<void> => {
+  prepareToSend = async (nodeRpc: RPC): Promise<Transaction> => {
     const nonceResult = await nodeRpc.getNonce(this.from.toString())
     if ('error' in nonceResult) throw new Error(nonceResult.error.message)
 
@@ -155,5 +155,7 @@ export class Transaction {
     this.gasFeeCap = gasResult.result.GasFeeCap
     this.gasLimit = gasResult.result.GasLimit
     this.gasPremium = gasResult.result.GasPremium
+
+    return this
   }
 }
