@@ -2,8 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { Network, Transaction, Wallet } from '../../src'
-import { TransactionJSON } from '../../src/transaction/types'
-import { SignatureType } from '../../src/wallet/types'
+import { TransactionJSON, SignatureType } from '../../src/types'
 
 jest.setTimeout(60 * 1000)
 

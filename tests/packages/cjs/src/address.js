@@ -1,4 +1,5 @@
-const { Address, ProtocolIndicator, Network } = require('@zondax/izari-tools')
+const { Address } = require('@zondax/izari-tools/address')
+const { ProtocolIndicator, Network } = require('@zondax/izari-tools/types')
 const assert = require('assert')
 
 function run() {

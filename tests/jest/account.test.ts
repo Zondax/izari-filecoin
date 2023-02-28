@@ -2,7 +2,7 @@ import { Account } from '../../src/account'
 import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
 import { Token } from '../../src/token'
-import { SignatureType } from '../../src/wallet/types'
+import { SignatureType } from '../../src/types'
 
 jest.setTimeout(60 * 1000)
 

@@ -1,4 +1,5 @@
-const { Transaction, Network } = require('@zondax/izari-tools')
+const { Transaction } = require('@zondax/izari-tools/transaction')
+const { Network } = require('@zondax/izari-tools/types')
 const assert = require('assert')
 
 async function run() {
