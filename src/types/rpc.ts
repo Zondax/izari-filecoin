@@ -1,5 +1,5 @@
-import { TransactionJSON } from '../transaction/types.js'
-import { SignatureJSON } from '../wallet/types.js'
+import { TransactionJSON } from './transaction.js'
+import { SignatureJSON } from './wallet.js'
 
 export type SignedTransaction = {
   Message: TransactionJSON

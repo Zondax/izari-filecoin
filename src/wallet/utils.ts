@@ -1,6 +1,6 @@
 import blake from 'blakejs'
 import { InvalidPrivateKeyFormat } from '../address/errors.js'
-import { SignatureType } from './types.js'
+import { SignatureType } from '../types/wallet.js'
 
 const CID_PREFIX = Buffer.from([0x01, 0x71, 0xa0, 0xe4, 0x02, 0x20])
 

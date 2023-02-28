@@ -2,9 +2,8 @@ import BN from 'bn.js'
 
 import { Address } from '../address/index.js'
 import { serializeBigNum } from './utils.js'
-import { Network } from '../address/constants.js'
 import { RPC } from '../rpc/index.js'
-import { TransactionJSON, TxInputData, TxVersion } from './types.js'
+import { TransactionJSON, TxInputData, TxVersion, Network } from '../types/index.js'
 import { IpldDagCbor } from '../external/dag-cbor.js'
 import { waitFor } from '../utils/sleep.js'
 
@@ -77,26 +76,20 @@ export class Transaction {
 
     if (!('From' in message) || typeof message['From'] !== 'string') throw new Error("'From' is a required field and has to be a 'string'")
 
-    if (!('Nonce' in message) || typeof message['Nonce'] !== 'number')
-      throw new Error("'Nonce' is a required field and has to be a 'number'")
+    if (!('Nonce' in message) || typeof message['Nonce'] !== 'number') throw new Error("'Nonce' is a required field and has to be a 'number'")
 
     if (!('Value' in message) || typeof message['Value'] !== 'string' || message['Value'] === '' || message['Value'].includes('-'))
       throw new Error("'Value' is a required field and has to be a 'string' but not empty or negative")
 
-    if (!('GasFeeCap' in message) || typeof message['GasFeeCap'] !== 'string')
-      throw new Error("'GasFeeCap' is a required field and has to be a 'string'")
+    if (!('GasFeeCap' in message) || typeof message['GasFeeCap'] !== 'string') throw new Error("'GasFeeCap' is a required field and has to be a 'string'")
 
-    if (!('GasPremium' in message) || typeof message['GasPremium'] !== 'string')
-      throw new Error("'GasPremium' is a required field and has to be a 'string'")
+    if (!('GasPremium' in message) || typeof message['GasPremium'] !== 'string') throw new Error("'GasPremium' is a required field and has to be a 'string'")
 
-    if (!('GasLimit' in message) || typeof message['GasLimit'] !== 'number')
-      throw new Error("'GasLimit' is a required field and has to be a 'number'")
+    if (!('GasLimit' in message) || typeof message['GasLimit'] !== 'number') throw new Error("'GasLimit' is a required field and has to be a 'number'")
 
-    if (!('Method' in message) || typeof message['Method'] !== 'number')
-      throw new Error("'Method' is a required field and has to be a 'number'")
+    if (!('Method' in message) || typeof message['Method'] !== 'number') throw new Error("'Method' is a required field and has to be a 'number'")
 
-    if (!('Params' in message) || typeof message['Params'] !== 'string')
-      throw new Error("'Params' is a required field and has to be a 'string'")
+    if (!('Params' in message) || typeof message['Params'] !== 'string') throw new Error("'Params' is a required field and has to be a 'string'")
 
     return new Transaction(
       TxVersion.Zero,
