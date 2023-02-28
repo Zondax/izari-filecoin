@@ -33,9 +33,9 @@
       "import": "./dist/mjs/account/index.js",
       "require": "./dist/cjs/account/index.js"
     },
-    "./types": {
-      "import": "./dist/mjs/types/index.js",
-      "require": "./dist/cjs/types/index.js"
+    "./artifacts": {
+      "import": "./dist/mjs/artifacts/index.js",
+      "require": "./dist/cjs/artifacts/index.js"
     }
   },
   "scripts": {

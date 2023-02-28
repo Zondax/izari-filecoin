@@ -1,6 +1,6 @@
 import { Wallet } from '@zondax/izari-tools/wallet'
 import { Transaction } from '@zondax/izari-tools/transaction'
-import { Network, SignatureType } from '@zondax/izari-tools/types'
+import { Network, SignatureType } from '@zondax/izari-tools/artifacts'
 
 import assert from 'assert'
 

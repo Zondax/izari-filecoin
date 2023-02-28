@@ -1,5 +1,5 @@
 import { Address } from '@zondax/izari-tools/address'
-import { ProtocolIndicator, Network } from '@zondax/izari-tools/types'
+import { ProtocolIndicator, Network } from '@zondax/izari-tools/artifacts'
 import assert from 'assert'
 
 export async function run() {

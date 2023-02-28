@@ -3,7 +3,7 @@ import path from 'path'
 import BN from 'bn.js'
 
 import { Address, AddressActor, AddressBls, AddressId, AddressSecp256k1 } from '../../src/address'
-import { Network, ProtocolIndicator } from '../../src/types/address'
+import { Network, ProtocolIndicator } from '../../src/artifacts/address'
 import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../src/address/errors'
 
 jest.setTimeout(60 * 1000)

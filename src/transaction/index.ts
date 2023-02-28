@@ -3,7 +3,7 @@ import BN from 'bn.js'
 import { Address } from '../address/index.js'
 import { serializeBigNum } from './utils.js'
 import { RPC } from '../rpc/index.js'
-import { TransactionJSON, TxInputData, TxVersion, Network } from '../types/index.js'
+import { TransactionJSON, TxInputData, TxVersion, Network } from '../artifacts/index.js'
 import { IpldDagCbor } from '../external/dag-cbor.js'
 import { waitFor } from '../utils/sleep.js'
 

@@ -2,7 +2,7 @@ import { Account } from '../../src/account'
 import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
 import { Token } from '../../src/token'
-import { SignatureType } from '../../src/types'
+import { SignatureType } from '../../src/artifacts'
 
 jest.setTimeout(60 * 1000)
 
@@ -25,9 +25,15 @@ describe('Account', () => {
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path)
 
     const cid = await Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('100'))
+    expect(cid).toBeDefined()
+    expect(typeof cid).toBe('string')
+  })
 
-    expect('error' in cid).toBe(false)
-    expect('result' in cid).toBe(true)
-    if ('result' in cid) expect(cid.result['/']).toBeDefined()
+  test('Balance', async () => {
+    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
+
+    const balance = await Account.getBalance(rpcNode, senderAccountData)
+    expect(balance.gt(Token.getDefault())).toBeTruthy()
   })
 })

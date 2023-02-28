@@ -1,6 +1,6 @@
 const { Wallet } = require('@zondax/izari-tools/wallet')
 const { Transaction } = require('@zondax/izari-tools/transaction')
-const { Network } = require('@zondax/izari-tools/types')
+const { Network } = require('@zondax/izari-tools/artifacts')
 
 const assert = require('assert')
 

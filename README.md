@@ -40,7 +40,6 @@ Allow you to communicate to the filecoin node in order to fetch on-chain data (m
 | Broadcast a new tx       | :white_check_mark: |
 | Read tx state            | :white_check_mark: |
 
-
 #### Addresses
 
 Allow you to easily handle the entire set of filecoin address types available. You will be able to inspect how each address is composed, convert from 
@@ -101,12 +100,69 @@ from it, and signing new txs to be broadcast.
 
 These features group actions related to high-level account features like send funds, fetch balances, etc.
 
-| Feature               | Supported?         |
-|-----------------------|--------------------|
-| Send funds to address | :white_check_mark: |
-| Fetch current balance | :x:                |
+| Feature               | Supported?          |
+|-----------------------|---------------------|
+| Send funds to address | :white_check_mark:  |
+| Fetch current balance | :white_check_mark:  |
 
+## Usage
 
+### Install 
+
+Just run the following command to add the package to your project
+
+```yarn
+yarn add @zondax/izari-tools
+```
+or 
+```npm
+npm install --save @zondax/izari-tools
+```
+
+### Use
+The package can be imported easily on any place you need it. Choose the way to import it based on the loader module you use. 
+
+For ESM modules
+```typescript
+import { Wallet, Transaction, Account } from "@zondax/izari-tools"
+```
+
+For CommonJS modules
+```typescript
+const { Wallet, Transaction, Account } = require("@zondax/izari-tools")
+```
+
+### Specific features
+Inside this package there are several entry points grouped by features. If you only need to use specific features among all others, please choose the entry point you want to import from
+
+| Entry point                       | Features                    |
+|-----------------------------------|-----------------------------|
+| `@zondax/izari-tools`             | All features                | 
+| `@zondax/izari-tools/rpc`         | Node Communications         | 
+| `@zondax/izari-tools/address`     | Address                     | 
+| `@zondax/izari-tools/transaction` | Transaction                 | 
+| `@zondax/izari-tools/wallet`      | Wallet                      | 
+| `@zondax/izari-tools/account`     | Account                     | 
+| `@zondax/izari-tools/artifacts`   | Types, constants and errors |
+
+**Note:** More information about these approach and its advantages can be found [here](https://webpack.js.org/guides/package-exports/) and [here](https://dev.to/binjospookie/exports-in-package-json-1fl2). 
+
+#### Examples 
+If I only need to convert some tokens between different magnitudes, both ways are valid.
+
+Using the main entry point
+```typescript
+import { Token } from "@zondax/izari-tools"
+
+const valueInFil = Token.fromAtto("10000000000000000")
+```
+
+Or just simply importing the token features
+```typescript
+import { Token } from "@zondax/izari-tools/token"
+
+const valueInFil = Token.fromAtto("10000000000000000")
+```
 
 ## Development
 ### Build

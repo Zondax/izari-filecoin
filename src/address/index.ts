@@ -13,7 +13,7 @@ import {
   ProtocolIndicator,
   SECP256K1_PAYLOAD_LEN,
   SUB_ADDRESS_MAX_LEN,
-} from '../types/address.js'
+} from '../artifacts/address.js'
 
 import {
   InvalidChecksumAddress,

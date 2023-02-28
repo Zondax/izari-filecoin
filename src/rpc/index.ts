@@ -8,8 +8,9 @@ import {
   RpcError,
   SignedTransaction,
   StateWaitMsgResponse,
-} from '../types/rpc.js'
-import { TransactionJSON } from '../types/transaction.js'
+  WalletBalanceResponse,
+} from '../artifacts/rpc.js'
+import { TransactionJSON } from '../artifacts/transaction.js'
 
 type Args = { url: string; token: string }
 
@@ -91,6 +92,19 @@ export class RPC {
         params: [cid, 0, null, false],
       })
       return response.data as StateWaitMsgResponse
+    } catch (e: unknown) {
+      return this.handleError<RpcError>(e)
+    }
+  }
+  async walletBalance(address: string): Promise<WalletBalanceResponse> {
+    try {
+      const response = await this.fetcher.post('', {
+        jsonrpc: '2.0',
+        method: 'Filecoin.WalletBalance',
+        id: 1,
+        params: [address],
+      })
+      return response.data as WalletBalanceResponse
     } catch (e: unknown) {
       return this.handleError<RpcError>(e)
     }
