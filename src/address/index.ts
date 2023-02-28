@@ -1,14 +1,17 @@
 import base32Decode from 'base32-decode'
 import leb from 'leb128'
+import BN from 'bn.js'
 
 import { encode as base32Encode } from '../utils/base32.js'
 
 import {
-  ACTOR_PAYLOAD_MAX_LEN,
-  BLS_PAYLOAD_MAX_LEN,
+  ACTOR_PAYLOAD_LEN,
+  BLS_PAYLOAD_LEN,
+  ID_PAYLOAD_MAX_LEN,
+  ID_PAYLOAD_MAX_NUM,
   Network,
   ProtocolIndicator,
-  SECP256K1_PAYLOAD_MAX_LEN,
+  SECP256K1_PAYLOAD_LEN,
   SUB_ADDRESS_MAX_LEN,
 } from './constants.js'
 
@@ -81,7 +84,7 @@ export class AddressBls extends Address {
   constructor(network: Network, public payload: Buffer) {
     super(network, ProtocolIndicator.BLS)
 
-    if (payload.byteLength !== BLS_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength()
+    if (payload.byteLength !== BLS_PAYLOAD_LEN) throw new InvalidPayloadLength()
   }
 
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
@@ -124,10 +127,16 @@ export class AddressBls extends Address {
 
 export class AddressId extends Address {
   public id: string
+  public payload: Buffer
 
-  constructor(network: Network, public payload: Buffer) {
+  constructor(network: Network, payload: string | Buffer) {
     super(network, ProtocolIndicator.ID)
 
+    const payloadBuff = typeof payload === 'string' ? leb.unsigned.encode(payload) : payload
+
+    if (payloadBuff.length > ID_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength()
+
+    this.payload = payloadBuff
     this.id = this.toString().slice(2)
   }
 
@@ -141,8 +150,6 @@ export class AddressId extends Address {
 
     if (!validateNetwork(network)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
-
-    if (address.length > 18) throw new InvalidPayloadLength()
 
     const payload = leb.unsigned.encode(address.substr(2))
     return new AddressId(network, payload)
@@ -159,7 +166,7 @@ export class AddressId extends Address {
 export class AddressSecp256k1 extends Address {
   constructor(network: Network, public payload: Buffer) {
     super(network, ProtocolIndicator.SECP256K1)
-    if (payload.byteLength !== SECP256K1_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength()
+    if (payload.byteLength !== SECP256K1_PAYLOAD_LEN) throw new InvalidPayloadLength()
   }
 
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
@@ -203,7 +210,7 @@ export class AddressSecp256k1 extends Address {
 export class AddressActor extends Address {
   constructor(network: Network, public payload: Buffer) {
     super(network, ProtocolIndicator.ACTOR)
-    if (payload.byteLength !== ACTOR_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength()
+    if (payload.byteLength !== ACTOR_PAYLOAD_LEN) throw new InvalidPayloadLength()
   }
 
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
@@ -249,7 +256,7 @@ export class AddressDelegated extends Address {
   constructor(public network: Network, public namespace: string, public subAddress: Buffer) {
     super(network, ProtocolIndicator.DELEGATED)
 
-    //if (namespace < 0) throw new InvalidNamespace()
+    if (new BN(namespace).gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidNamespace()
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
 
     this.payload = this.toBytes().slice(1)
@@ -283,8 +290,8 @@ export class AddressDelegated extends Address {
     if (!validateNetwork(network)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
-    const namespace = address.slice(2, address.indexOf('f', 2))
-    const dataEncoded = address.slice(address.indexOf('f', 2) + 1)
+    const namespace = address.slice(2, address.indexOf(network, 2))
+    const dataEncoded = address.slice(address.indexOf(network, 2) + 1)
     const dataDecoded = base32Decode(dataEncoded.toUpperCase(), 'RFC4648')
 
     const subAddress = Buffer.from(dataDecoded.slice(0, -4))
