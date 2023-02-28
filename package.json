@@ -8,6 +8,34 @@
     ".": {
       "import": "./dist/mjs/index.js",
       "require": "./dist/cjs/index.js"
+    },
+    "./rpc": {
+      "import": "./dist/mjs/rpc/index.js",
+      "require": "./dist/cjs/rpc/index.js"
+    },
+    "./address": {
+      "import": "./dist/mjs/address/index.js",
+      "require": "./dist/cjs/address/index.js"
+    },
+    "./transaction": {
+      "import": "./dist/mjs/transaction/index.js",
+      "require": "./dist/cjs/transaction/index.js"
+    },
+    "./wallet": {
+      "import": "./dist/mjs/wallet/index.js",
+      "require": "./dist/cjs/wallet/index.js"
+    },
+    "./token": {
+      "import": "./dist/mjs/token/index.js",
+      "require": "./dist/cjs/token/index.js"
+    },
+    "./account": {
+      "import": "./dist/mjs/account/index.js",
+      "require": "./dist/cjs/account/index.js"
+    },
+    "./types": {
+      "import": "./dist/mjs/types/index.js",
+      "require": "./dist/cjs/types/index.js"
     }
   },
   "scripts": {
