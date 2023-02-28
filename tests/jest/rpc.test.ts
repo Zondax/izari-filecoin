@@ -20,6 +20,14 @@ const TX_TEMPLATE = {
 }
 
 describe('Filecoin RPC', () => {
+  test('Unauthorized', async () => {
+    const rpcNode = new RPC({ url: nodeUrl, token: `${nodeToken}invalid` })
+    const response = await rpcNode.getNonce('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+
+    expect('error' in response).toBe(true)
+    expect('error' in response ? response.error.message : null).toBe('401 - Unauthorized')
+  })
+
   test('Get nonce for new account', async () => {
     const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
     const response = await rpcNode.getNonce('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
