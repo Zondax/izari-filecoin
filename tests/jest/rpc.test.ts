@@ -1,11 +1,17 @@
 import { RPC } from '../../src/rpc'
+import { SignatureType, Wallet } from '../../src'
 
 jest.setTimeout(60 * 1000)
 
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
+const mnemonic = process.env.ACCOUNT_MNEMONIC
+const sender_path = process.env.SENDER_ACCOUNT_PATH
+
 if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
 if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
+if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
+if (!sender_path) throw new Error('SENDER_ACCOUNT_PATH must be defined')
 
 const TX_TEMPLATE = {
   From: 'REPLACE-ME',
@@ -76,6 +82,26 @@ describe('Filecoin RPC', () => {
       expect(GasFeeCap).toBeDefined()
       expect(GasFeeCap).toBeDefined()
     }
+  })
+
+  test('Get balance for account (0 balance)', async () => {
+    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
+    const response = await rpcNode.walletBalance('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+
+    expect('error' in response).toBe(false)
+    expect('result' in response).toBe(true)
+    if ('result' in response) expect(response.result).toBe('0')
+  })
+
+  test('Get balance for account (some balance)', async () => {
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
+
+    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
+    const response = await rpcNode.walletBalance(senderAccountData.address.toString())
+
+    expect('error' in response).toBe(false)
+    expect('result' in response).toBe(true)
+    if ('result' in response) expect(response.result).not.toBe('0')
   })
 
   test('Broadcast new transaction', () => {
