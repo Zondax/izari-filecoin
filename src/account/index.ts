@@ -1,7 +1,7 @@
 import { Address } from '../address/index.js'
 import { Token } from '../token/index.js'
 import { Transaction } from '../transaction/index.js'
-import { AccountData } from '../wallet/types.js'
+import { AccountData } from '../types/wallet.js'
 import { Wallet } from '../wallet/index.js'
 import { RPC } from '../rpc/index.js'
 

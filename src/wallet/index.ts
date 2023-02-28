@@ -4,8 +4,7 @@ import * as ecc from '@bitcoinerlab/secp256k1'
 import secp256k1 from 'secp256k1'
 
 import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer, getPayloadSECP256K1, isSignatureType } from './utils.js'
-import { Network } from '../address/constants.js'
-import { AccountData, SignatureType } from './types.js'
+import { Network, AccountData, SignatureType } from '../types/index.js'
 import { AddressSecp256k1 } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
 

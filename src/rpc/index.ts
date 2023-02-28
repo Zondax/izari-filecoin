@@ -8,8 +8,8 @@ import {
   RpcError,
   SignedTransaction,
   StateWaitMsgResponse,
-} from './types.js'
-import { TransactionJSON } from '../transaction/types.js'
+} from '../types/rpc.js'
+import { TransactionJSON } from '../types/transaction.js'
 
 type Args = { url: string; token: string }
 
