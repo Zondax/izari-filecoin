@@ -1,5 +1,5 @@
 import blake from 'blakejs'
-import { Network } from '../types/address.js'
+import { Network } from '../artifacts/address.js'
 
 export function getChecksum(payload: Buffer): Buffer {
   const blakeCtx = blake.blake2bInit(4)

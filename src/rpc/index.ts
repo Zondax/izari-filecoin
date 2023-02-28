@@ -9,7 +9,7 @@ import {
   SignedTransaction,
   StateWaitMsgResponse,
 } from '../types/rpc.js'
-import { TransactionJSON } from '../types/transaction.js'
+} from '../artifacts/rpc.js'
 
 type Args = { url: string; token: string }
 

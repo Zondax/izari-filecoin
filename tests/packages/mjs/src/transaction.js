@@ -1,5 +1,5 @@
 import { Transaction } from '@zondax/izari-tools/transaction'
-import { Network } from '@zondax/izari-tools/types'
+import { Network } from '@zondax/izari-tools/artifacts'
 import assert from 'assert'
 
 export async function run() {

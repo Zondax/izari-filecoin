@@ -44,3 +44,5 @@ export type MpoolPushOk = {
 export type MpoolPushResponse = MpoolPushOk | RpcError
 
 export type ReadStateResponse = { Balance: string; Code: { '/': string } } | RpcError
+
+export type WalletBalanceResponse = { result: string } | RpcError
