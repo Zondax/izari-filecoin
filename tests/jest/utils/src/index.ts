@@ -59,7 +59,7 @@ function generateTransactions() {
     if (tx_from || tx_to) {
       const tx = {
         To: tx_to || tx_from,
-        From: keys[0].address,
+        From: key.address,
         Value: parseInt((Math.random() * 100000).toString()).toString(),
         Params: '',
         GasFeeCap: parseInt((Math.random() * 100000).toString()).toString(),
@@ -69,13 +69,14 @@ function generateTransactions() {
         Method: parseInt((Math.random() * 100000).toString()),
       }
       const cbor = fst.transactionSerialize(tx)
-      const privKey = key.privateKey.toString('base64')
+      const privateKey = key.privateKey.toString('base64')
+      const publicKey = key.publicKey.toString('base64')
       const signature = {
-        data: fst.transactionSignRaw(tx, privKey).toString('base64'),
+        data: fst.transactionSignRaw(tx, privateKey).toString('base64'),
         type: 1,
       }
 
-      testCases.push({ tx, cbor, signature, privKey })
+      testCases.push({ tx, cbor, signature, privateKey, publicKey })
     }
   }
 

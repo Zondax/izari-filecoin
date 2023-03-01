@@ -12,7 +12,8 @@ type TxTestCase = {
   tx: TransactionJSON
   cbor: string
   signature: string
-  privKey: string
+  privateKey: string
+  publicKey: string
 }
 
 describe('Transaction', () => {

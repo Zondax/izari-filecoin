@@ -21,7 +21,8 @@ type TxTestCase = {
     data: string
     type: number
   }
-  privKey: string
+  privateKey: string
+  publicKey: string
 }
 
 describe('Wallet', () => {
