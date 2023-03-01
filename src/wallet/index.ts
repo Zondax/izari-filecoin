@@ -3,8 +3,8 @@ import * as bip32Default from 'bip32'
 import * as ecc from '@bitcoinerlab/secp256k1'
 import secp256k1 from 'secp256k1'
 
-import { getCoinTypeFromPath, getDigest, tryToPrivateKeyBuffer, getPayloadSECP256K1, isSignatureType } from './utils.js'
-import { Network, AccountData, SignatureType } from '../artifacts/index.js'
+import { getCoinTypeFromPath, getDigest, getPayloadSECP256K1, isSignatureType, tryToPrivateKeyBuffer } from './utils.js'
+import { AccountData, Network, SignatureType } from '../artifacts/index.js'
 import { AddressSecp256k1 } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
 
@@ -86,6 +86,22 @@ export class Wallet {
     }
   }
 
+  static verifySignature = async (signature: Signature, tx: Transaction): Promise<boolean> => {
+    const serializedTx = await tx.serialize()
+    const txDigest = getDigest(serializedTx)
+
+    switch (signature.getType()) {
+      case SignatureType.SECP256K1: {
+        const sigDat = signature.getData()
+        const publicKey = secp256k1.ecdsaRecover(sigDat.slice(0, -1), sigDat[64], txDigest, false)
+        return secp256k1.ecdsaVerify(sigDat.slice(0, -1), txDigest, publicKey)
+      }
+
+      default:
+        throw new Error('not supported yet')
+    }
+  }
+
   protected static getPublicSecp256k1FromPrivKey = (network: Network, privateKey: Buffer) => {
     const pubKey = secp256k1.publicKeyCreate(privateKey)
 
@@ -114,4 +130,10 @@ export class Signature {
   }
 
   toJSON = () => ({ Type: this.type, Data: this.data.toString('base64') })
+
+  getType = () => this.type
+  getData = () => this.data
+
+  isSecp256k1 = () => this.type === SignatureType.SECP256K1
+  isBls = () => this.type === SignatureType.BLS
 }
