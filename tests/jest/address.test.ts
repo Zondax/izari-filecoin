@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import BN from 'bn.js'
 
-import { Address, AddressActor, AddressBls, AddressId, AddressSecp256k1 } from '../../src/address'
+import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, FilEthAddress } from '../../src/address'
 import { Network, ProtocolIndicator } from '../../src/artifacts/address'
 import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../src/address/errors'
 
@@ -145,30 +145,72 @@ describe('Address', () => {
           expect(addr.network).toBe(Network.Mainnet)
         })
       })
+
+      test('Wrong protocol', async () => {
+        expect(() => {
+          AddressId.fromString('f18666')
+        }).toThrow(InvalidProtocolIndicator)
+      })
     })
 
-    test('Wrong protocol for ID', async () => {
-      expect(() => {
-        AddressId.fromString('f18666')
-      }).toThrow(InvalidProtocolIndicator)
+    describe('Type BLS', () => {
+      test('Wrong protocol', async () => {
+        expect(() => {
+          AddressBls.fromString('f48666')
+        }).toThrow(InvalidProtocolIndicator)
+      })
     })
 
-    test('Wrong protocol for BLS', async () => {
-      expect(() => {
-        AddressBls.fromString('f48666')
-      }).toThrow(InvalidProtocolIndicator)
+    describe('Type SECP256K1', () => {
+      test('Wrong protocol', async () => {
+        expect(() => {
+          AddressSecp256k1.fromString('f08666')
+        }).toThrow(InvalidProtocolIndicator)
+      })
     })
 
-    test('Wrong protocol for SECP256K1', async () => {
-      expect(() => {
-        AddressSecp256k1.fromString('f08666')
-      }).toThrow(InvalidProtocolIndicator)
+    describe('Type Actor', () => {
+      test('Wrong protocol', async () => {
+        expect(() => {
+          AddressActor.fromString('f08666')
+        }).toThrow(InvalidProtocolIndicator)
+      })
     })
 
-    test('Wrong protocol for Actor', async () => {
-      expect(() => {
-        AddressActor.fromString('f08666')
-      }).toThrow(InvalidProtocolIndicator)
+    describe('Type Delegated', () => {
+      test('Wrong protocol', async () => {
+        expect(() => {
+          AddressDelegated.fromString('f08666')
+        }).toThrow(InvalidProtocolIndicator)
+      })
+    })
+
+    describe('Type Filecoin Ethereum', () => {
+      test('Wrong protocol', async () => {
+        expect(() => {
+          FilEthAddress.fromString('f08666')
+        }).toThrow(InvalidProtocolIndicator)
+      })
+
+      test('Wrong namespace', async () => {
+        expect(() => {
+          const addr = new AddressDelegated(Network.Mainnet, '11', Buffer.from('111111', 'hex'))
+          FilEthAddress.fromString(addr.toString())
+        }).toThrow()
+      })
+
+      test('Wrong eth address', async () => {
+        expect(() => {
+          const addr = new AddressDelegated(Network.Mainnet, '10', Buffer.from('111111', 'hex'))
+          FilEthAddress.fromString(addr.toString())
+        }).toThrow()
+      })
+
+      test('Correct eth address', async () => {
+        const addr = FilEthAddress.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
+        expect(addr.namespace).toBe('10')
+        expect(addr.subAddress.toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
+      })
     })
   })
 })
