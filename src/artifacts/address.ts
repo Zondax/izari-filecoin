@@ -1,4 +1,7 @@
 import BN from 'bn.js'
+export enum DelegatedNamespace {
+  ETH = '10',
+}
 
 export enum ProtocolIndicator {
   ID = 0,
@@ -13,6 +16,7 @@ export enum Network {
   Testnet = 't',
 }
 
+export const ETH_ADDRESS_LEN = 32
 export const SUB_ADDRESS_MAX_LEN = 54
 export const BLS_PAYLOAD_LEN = 48
 export const ACTOR_PAYLOAD_LEN = 20

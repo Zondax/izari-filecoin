@@ -7,6 +7,8 @@ import { encode as base32Encode } from '../utils/base32.js'
 import {
   ACTOR_PAYLOAD_LEN,
   BLS_PAYLOAD_LEN,
+  DelegatedNamespace,
+  ETH_ADDRESS_LEN,
   ID_PAYLOAD_MAX_LEN,
   ID_PAYLOAD_MAX_NUM,
   Network,
@@ -312,5 +314,27 @@ export class AddressDelegated extends Address {
     const subAddress = bytes.slice(namespaceLength + 1)
 
     return new AddressDelegated(network, namespace, subAddress)
+  }
+}
+
+export class FilEthAddress extends AddressDelegated {
+  constructor(network: Network, ethAddress: Buffer) {
+    super(network, DelegatedNamespace.ETH, ethAddress)
+
+    if (ethAddress.length !== ETH_ADDRESS_LEN) throw new Error('invalid ethereum address: length should be 32 bytes')
+  }
+
+  static fromBytes(network: Network, bytesFilAddress: Buffer): FilEthAddress {
+    const addr = AddressDelegated.fromBytes(network, bytesFilAddress)
+    if (addr.namespace !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
+
+    return new FilEthAddress(addr.network, addr.subAddress)
+  }
+
+  static fromString(strFilAddress: string): FilEthAddress {
+    const addr = AddressDelegated.fromString(strFilAddress)
+    if (addr.namespace !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
+
+    return new FilEthAddress(addr.network, addr.subAddress)
   }
 }
