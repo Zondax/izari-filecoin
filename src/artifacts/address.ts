@@ -16,7 +16,7 @@ export enum Network {
   Testnet = 't',
 }
 
-export const ETH_ADDRESS_LEN = 32
+export const ETH_ADDRESS_LEN = 20
 export const SUB_ADDRESS_MAX_LEN = 54
 export const BLS_PAYLOAD_LEN = 48
 export const ACTOR_PAYLOAD_LEN = 20
