@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Network, Transaction, Wallet } from '../../src'
+import { Network, Transaction, Wallet, Signature } from '../../src'
 import { TransactionJSON, SignatureType } from '../../src/artifacts'
 
 jest.setTimeout(60 * 1000)
@@ -21,7 +21,8 @@ type TxTestCase = {
     data: string
     type: number
   }
-  privKey: string
+  privateKey: string
+  publicKey: string
 }
 
 describe('Wallet', () => {
@@ -88,10 +89,10 @@ describe('Wallet', () => {
     const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, TXS_TEST_CASES_PATH), 'utf-8')) as TxTestCase[]
 
     describe('From raw JSON', () => {
-      vectors.forEach(({ tx: txJSON, signature, privKey }, i) => {
+      vectors.forEach(({ tx: txJSON, signature, privateKey }, i) => {
         test('Tx ' + i, async () => {
           const tx = Transaction.fromJSON(txJSON)
-          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privKey)
+          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privateKey)
           const sig = await Wallet.signTransaction(account, tx)
 
           expect(sig.toJSON().Data).toBe(signature.data)
@@ -101,16 +102,56 @@ describe('Wallet', () => {
     })
 
     describe('From CBOR encoded', () => {
-      vectors.forEach(({ cbor, signature, privKey }, i) => {
+      vectors.forEach(({ cbor, signature, privateKey }, i) => {
         test('Tx ' + i, async () => {
           const tx = await Transaction.fromCBOR(Network.Mainnet, cbor)
-          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privKey)
+          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privateKey)
           const sig = await Wallet.signTransaction(account, tx)
 
           expect(sig.toJSON().Data).toBe(signature.data)
           expect(sig.toJSON().Type).toBe(signature.type)
         })
       })
+    })
+  })
+
+  describe('Verify signatures', () => {
+    const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, TXS_TEST_CASES_PATH), 'utf-8')) as TxTestCase[]
+
+    describe('From raw JSON', () => {
+      vectors.forEach(({ tx: txJSON, signature, privateKey }, i) => {
+        test('Tx ' + i, async () => {
+          const tx = Transaction.fromJSON(txJSON)
+          const sig = new Signature(signature.type, Buffer.from(signature.data, 'base64'))
+          const isValid = await Wallet.verifySignature(sig, tx)
+
+          expect(isValid).toBeTruthy()
+        })
+      })
+    })
+
+    test('Invalid signature (different tx, different sender)', async () => {
+      const testCaseA = vectors[0]
+      const testCaseB = vectors.find(value => value.privateKey != testCaseA.privateKey)
+      if (!testCaseB) throw new Error('there is no different txs with different senders')
+
+      const tx = Transaction.fromJSON(testCaseA.tx)
+      const sig = new Signature(testCaseB.signature.type, Buffer.from(testCaseB.signature.data, 'base64'))
+      const isValid = await Wallet.verifySignature(sig, tx)
+
+      expect(isValid).toBeFalsy()
+    })
+
+    test('Invalid signature (different tx, same sender)', async () => {
+      const testCaseA = vectors[0]
+      const testCaseB = vectors.find(value => value.privateKey === testCaseA.privateKey && value.cbor !== testCaseA.cbor)
+      if (!testCaseB) throw new Error('there is no different txs with same senders')
+
+      const tx = Transaction.fromJSON(testCaseA.tx)
+      const sig = new Signature(testCaseB.signature.type, Buffer.from(testCaseB.signature.data, 'base64'))
+      const isValid = await Wallet.verifySignature(sig, tx)
+
+      expect(isValid).toBeFalsy()
     })
   })
 })
