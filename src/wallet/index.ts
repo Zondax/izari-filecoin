@@ -93,8 +93,11 @@ export class Wallet {
     switch (signature.getType()) {
       case SignatureType.SECP256K1: {
         const sigDat = signature.getData()
-        const publicKey = secp256k1.ecdsaRecover(sigDat.slice(0, -1), sigDat[64], txDigest, false)
-        return secp256k1.ecdsaVerify(sigDat.slice(0, -1), txDigest, publicKey)
+        const uncompressedPublicKey = secp256k1.ecdsaRecover(sigDat.slice(0, -1), sigDat[64], txDigest, false)
+        const payload = getPayloadSECP256K1(uncompressedPublicKey)
+
+        if (tx.from.payload.toString('hex') !== payload.toString('hex')) return false
+        return secp256k1.ecdsaVerify(sigDat.slice(0, -1), txDigest, uncompressedPublicKey)
       }
 
       default:

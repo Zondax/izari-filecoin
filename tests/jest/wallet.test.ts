@@ -130,10 +130,22 @@ describe('Wallet', () => {
       })
     })
 
-    test('Invalid signature', async () => {
+    test('Invalid signature (different tx, different sender)', async () => {
       const testCaseA = vectors[0]
       const testCaseB = vectors.find(value => value.privateKey != testCaseA.privateKey)
       if (!testCaseB) throw new Error('there is no different txs with different senders')
+
+      const tx = Transaction.fromJSON(testCaseA.tx)
+      const sig = new Signature(testCaseB.signature.type, Buffer.from(testCaseB.signature.data, 'base64'))
+      const isValid = await Wallet.verifySignature(sig, tx)
+
+      expect(isValid).toBeFalsy()
+    })
+
+    test('Invalid signature (different tx, same sender)', async () => {
+      const testCaseA = vectors[0]
+      const testCaseB = vectors.find(value => value.privateKey === testCaseA.privateKey && value.cbor !== testCaseA.cbor)
+      if (!testCaseB) throw new Error('there is no different txs with same senders')
 
       const tx = Transaction.fromJSON(testCaseA.tx)
       const sig = new Signature(testCaseB.signature.type, Buffer.from(testCaseB.signature.data, 'base64'))
