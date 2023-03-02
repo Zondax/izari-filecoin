@@ -95,6 +95,7 @@ from it, and signing new txs to be broadcast.
 | Derive key from seed     | :white_check_mark: | :x:                |
 | Derive key from mnemonic | :white_check_mark: | :x:                |
 | Sign transactions        | :white_check_mark: | :x:                |
+| Verify signatures        | :white_check_mark: | :x:                |
 
 #### Account
 
