@@ -58,6 +58,11 @@ refer to [this doc](https://spec.filecoin.io/appendix/address/)
 | Get namespace     | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 | Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 
+#### Ethereum Addresses
+This is a particular case for a delegated address. Ethereum addresses on the Filecoin EVM are handled by the ethereum account manager, which actor id is 10. 
+For this reason, there is a particular class to handle Ethereum addresses conversions. It will help you to get the filecoin equivalent address from an 
+ethereum address, either string or bytes format. Besides, you can do the other way around: get the ethereum address from a filecoin one (f4/t4).
+
 #### Tokens
 
 Allow you to easily manage magnitudes used within Filecoin to do conversions between them, arithmetical operations, etc.
