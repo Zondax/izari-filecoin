@@ -75,6 +75,28 @@ export abstract class Address {
     }
   }
 
+  // based on https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370
+  static fromEthAddress = (network: Network, ethAddr: Buffer): Address => {
+    const idMask = Buffer.alloc(12)
+    idMask[0] = 0xff
+
+    if (idMask == ethAddr.slice(0,12)) {
+      return AddressId.fromBytes(network, ethAddr.slice(12))
+    }
+
+    return new FilEthAddress(network, ethAddr)  
+  }
+
+  static fromEthAddressHex = (network: Network, ethAddr: String): Address => {
+    let tmp = ethAddr
+    if (ethAddr.startsWith('0x')) {
+      tmp = ethAddr.slice(2)
+    }
+
+    const buf = Buffer.from(tmp, 'hex')
+    return this.fromEthAddress(network, buf)
+  }
+
   static isAddressId = (address: Address): address is AddressId => address.protocol == ProtocolIndicator.ID
   static isAddressBls = (address: Address): address is AddressBls => address.protocol == ProtocolIndicator.BLS
   static isAddressSecp256k1 = (address: Address): address is AddressSecp256k1 => address.protocol == ProtocolIndicator.SECP256K1
@@ -163,6 +185,16 @@ export class AddressId extends Address {
     const payload = bytes.slice(1)
     return new AddressId(network, payload)
   }
+
+  toEthAddressHex = (): String => {
+    let buf = Buffer.alloc(ETH_ADDRESS_LEN)
+    buf[0] = 0xff
+
+    buf.set(this.payload, 12)
+
+    return '0x' + buf.toString('hex')
+  }
+
 }
 
 export class AddressSecp256k1 extends Address {
@@ -314,6 +346,13 @@ export class AddressDelegated extends Address {
     const subAddress = bytes.slice(namespaceLength + 1)
 
     return new AddressDelegated(network, namespace, subAddress)
+  }
+
+  toEthAddressHex = (): String => {
+    let buf = Buffer.alloc(ETH_ADDRESS_LEN)
+    buf.set(this.payload)
+
+    return '0x' + buf.toString('hex')
   }
 }
 
