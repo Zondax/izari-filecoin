@@ -87,7 +87,7 @@ export abstract class Address {
     return new FilEthAddress(network, ethAddr)  
   }
 
-  static fromEthAddressHex = (network: Network, ethAddr: String): Address => {
+  static fromEthAddressHex = (network: Network, ethAddr: string): Address => {
     let tmp = ethAddr
     if (ethAddr.startsWith('0x')) {
       tmp = ethAddr.slice(2)
@@ -186,7 +186,7 @@ export class AddressId extends Address {
     return new AddressId(network, payload)
   }
 
-  toEthAddressHex = (): String => {
+  toEthAddressHex = (): string => {
     let buf = Buffer.alloc(ETH_ADDRESS_LEN)
     buf[0] = 0xff
 
