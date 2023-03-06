@@ -63,13 +63,3 @@ export const ID_PAYLOAD_MAX_LEN = 9
  *  Maximum actor id (decimal) for type one (f0/t0) addresses
  */
 export const ID_PAYLOAD_MAX_NUM = new BN(2).pow(new BN(63)).sub(new BN(1))
-
-/**
- * Indicates the type of signature used to derive new accounts and sign transactions.
- * For more information in type one addresses (f1/t1), please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-1-libsecpk1-elliptic-curve-public-keys|link}.
- * For more information in type three addresses (f3/t3), please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-3-bls|link}.
- */
-export enum SignatureType {
-  SECP256K1 = 1,
-  BLS = 3,
-}
