@@ -187,7 +187,7 @@ export class AddressId extends Address {
   }
 
   toEthAddressHex = (): string => {
-    let buf = Buffer.alloc(ETH_ADDRESS_LEN)
+    const buf = Buffer.alloc(ETH_ADDRESS_LEN)
     buf[0] = 0xff
 
     buf.set(this.payload, 12)
@@ -348,8 +348,8 @@ export class AddressDelegated extends Address {
     return new AddressDelegated(network, namespace, subAddress)
   }
 
-  toEthAddressHex = (): String => {
-    let buf = Buffer.alloc(ETH_ADDRESS_LEN)
+  toEthAddressHex = (): string => {
+    const buf = Buffer.alloc(ETH_ADDRESS_LEN)
     buf.set(this.payload)
 
     return '0x' + buf.toString('hex')
