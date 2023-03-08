@@ -1,5 +1,5 @@
-const { Address } = require('@zondax/izari-tools/address')
-const { ProtocolIndicator, Network } = require('@zondax/izari-tools/artifacts')
+const { Address } = require('@zondax/beryx-tools-filecoin/address')
+const { ProtocolIndicator, Network } = require('@zondax/beryx-tools-filecoin/artifacts')
 const assert = require('assert')
 
 function run() {

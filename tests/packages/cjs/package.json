@@ -5,11 +5,11 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "test:install": "rm -rf .yacl yalc.lock && yalc remove @zondax/izari-tools && yalc add @zondax/izari-tools@0.0.0 && yarn install"
+    "test:install": "rm -rf .yacl yalc.lock && yalc remove @zondax/beryx-tools-filecoin && yalc add @zondax/beryx-tools-filecoin@0.0.0 && yarn install"
   },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@zondax/izari-tools": "file:.yalc/@zondax/izari-tools"
+    "@zondax/beryx-tools-filecoin": "file:.yalc/@zondax/beryx-tools-filecoin"
   }
 }

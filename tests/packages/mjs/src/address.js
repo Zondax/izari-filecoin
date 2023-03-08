@@ -1,5 +1,5 @@
-import { Address } from '@zondax/izari-tools/address'
-import { ProtocolIndicator, Network } from '@zondax/izari-tools/artifacts'
+import { Address } from '@zondax/beryx-tools-filecoin/address'
+import { ProtocolIndicator, Network } from '@zondax/beryx-tools-filecoin/artifacts'
 import assert from 'assert'
 
 export async function run() {

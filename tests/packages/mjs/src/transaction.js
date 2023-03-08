@@ -1,5 +1,5 @@
-import { Transaction } from '@zondax/izari-tools/transaction'
-import { Network } from '@zondax/izari-tools/artifacts'
+import { Transaction } from '@zondax/beryx-tools-filecoin/transaction'
+import { Network } from '@zondax/beryx-tools-filecoin/artifacts'
 import assert from 'assert'
 
 export async function run() {

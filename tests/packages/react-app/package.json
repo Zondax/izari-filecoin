@@ -13,7 +13,7 @@
     "@types/node": "^16.18.12",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
-    "@zondax/izari-tools": "file:.yalc/@zondax/izari-tools",
+    "@zondax/beryx-tools-filecoin": "file:.yalc/@zondax/beryx-tools-filecoin",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
     "babel-plugin-named-asset-import": "^0.3.8",
@@ -67,7 +67,7 @@
     "start": "BROWSER=none node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "yarn start & jest ./tests",
-    "test:install": "rm -rf .yacl yalc.lock && yalc remove @zondax/izari-tools && yalc add @zondax/izari-tools@0.0.0 && yarn install"
+    "test:install": "rm -rf .yacl yalc.lock && yalc remove @zondax/beryx-tools-filecoin && yalc add @zondax/beryx-tools-filecoin@0.0.0 && yarn install"
   },
   "eslintConfig": {
     "extends": [

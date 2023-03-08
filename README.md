@@ -1,8 +1,8 @@
-# Izari Tools
+# Beryx Tools Filecoin
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![node-current](https://img.shields.io/node/v/@zondax/izari-tools)
-[![Package](https://badge.fury.io/js/%40zondax%2Fizari-tools.svg)](https://badge.fury.io/js/%40zondax%2Fizari-tools)
-[![GithubActions](https://github.com/Zondax/izari-tools/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-tools/blob/master/.github/workflows/main.yaml)
+![node-current](https://img.shields.io/node/v/@zondax/beryx-tools-filecoin)
+[![Package](https://badge.fury.io/js/%40zondax%2Fberyx-tools-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fberyx-tools-filecoin)
+[![GithubActions](https://github.com/Zondax/beryx-tools-filecoin/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/beryx-tools-filecoin/blob/master/.github/workflows/main.yaml)
 
 ## Introduction
 Izari Tools is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
@@ -118,11 +118,11 @@ These features group actions related to high-level account features like send fu
 Just run the following command to add the package to your project
 
 ```yarn
-yarn add @zondax/izari-tools
+yarn add @zondax/beryx-tools-filecoin
 ```
 or 
 ```npm
-npm install --save @zondax/izari-tools
+npm install --save @zondax/beryx-tools-filecoin
 ```
 
 ### Use
@@ -130,12 +130,12 @@ The package can be imported easily on any place you need it. Choose the way to i
 
 For ESM modules
 ```typescript
-import { Wallet, Transaction, Account } from "@zondax/izari-tools"
+import { Wallet, Transaction, Account } from "@zondax/beryx-tools-filecoin"
 ```
 
 For CommonJS modules
 ```typescript
-const { Wallet, Transaction, Account } = require("@zondax/izari-tools")
+const { Wallet, Transaction, Account } = require("@zondax/beryx-tools-filecoin")
 ```
 
 ### Specific features
@@ -143,12 +143,12 @@ Inside this package there are several entry points grouped by features. If you o
 
 | Entry point                       | Features                    |
 |-----------------------------------|-----------------------------|
-| `@zondax/izari-tools`             | All features                | 
-| `@zondax/izari-tools/rpc`         | Node Communications         | 
-| `@zondax/izari-tools/address`     | Address                     | 
-| `@zondax/izari-tools/transaction` | Transaction                 | 
-| `@zondax/izari-tools/wallet`      | Wallet                      | 
-| `@zondax/izari-tools/account`     | Account                     | 
+| `@zondax/beryx-tools-filecoin`             | All features                | 
+| `@zondax/beryx-tools-filecoin/rpc`         | Node Communications         | 
+| `@zondax/beryx-tools-filecoin/address`     | Address                     | 
+| `@zondax/beryx-tools-filecoin/transaction` | Transaction                 | 
+| `@zondax/beryx-tools-filecoin/wallet`      | Wallet                      | 
+| `@zondax/beryx-tools-filecoin/account`     | Account                     | 
 | `@zondax/izari-tools/artifacts`   | Types, constants and errors |
 
 **Note:** More information about these approach and its advantages can be found [here](https://webpack.js.org/guides/package-exports/) and [here](https://dev.to/binjospookie/exports-in-package-json-1fl2). 
