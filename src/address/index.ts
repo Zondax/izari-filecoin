@@ -80,8 +80,13 @@ export abstract class Address {
     const idMask = Buffer.alloc(12)
     idMask[0] = 0xff
 
-    if (idMask == ethAddr.slice(0,12)) {
-      return AddressId.fromBytes(network, ethAddr.slice(12))
+    if (idMask.compare(ethAddr, 0, 12) == 0) {
+      let  i = 12
+      while (ethAddr[i] == 0) {
+        i += 1
+      }
+
+      return new AddressId(network, ethAddr.slice(i))
     }
 
     return new FilEthAddress(network, ethAddr)  
@@ -350,7 +355,7 @@ export class AddressDelegated extends Address {
 
   toEthAddressHex = (): string => {
     const buf = Buffer.alloc(ETH_ADDRESS_LEN)
-    buf.set(this.payload)
+    buf.set(this.payload.slice(1))
 
     return '0x' + buf.toString('hex')
   }

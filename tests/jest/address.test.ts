@@ -217,17 +217,17 @@ describe('Address', () => {
       test('From ethereum address (ID)', async () => {
         const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000001')
 
-        expect(addr.protocol).toBe(ProtocolIndicator.DELEGATED)
+        expect(addr.protocol).toBe(ProtocolIndicator.ID)
         expect(addr.network).toBe(Network.Testnet)
-        expect(addr.toString()).toBe("f01")
+        expect(addr.toString()).toBe("t01")
       })
 
       test('From ethereum address (ID) 2', async () => {
         const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000065')
 
-        expect(addr.protocol).toBe(ProtocolIndicator.DELEGATED)
+        expect(addr.protocol).toBe(ProtocolIndicator.ID)
         expect(addr.network).toBe(Network.Testnet)
-        expect(addr.toString()).toBe("f0101")
+        expect(addr.toString()).toBe("t0101")
       })
 
       test('To ethereum address (ID)', async () => {
