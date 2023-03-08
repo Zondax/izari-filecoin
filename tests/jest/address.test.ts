@@ -213,7 +213,7 @@ describe('Address', () => {
       })
     })
 
-    describe('Ethereum conversion', async () => {
+    describe('Ethereum conversion', () => {
       test('From ethereum address (ID)', async () => {
         const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000001')
 
