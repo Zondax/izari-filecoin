@@ -212,5 +212,47 @@ describe('Address', () => {
         expect(addr.subAddress.toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
       })
     })
+
+    describe('Ethereum conversion', () => {
+      test('From ethereum address (ID)', async () => {
+        const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000001')
+
+        expect(addr.protocol).toBe(ProtocolIndicator.ID)
+        expect(addr.network).toBe(Network.Testnet)
+        expect(addr.toString()).toBe("t01")
+      })
+
+      test('From ethereum address (ID) 2', async () => {
+        const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000065')
+
+        expect(addr.protocol).toBe(ProtocolIndicator.ID)
+        expect(addr.network).toBe(Network.Testnet)
+        expect(addr.toString()).toBe("t0101")
+      })
+
+      test('To ethereum address (ID)', async () => {
+        const addr = AddressId.fromString('f0101')
+
+        expect(addr.toEthAddressHex()).toBe("0xff00000000000000000000000000000000000065")
+      })
+
+      test('From ethereum address (DelegatedAddress)', async () => {
+        const addr = Address.fromEthAddressHex(Network.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da')
+
+        expect(addr.protocol).toBe(ProtocolIndicator.DELEGATED)
+        expect(addr.network).toBe(Network.Mainnet)
+        expect(addr.toString()).toBe("f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa")
+      })
+
+
+      test('To ethereum address (DelegatedAddress)', async () => {
+        const addr = AddressDelegated.fromString('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
+
+        expect(addr.network).toBe(Network.Mainnet)
+        expect(addr.toEthAddressHex()).toBe("0xd4c5fb16488aa48081296299d54b0c648c9333da")
+      })
+
+    })
+
   })
 })
