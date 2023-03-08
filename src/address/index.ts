@@ -190,7 +190,7 @@ export class AddressId extends Address {
     const buf = Buffer.alloc(ETH_ADDRESS_LEN)
     buf[0] = 0xff
 
-    buf.set(this.payload, 12)
+    buf.set(this.payload, ETH_ADDRESS_LEN - this.payload.length)
 
     return '0x' + buf.toString('hex')
   }
