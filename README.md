@@ -5,10 +5,10 @@
 [![GithubActions](https://github.com/Zondax/beryx-tools-filecoin/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/beryx-tools-filecoin/blob/master/.github/workflows/main.yaml)
 
 ## Introduction
-Izari Tools is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
+Beryx Tools Filecoin is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
 from web projects using React to backend applications using NodeJS. It enables developers to easily manage and access blockchain data, including transactions, smart contracts, and assets.
 
-Izari Tools makes it easy for developers to incorporate blockchain technology into their projects, unlocking new possibilities for innovation and growth.
+Beryx Tools Filecoin makes it easy for developers to incorporate blockchain technology into their projects, unlocking new possibilities for innovation and growth.
 
 Some key points: 
  - It is written in **Typescript**
