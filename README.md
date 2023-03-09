@@ -58,10 +58,11 @@ refer to [this doc](https://spec.filecoin.io/appendix/address/)
 | Get namespace     | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 | Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 
-#### Ethereum Addresses
+#### Ethereum Addresses 
 This is a particular case for a delegated address. Ethereum addresses on the Filecoin EVM are handled by the ethereum account manager, which actor id is 10. 
 For this reason, there is a particular class to handle Ethereum addresses conversions. It will help you to get the filecoin equivalent address from an 
 ethereum address, either string or bytes format. Besides, you can do the other way around: get the ethereum address from a filecoin one (f4/t4).
+
 
 #### Tokens
 
@@ -141,15 +142,15 @@ const { Wallet, Transaction, Account } = require("@zondax/izari-tools")
 ### Specific features
 Inside this package there are several entry points grouped by features. If you only need to use specific features among all others, please choose the entry point you want to import from
 
-| Entry point                       | Features                    |
-|-----------------------------------|-----------------------------|
-| `@zondax/izari-tools`             | All features                | 
-| `@zondax/izari-tools/rpc`         | Node Communications         | 
-| `@zondax/izari-tools/address`     | Address                     | 
-| `@zondax/izari-tools/transaction` | Transaction                 | 
-| `@zondax/izari-tools/wallet`      | Wallet                      | 
-| `@zondax/izari-tools/account`     | Account                     | 
-| `@zondax/izari-tools/artifacts`   | Types, constants and errors |
+| Entry point                       | Features                    | Project Folder           |
+|-----------------------------------|-----------------------------|--------------------------|
+| `@zondax/izari-tools`             | All features                | src/index.ts             | 
+| `@zondax/izari-tools/rpc`         | Node Communications         | src/rpc/index.ts         | 
+| `@zondax/izari-tools/address`     | Address                     | src/address/index.ts     | 
+| `@zondax/izari-tools/transaction` | Transaction                 | src/transaction/index.ts | 
+| `@zondax/izari-tools/wallet`      | Wallet                      | src/wallet/index.ts      | 
+| `@zondax/izari-tools/account`     | Account                     | src/account/index.ts     | 
+| `@zondax/izari-tools/artifacts`   | Types, constants and errors | src/artifacts/index.tx   |
 
 **Note:** More information about these approach and its advantages can be found [here](https://webpack.js.org/guides/package-exports/) and [here](https://dev.to/binjospookie/exports-in-package-json-1fl2). 
 

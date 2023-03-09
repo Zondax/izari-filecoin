@@ -9,6 +9,12 @@ export enum DelegatedNamespace {
 }
 
 /**
+ * Actor ids can be converted to a special ethereum address in the filecoin blockchain. This is the prefix in ethereum addresses that indicates that
+ * it holds an actor id.
+ */
+export const ACTOR_ID_ETHEREUM_MASK = 0xff
+
+/**
  * Indicates the type of address.
  * For more information, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-indicator|link}.
  */

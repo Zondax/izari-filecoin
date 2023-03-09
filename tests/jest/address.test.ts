@@ -29,12 +29,12 @@ describe('Address', () => {
 
           expect(addr.toString()).toBe(string)
           expect(addr.toBytes().toString('hex')).toBe(bytes)
-          expect(addr.protocol).toBe(protocol)
-          expect(addr.network).toBe(network)
-          expect(addr.payload.toString('hex')).toBe(payload)
+          expect(addr.getProtocol()).toBe(protocol)
+          expect(addr.getNetwork()).toBe(network)
+          expect(addr.getPayload().toString('hex')).toBe(payload)
 
-          if (Address.isAddressId(addr)) expect(addr.id).toBe(string.slice(2))
-          if (Address.isAddressDelegated(addr)) expect(addr.namespace).toBe(string.slice(2, string.indexOf(network, 1)))
+          if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.slice(2))
+          if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.slice(2, string.indexOf(network, 1)))
         })
       })
     })
@@ -49,12 +49,12 @@ describe('Address', () => {
           expect(addr.toString()).toBe(string)
           expect(addr.toBytes().toString('hex')).toBe(bytes)
 
-          expect(addr.protocol).toBe(protocol)
-          expect(addr.network).toBe(network)
-          expect(addr.payload.toString('hex')).toBe(payload)
+          expect(addr.getProtocol()).toBe(protocol)
+          expect(addr.getNetwork()).toBe(network)
+          expect(addr.getPayload().toString('hex')).toBe(payload)
 
-          if (Address.isAddressId(addr)) expect(addr.id).toBe(string.slice(2))
-          if (Address.isAddressDelegated(addr)) expect(addr.namespace).toBe(string.slice(2, string.indexOf(network, 1)))
+          if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.slice(2))
+          if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.slice(2, string.indexOf(network, 1)))
         })
       })
     })
@@ -67,20 +67,20 @@ describe('Address', () => {
           const addr = Address.fromString('t08666')
           expect(addr.toString()).toBe('t08666')
           expect(addr.toBytes().toString('hex')).toBe('00da43')
-          expect(addr.protocol).toBe(ProtocolIndicator.ID)
-          expect(addr.network).toBe(Network.Testnet)
+          expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+          expect(addr.getNetwork()).toBe(Network.Testnet)
           expect(Address.isAddressId(addr)).toBeTruthy()
-          if (Address.isAddressId(addr)) expect(addr.id).toBe('8666')
+          if (Address.isAddressId(addr)) expect(addr.getId()).toBe('8666')
         })
 
         test('Mainnet', async () => {
           const addr = Address.fromString('f08666')
           expect(addr.toString()).toBe('f08666')
           expect(addr.toBytes().toString('hex')).toBe('00da43')
-          expect(addr.protocol).toBe(ProtocolIndicator.ID)
-          expect(addr.network).toBe(Network.Mainnet)
+          expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+          expect(addr.getNetwork()).toBe(Network.Mainnet)
           expect(Address.isAddressId(addr)).toBeTruthy()
-          if (Address.isAddressId(addr)) expect(addr.id).toBe('8666')
+          if (Address.isAddressId(addr)) expect(addr.getId()).toBe('8666')
         })
 
         test('Exceed max id (super big)', async () => {
@@ -109,8 +109,8 @@ describe('Address', () => {
           const addr = Address.fromString(addrStr)
           expect(addr.toString()).toBe(addrStr)
           expect(addr.toBytes().toString('hex')).toBe('00ffffffffffffffff7f')
-          expect(addr.protocol).toBe(ProtocolIndicator.ID)
-          expect(addr.network).toBe(Network.Mainnet)
+          expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+          expect(addr.getNetwork()).toBe(Network.Mainnet)
         })
       })
 
@@ -119,16 +119,16 @@ describe('Address', () => {
           const addr = Address.fromBytes(Network.Testnet, Buffer.from('00da43', 'hex'))
           expect(addr.toString()).toBe('t08666')
           expect(addr.toBytes().toString('hex')).toBe('00da43')
-          expect(addr.protocol).toBe(ProtocolIndicator.ID)
-          expect(addr.network).toBe(Network.Testnet)
+          expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+          expect(addr.getNetwork()).toBe(Network.Testnet)
         })
 
         test('Mainnet', async () => {
           const addr = Address.fromBytes(Network.Mainnet, Buffer.from('00da43', 'hex'))
           expect(addr.toString()).toBe('f08666')
           expect(addr.toBytes().toString('hex')).toBe('00da43')
-          expect(addr.protocol).toBe(ProtocolIndicator.ID)
-          expect(addr.network).toBe(Network.Mainnet)
+          expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+          expect(addr.getNetwork()).toBe(Network.Mainnet)
         })
 
         test('Exceed max value', async () => {
@@ -141,8 +141,8 @@ describe('Address', () => {
           const addr = Address.fromBytes(Network.Mainnet, Buffer.from('00ffffffffffffffff7f', 'hex'))
           expect(addr.toString()).toBe('f09223372036854775807')
           expect(addr.toBytes().toString('hex')).toBe('00ffffffffffffffff7f')
-          expect(addr.protocol).toBe(ProtocolIndicator.ID)
-          expect(addr.network).toBe(Network.Mainnet)
+          expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+          expect(addr.getNetwork()).toBe(Network.Mainnet)
         })
       })
 
@@ -208,46 +208,55 @@ describe('Address', () => {
 
       test('Correct eth address', async () => {
         const addr = FilEthAddress.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
-        expect(addr.namespace).toBe('10')
-        expect(addr.subAddress.toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
+        expect(addr.getNamespace()).toBe('10')
+        expect(addr.getSubAddress().toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
       })
     })
 
     describe('Ethereum conversion', () => {
       test('From ethereum address (ID)', async () => {
-        const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000001')
+        const addr = Address.fromEthAddress(Network.Testnet, '0xff00000000000000000000000000000000000001')
 
-        expect(addr.protocol).toBe(ProtocolIndicator.ID)
-        expect(addr.network).toBe(Network.Testnet)
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetwork()).toBe(Network.Testnet)
         expect(addr.toString()).toBe('t01')
       })
 
       test('From ethereum address (ID) 2', async () => {
-        const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000065')
+        const addr = Address.fromEthAddress(Network.Testnet, '0xff00000000000000000000000000000000000065')
 
-        expect(addr.protocol).toBe(ProtocolIndicator.ID)
-        expect(addr.network).toBe(Network.Testnet)
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetwork()).toBe(Network.Testnet)
         expect(addr.toString()).toBe('t0101')
+      })
+
+      test('From ethereum address (ID) 3', async () => {
+        const addr = Address.fromEthAddress(Network.Testnet, '0xff0000000000000000000000000000000000da43')
+
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetwork()).toBe(Network.Testnet)
+        expect(addr.toString()).toBe('t08666')
       })
 
       test('To ethereum address (ID)', async () => {
         const addr = AddressId.fromString('f0101')
 
-        expect(addr.toEthAddressHex()).toBe('0xff00000000000000000000000000000000000065')
+        expect(addr.toEthAddressHex(true)).toBe('0xff00000000000000000000000000000000000065')
+        expect(addr.toEthAddressHex(false)).toBe('ff00000000000000000000000000000000000065')
       })
 
       test('From ethereum address (DelegatedAddress)', async () => {
-        const addr = Address.fromEthAddressHex(Network.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da')
+        const addr = Address.fromEthAddress(Network.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da')
 
-        expect(addr.protocol).toBe(ProtocolIndicator.DELEGATED)
-        expect(addr.network).toBe(Network.Mainnet)
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.DELEGATED)
+        expect(addr.getNetwork()).toBe(Network.Mainnet)
         expect(addr.toString()).toBe('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
       })
 
       test('To ethereum address (DelegatedAddress)', async () => {
         const addr = FilEthAddress.fromString('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
 
-        expect(addr.network).toBe(Network.Mainnet)
+        expect(addr.getNetwork()).toBe(Network.Mainnet)
         expect(addr.toEthAddressHex(true)).toBe('0xd4c5fb16488aa48081296299d54b0c648c9333da')
         expect(addr.toEthAddressHex()).toBe('d4c5fb16488aa48081296299d54b0c648c9333da')
       })
