@@ -124,7 +124,7 @@ export abstract class Address {
    * @param ethAddr - ethereum address to parse (as buffer)
    * @returns a new instance of a particular address type.
    */
-  static fromEthAddress = (network: Network, ethAddr: Buffer): AddressId | EthereumAddress => {
+  static fromEthAddress = (network: Network, ethAddr: Buffer): AddressId | FilEthAddress => {
     const idMask = Buffer.alloc(12)
     idMask[0] = 0xff
 
@@ -135,7 +135,7 @@ export abstract class Address {
       return new AddressId(network, ethAddr.slice(i))
     }
 
-    return new EthereumAddress(network, ethAddr)
+    return new FilEthAddress(network, ethAddr)
   }
 
   /**
@@ -145,7 +145,7 @@ export abstract class Address {
    * @param ethAddr - ethereum address to parse (as hex string)
    * @returns a new instance of a particular address type.
    */
-  static fromEthAddressHex = (network: Network, ethAddr: string): AddressId | EthereumAddress => {
+  static fromEthAddressHex = (network: Network, ethAddr: string): AddressId | FilEthAddress => {
     const tmp = ethAddr.startsWith('0x') ? ethAddr.slice(2) : ethAddr
     return this.fromEthAddress(network, Buffer.from(tmp, 'hex'))
   }
@@ -621,25 +621,19 @@ export class AddressDelegated extends Address {
 
     return new AddressDelegated(network, namespace, subAddress)
   }
-
-  toEthAddressHex = (): string => {
-    const buf = Buffer.alloc(ETH_ADDRESS_LEN)
-    buf.set(this.payload.slice(1))
-
-    return '0x' + buf.toString('hex')
-  }
 }
 
 /**
  * EthereumAddress is a concrete implementation for the ethereum addresses in the filecoin blockchain.
  * For more information about ethereum addresses, please refer to this {@link https://docs.filecoin.io/intro/intro-to-filecoin/blockchain/#addresses|link}.
  */
-export class EthereumAddress extends AddressDelegated {
+export class FilEthAddress extends AddressDelegated {
   /**
    * Allows to create a new instance of EthereumAddress
    * @param network - indicates which network the address belongs.
    * @param ethAddress - valid ethereum address to wrap (as buffer)
    */
+
   constructor(network: Network, ethAddress: Buffer) {
     super(network, DelegatedNamespace.ETH, ethAddress)
 
@@ -653,11 +647,11 @@ export class EthereumAddress extends AddressDelegated {
    * @param bytesFilAddress - address to parse in bytes format (buffer)
    * @returns a new instance of EthereumAddress
    */
-  static fromBytes(network: Network, bytesFilAddress: Buffer): EthereumAddress {
+  static fromBytes(network: Network, bytesFilAddress: Buffer): FilEthAddress {
     const addr = AddressDelegated.fromBytes(network, bytesFilAddress)
     if (addr.namespace !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
 
-    return new EthereumAddress(addr.network, addr.subAddress)
+    return new FilEthAddress(addr.network, addr.subAddress)
   }
 
   /**
@@ -666,10 +660,17 @@ export class EthereumAddress extends AddressDelegated {
    * @example strFilAddress: f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq
    * @returns a new instance of EthereumAddress
    */
-  static fromString(strFilAddress: string): EthereumAddress {
+  static fromString(strFilAddress: string): FilEthAddress {
     const addr = AddressDelegated.fromString(strFilAddress)
     if (addr.namespace !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
 
-    return new EthereumAddress(addr.network, addr.subAddress)
+    return new FilEthAddress(addr.network, addr.subAddress)
   }
+
+  /**
+   * Allows to get the ethereum address in hex format of this address
+   * @param hexPrefix - add the 0x prefix or not
+   * @returns ethereum address in hex string format
+   */
+  toEthAddressHex = (hexPrefix = false): string => `${hexPrefix ? '0x' : ''}${this.subAddress.toString('hex')}`
 }

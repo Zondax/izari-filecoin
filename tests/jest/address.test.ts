@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import BN from 'bn.js'
 
-import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, EthereumAddress } from '../../src/address'
+import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, FilEthAddress } from '../../src/address'
 import { Network, ProtocolIndicator } from '../../src/artifacts/address'
 import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../src/address/errors'
 
@@ -188,26 +188,26 @@ describe('Address', () => {
     describe('Type Filecoin Ethereum', () => {
       test('Wrong protocol', async () => {
         expect(() => {
-          EthereumAddress.fromString('f08666')
+          FilEthAddress.fromString('f08666')
         }).toThrow(InvalidProtocolIndicator)
       })
 
       test('Wrong namespace', async () => {
         expect(() => {
           const addr = new AddressDelegated(Network.Mainnet, '11', Buffer.from('111111', 'hex'))
-          EthereumAddress.fromString(addr.toString())
+          FilEthAddress.fromString(addr.toString())
         }).toThrow()
       })
 
       test('Wrong eth address', async () => {
         expect(() => {
           const addr = new AddressDelegated(Network.Mainnet, '10', Buffer.from('111111', 'hex'))
-          EthereumAddress.fromString(addr.toString())
+          FilEthAddress.fromString(addr.toString())
         }).toThrow()
       })
 
       test('Correct eth address', async () => {
-        const addr = EthereumAddress.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
+        const addr = FilEthAddress.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
         expect(addr.namespace).toBe('10')
         expect(addr.subAddress.toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
       })
@@ -245,10 +245,11 @@ describe('Address', () => {
       })
 
       test('To ethereum address (DelegatedAddress)', async () => {
-        const addr = AddressDelegated.fromString('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
+        const addr = FilEthAddress.fromString('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
 
         expect(addr.network).toBe(Network.Mainnet)
-        expect(addr.toEthAddressHex()).toBe('0xd4c5fb16488aa48081296299d54b0c648c9333da')
+        expect(addr.toEthAddressHex(true)).toBe('0xd4c5fb16488aa48081296299d54b0c648c9333da')
+        expect(addr.toEthAddressHex()).toBe('d4c5fb16488aa48081296299d54b0c648c9333da')
       })
     })
   })
