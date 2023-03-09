@@ -182,14 +182,14 @@ export class Wallet {
 export class Signature {
   /**
    * Creates a new Signature instance based on a type and payload
-   * @param type signature type
-   * @param data signature payload
+   * @param type - signature type
+   * @param data - signature payload
    */
   constructor(protected type: SignatureType, protected data: Buffer) {}
 
   /**
    * Create a new Signature instance from a raw JSON object
-   * @param input raw JSON input
+   * @param input - raw JSON input
    * @returns new Signature instance
    */
   fromJSON = (input: unknown): Signature => {
