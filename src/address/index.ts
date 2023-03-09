@@ -546,9 +546,9 @@ export class AddressDelegated extends Address {
     if (new BN(namespace).gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidNamespace()
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
 
-    this.payload = this.toBytes().slice(1)
     this.namespace = namespace
     this.subAddress = subAddress
+    this.payload = this.toBytes().slice(1)
   }
 
   /**
