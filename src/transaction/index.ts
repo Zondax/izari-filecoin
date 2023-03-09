@@ -46,26 +46,27 @@ export class Transaction {
 
     const decoded = cbor.decode<TxInputData>(cborMessage)
     if (!(decoded instanceof Array)) throw new Error('Decoded raw tx should be an array')
-
-    if (decoded[0] !== TxVersion.Zero) throw new Error('Unsupported version')
     if (decoded.length < 10) throw new Error('The cbor is missing some fields... please verify you have 9 fields.')
-    if (decoded[4][0] === 0x01) throw new Error('Value cant be negative')
 
-    const value = new BN(Buffer.from(decoded[4]).toString('hex'), 16).toString(10)
-    const gasFeeCap = new BN(Buffer.from(decoded[6]).toString('hex'), 16).toString(10)
-    const gasPremium = new BN(Buffer.from(decoded[7]).toString('hex'), 16).toString(10)
+    const [txVersion, toRaw, fromRaw, nonceRaw, valueRaw, gasLimitRaw, gasFeeCapRaw, gasPremiumRaw, methodRaw, paramsRaw] = decoded
+    if (txVersion !== TxVersion.Zero) throw new Error('Unsupported version')
+    if (valueRaw[0] === 0x01) throw new Error('Value cant be negative')
+
+    const value = new BN(Buffer.from(valueRaw).toString('hex'), 16).toString(10)
+    const gasFeeCap = new BN(Buffer.from(gasFeeCapRaw).toString('hex'), 16).toString(10)
+    const gasPremium = new BN(Buffer.from(gasPremiumRaw).toString('hex'), 16).toString(10)
 
     return new Transaction(
-      decoded[0],
-      Address.fromBytes(network, decoded[1]),
-      Address.fromBytes(network, decoded[2]),
-      decoded[3],
+      txVersion,
+      Address.fromBytes(network, toRaw),
+      Address.fromBytes(network, fromRaw),
+      nonceRaw,
       value,
-      decoded[5],
+      gasLimitRaw,
       gasFeeCap,
       gasPremium,
-      decoded[8],
-      decoded[9].toString('base64')
+      methodRaw,
+      paramsRaw.toString('base64')
     )
   }
 
