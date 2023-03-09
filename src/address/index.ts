@@ -38,12 +38,12 @@ export abstract class Address {
    *
    * @param network - indicates which network the address belongs.
    * @param protocol - indicates the address types.
-   * @protected
    */
   protected constructor(public network: Network, public protocol: ProtocolIndicator) {}
 
   /**
    * Each address is composed by a payload
+   * For more information about payloads, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.payload|link}.
    */
   abstract payload: Buffer
 
@@ -118,13 +118,13 @@ export abstract class Address {
   }
 
   /**
-   * Allows to create a new instance of an Address from an ethereum address
-   * @dev based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
+   * Allows to create a new instance of an Address from an ethereum address.
+   * It is based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
    * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param ethAddr - ethereum address to parse (as buffer)
    * @returns a new instance of a particular address type.
    */
-  static fromEthAddress = (network: Network, ethAddr: Buffer): AddressId | FilEthAddress => {
+  static fromEthAddress = (network: Network, ethAddr: Buffer): AddressId | EthereumAddress => {
     const idMask = Buffer.alloc(12)
     idMask[0] = 0xff
 
@@ -135,17 +135,17 @@ export abstract class Address {
       return new AddressId(network, ethAddr.slice(i))
     }
 
-    return new FilEthAddress(network, ethAddr)
+    return new EthereumAddress(network, ethAddr)
   }
 
   /**
-   * Allows to create a new instance of an Address from an ethereum address
-   * @dev based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
+   * Allows to create a new instance of an Address from an ethereum address.
+   * It is based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
    * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param ethAddr - ethereum address to parse (as hex string)
    * @returns a new instance of a particular address type.
    */
-  static fromEthAddressHex = (network: Network, ethAddr: string): AddressId | FilEthAddress => {
+  static fromEthAddressHex = (network: Network, ethAddr: string): AddressId | EthereumAddress => {
     const tmp = ethAddr.startsWith('0x') ? ethAddr.slice(2) : ethAddr
     return this.fromEthAddress(network, Buffer.from(tmp, 'hex'))
   }
@@ -339,6 +339,10 @@ export class AddressId extends Address {
     return new AddressId(network, payload)
   }
 
+  /**
+   * Allows to get the ethereum format of this address
+   * @returns address in ethereum format
+   */
   toEthAddressHex = (): string => {
     const buf = Buffer.alloc(ETH_ADDRESS_LEN)
     buf[0] = 0xff
@@ -510,18 +514,41 @@ export class AddressActor extends Address {
 
 /**
  * AddressDelegated is a concrete address type 4 on filecoin blockchain (f4/t4)
- * For more information about delegated addresses, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-3-bls|link}.
+ * For more information about delegated addresses, please refer to this {@link https://docs.filecoin.io/developers/smart-contracts/concepts/accounts-and-assets/#extensible-user-defined-actor-addresses-f4|link}.
+ * The filecoin improvement proposal (FIP) for this address type is {@link https://github.com/filecoin-project/FIPs/blob/master/FIPS/fip-0048.md|here}
  */
 export class AddressDelegated extends Address {
+  /**
+   * Contains the address manager actor id (leb128 encoded) and the subaddress (plain)
+   * For more information about payloads, please refer to this {@link https://github.com/filecoin-project/FIPs/blob/master/FIPS/fip-0048.md#the-f4-address-class|link}.
+   */
   public payload: Buffer
 
-  constructor(public network: Network, public namespace: string, public subAddress: Buffer) {
+  /**
+   * Contains the address manager actor id (decimal)
+   */
+  public namespace: string
+
+  /**
+   * Contains the sub address (plain)
+   */
+  public subAddress: Buffer
+
+  /**
+   * Allows to create a new instance of delegated address
+   * @param network - indicates which network the address belongs.
+   * @param namespace - account manager actor id
+   * @param subAddress - user-defined address the account manager will know and administrate (buffer)
+   */
+  constructor(network: Network, namespace: string, subAddress: Buffer) {
     super(network, ProtocolIndicator.DELEGATED)
 
     if (new BN(namespace).gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidNamespace()
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
 
     this.payload = this.toBytes().slice(1)
+    this.namespace = namespace
+    this.subAddress = subAddress
   }
 
   /**
@@ -603,24 +630,46 @@ export class AddressDelegated extends Address {
   }
 }
 
-export class FilEthAddress extends AddressDelegated {
+/**
+ * EthereumAddress is a concrete implementation for the ethereum addresses in the filecoin blockchain.
+ * For more information about ethereum addresses, please refer to this {@link https://docs.filecoin.io/intro/intro-to-filecoin/blockchain/#addresses|link}.
+ */
+export class EthereumAddress extends AddressDelegated {
+  /**
+   * Allows to create a new instance of EthereumAddress
+   * @param network - indicates which network the address belongs.
+   * @param ethAddress - valid ethereum address to wrap (as buffer)
+   */
   constructor(network: Network, ethAddress: Buffer) {
     super(network, DelegatedNamespace.ETH, ethAddress)
 
     if (ethAddress.length !== ETH_ADDRESS_LEN) throw new Error('invalid ethereum address: length should be 32 bytes')
   }
 
-  static fromBytes(network: Network, bytesFilAddress: Buffer): FilEthAddress {
+  /**
+   * Allows to create a new EthereumAddress instance from filecoin address in bytes format (buffer)
+   * @example network: 'f' - bytesFilAddress: 040a23a7f3c5c663d71151f40c8610c01150c9660795
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param bytesFilAddress - address to parse in bytes format (buffer)
+   * @returns a new instance of EthereumAddress
+   */
+  static fromBytes(network: Network, bytesFilAddress: Buffer): EthereumAddress {
     const addr = AddressDelegated.fromBytes(network, bytesFilAddress)
     if (addr.namespace !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
 
-    return new FilEthAddress(addr.network, addr.subAddress)
+    return new EthereumAddress(addr.network, addr.subAddress)
   }
 
-  static fromString(strFilAddress: string): FilEthAddress {
+  /**
+   * Allows to create a new EthereumAddress instance from filecoin address in string format
+   * @param strFilAddress - address to parse in string format (buffer)
+   * @example strFilAddress: f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq
+   * @returns a new instance of EthereumAddress
+   */
+  static fromString(strFilAddress: string): EthereumAddress {
     const addr = AddressDelegated.fromString(strFilAddress)
     if (addr.namespace !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
 
-    return new FilEthAddress(addr.network, addr.subAddress)
+    return new EthereumAddress(addr.network, addr.subAddress)
   }
 }
