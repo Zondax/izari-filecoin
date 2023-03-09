@@ -215,7 +215,7 @@ describe('Address', () => {
 
     describe('Ethereum conversion', () => {
       test('From ethereum address (ID)', async () => {
-        const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000001')
+        const addr = Address.fromEthAddress(Network.Testnet, '0xff00000000000000000000000000000000000001')
 
         expect(addr.protocol).toBe(ProtocolIndicator.ID)
         expect(addr.network).toBe(Network.Testnet)
@@ -223,11 +223,19 @@ describe('Address', () => {
       })
 
       test('From ethereum address (ID) 2', async () => {
-        const addr = Address.fromEthAddressHex(Network.Testnet, '0xff00000000000000000000000000000000000065')
+        const addr = Address.fromEthAddress(Network.Testnet, '0xff00000000000000000000000000000000000065')
 
         expect(addr.protocol).toBe(ProtocolIndicator.ID)
         expect(addr.network).toBe(Network.Testnet)
         expect(addr.toString()).toBe('t0101')
+      })
+
+      test('From ethereum address (ID) 3', async () => {
+        const addr = Address.fromEthAddress(Network.Testnet, '0xff0000000000000000000000000000000000da43')
+
+        expect(addr.protocol).toBe(ProtocolIndicator.ID)
+        expect(addr.network).toBe(Network.Testnet)
+        expect(addr.toString()).toBe('t08666')
       })
 
       test('To ethereum address (ID)', async () => {
@@ -237,7 +245,7 @@ describe('Address', () => {
       })
 
       test('From ethereum address (DelegatedAddress)', async () => {
-        const addr = Address.fromEthAddressHex(Network.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da')
+        const addr = Address.fromEthAddress(Network.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da')
 
         expect(addr.protocol).toBe(ProtocolIndicator.DELEGATED)
         expect(addr.network).toBe(Network.Mainnet)

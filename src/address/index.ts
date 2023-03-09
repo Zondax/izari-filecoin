@@ -5,6 +5,7 @@ import BN from 'bn.js'
 import { encode as base32Encode } from '../utils/base32.js'
 
 import {
+  ACTOR_ID_ETHEREUM_MASK,
   ACTOR_PAYLOAD_LEN,
   BLS_PAYLOAD_LEN,
   DelegatedNamespace,
@@ -121,12 +122,17 @@ export abstract class Address {
    * Allows to create a new instance of an Address from an ethereum address.
    * It is based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
    * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
-   * @param ethAddr - ethereum address to parse (as buffer)
+   * @param ethAddr - ethereum address to parse (buffer or hex string, with or without prefix)
    * @returns a new instance of a particular address type.
    */
-  static fromEthAddress = (network: Network, ethAddr: Buffer): AddressId | FilEthAddress => {
+  static fromEthAddress = (network: Network, ethAddr: Buffer | string): AddressId | FilEthAddress => {
+    if (typeof ethAddr === 'string') {
+      const tmp = ethAddr.startsWith('0x') ? ethAddr.slice(2) : ethAddr
+      ethAddr = Buffer.from(tmp, 'hex')
+    }
+
     const idMask = Buffer.alloc(12)
-    idMask[0] = 0xff
+    idMask[0] = ACTOR_ID_ETHEREUM_MASK
 
     if (idMask.compare(ethAddr, 0, 12) == 0) {
       let i = 12
@@ -136,18 +142,6 @@ export abstract class Address {
     }
 
     return new FilEthAddress(network, ethAddr)
-  }
-
-  /**
-   * Allows to create a new instance of an Address from an ethereum address.
-   * It is based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
-   * @param ethAddr - ethereum address to parse (as hex string)
-   * @returns a new instance of a particular address type.
-   */
-  static fromEthAddressHex = (network: Network, ethAddr: string): AddressId | FilEthAddress => {
-    const tmp = ethAddr.startsWith('0x') ? ethAddr.slice(2) : ethAddr
-    return this.fromEthAddress(network, Buffer.from(tmp, 'hex'))
   }
 
   /**
@@ -340,16 +334,17 @@ export class AddressId extends Address {
   }
 
   /**
-   * Allows to get the ethereum format of this address
-   * @returns address in ethereum format
+   * Allows to get an ethereum address that holds the actor id
+   * @param hexPrefix - add the 0x prefix or not
+   * @returns ethereum address
    */
-  toEthAddressHex = (): string => {
+  toEthAddressHex = (hexPrefix = false): string => {
     const buf = Buffer.alloc(ETH_ADDRESS_LEN)
-    buf[0] = 0xff
+    buf[0] = ACTOR_ID_ETHEREUM_MASK
 
     buf.set(this.payload, ETH_ADDRESS_LEN - this.payload.length)
 
-    return '0x' + buf.toString('hex')
+    return `${hexPrefix ? '0x' : ''}${buf.toString('hex')}`
   }
 }
 
