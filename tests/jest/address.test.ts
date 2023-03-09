@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import BN from 'bn.js'
 
-import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, FilEthAddress } from '../../src/address'
+import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, EthereumAddress } from '../../src/address'
 import { Network, ProtocolIndicator } from '../../src/artifacts/address'
 import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../src/address/errors'
 
@@ -188,26 +188,26 @@ describe('Address', () => {
     describe('Type Filecoin Ethereum', () => {
       test('Wrong protocol', async () => {
         expect(() => {
-          FilEthAddress.fromString('f08666')
+          EthereumAddress.fromString('f08666')
         }).toThrow(InvalidProtocolIndicator)
       })
 
       test('Wrong namespace', async () => {
         expect(() => {
           const addr = new AddressDelegated(Network.Mainnet, '11', Buffer.from('111111', 'hex'))
-          FilEthAddress.fromString(addr.toString())
+          EthereumAddress.fromString(addr.toString())
         }).toThrow()
       })
 
       test('Wrong eth address', async () => {
         expect(() => {
           const addr = new AddressDelegated(Network.Mainnet, '10', Buffer.from('111111', 'hex'))
-          FilEthAddress.fromString(addr.toString())
+          EthereumAddress.fromString(addr.toString())
         }).toThrow()
       })
 
       test('Correct eth address', async () => {
-        const addr = FilEthAddress.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
+        const addr = EthereumAddress.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
         expect(addr.namespace).toBe('10')
         expect(addr.subAddress.toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
       })
@@ -219,7 +219,7 @@ describe('Address', () => {
 
         expect(addr.protocol).toBe(ProtocolIndicator.ID)
         expect(addr.network).toBe(Network.Testnet)
-        expect(addr.toString()).toBe("t01")
+        expect(addr.toString()).toBe('t01')
       })
 
       test('From ethereum address (ID) 2', async () => {
@@ -227,13 +227,13 @@ describe('Address', () => {
 
         expect(addr.protocol).toBe(ProtocolIndicator.ID)
         expect(addr.network).toBe(Network.Testnet)
-        expect(addr.toString()).toBe("t0101")
+        expect(addr.toString()).toBe('t0101')
       })
 
       test('To ethereum address (ID)', async () => {
         const addr = AddressId.fromString('f0101')
 
-        expect(addr.toEthAddressHex()).toBe("0xff00000000000000000000000000000000000065")
+        expect(addr.toEthAddressHex()).toBe('0xff00000000000000000000000000000000000065')
       })
 
       test('From ethereum address (DelegatedAddress)', async () => {
@@ -241,18 +241,15 @@ describe('Address', () => {
 
         expect(addr.protocol).toBe(ProtocolIndicator.DELEGATED)
         expect(addr.network).toBe(Network.Mainnet)
-        expect(addr.toString()).toBe("f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa")
+        expect(addr.toString()).toBe('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
       })
-
 
       test('To ethereum address (DelegatedAddress)', async () => {
         const addr = AddressDelegated.fromString('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
 
         expect(addr.network).toBe(Network.Mainnet)
-        expect(addr.toEthAddressHex()).toBe("0xd4c5fb16488aa48081296299d54b0c648c9333da")
+        expect(addr.toEthAddressHex()).toBe('0xd4c5fb16488aa48081296299d54b0c648c9333da')
       })
-
     })
-
   })
 })
