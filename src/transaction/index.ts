@@ -9,7 +9,7 @@ import { waitFor } from '../utils/sleep.js'
 
 // Loading this module dynamically as it has no support to CJS
 // The only way to keep CJS supported on our side is to load it dynamically
-// The interface has been copied from the repo itself
+// The interface IpldDagCbor has been copied from the repo itself
 let globalCbor: IpldDagCbor | undefined
 import('@ipld/dag-cbor')
   .then(localCbor => {
@@ -19,6 +19,9 @@ import('@ipld/dag-cbor')
     throw e
   })
 
+/**
+ * Represents a transaction in the filecoin blockchain.
+ */
 export class Transaction {
   constructor(
     public version: TxVersion,
@@ -33,12 +36,26 @@ export class Transaction {
     public params: string
   ) {}
 
+  /**
+   * Create a new Transaction instance with the minimal values required
+   * @param to - transaction receiver actor
+   * @param from - transaction sender actor
+   * @param value - tokens to be transferred from sender to receiver
+   * @param method - method to be executed on the receiver actor
+   * @returns a new Transaction instance
+   */
   static getNew = (to: Address, from: Address, value: string, method: number): Transaction => {
     if (value === '' || value.includes('-')) throw new Error('value must not be empty or negative')
 
     return new Transaction(TxVersion.Zero, to, from, 0, value, 0, '0', '0', method, '')
   }
 
+  /**
+   * Create a new Transaction instance from a cbor encoded transaction
+   * @param network - network this tx comes from
+   * @param cborMessage - cbor encoded tx to parse
+   * @returns a new Transaction instance
+   */
   static fromCBOR = async (network: Network, cborMessage: Buffer | string): Promise<Transaction> => {
     if (typeof cborMessage === 'string') cborMessage = Buffer.from(cborMessage, 'hex')
 
@@ -70,6 +87,11 @@ export class Transaction {
     )
   }
 
+  /**
+   * Create a new Transaction instance from a json object
+   * @param message - raw json object containing transaction fields in json types
+   * @returns a new Transaction instance
+   */
   static fromJSON = (message: unknown): Transaction => {
     if (typeof message !== 'object' || message == null) throw new Error('tx should be an json object')
 
@@ -106,6 +128,10 @@ export class Transaction {
     )
   }
 
+  /**
+   * Export the current transaction fields to a JSON object (that can be saved in a file, or transmitted to anywhere)
+   * @returns a JSON object representing the current transaction
+   */
   toJSON = (): TransactionJSON => ({
     To: this.to.toString(),
     From: this.from.toString(),
@@ -118,6 +144,10 @@ export class Transaction {
     Method: this.method,
   })
 
+  /**
+   * Encode the current transaction as CBOR following filecoin specifications. This is the format required as input to sign it.
+   * @returns a cbor encoded transaction (as buffer)
+   */
   serialize = async (): Promise<Buffer> => {
     const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
 
@@ -137,6 +167,13 @@ export class Transaction {
     return Buffer.from(cbor.encode(message_to_encode))
   }
 
+  /**
+   * In order to broadcast a transaction, there are some fields that need to be fill up with specific values.
+   * The nonce must be queried from the current blockchain state. Fees must be set too. This method facilitates this
+   * process by fetching them from the node and setting them up.
+   * @param nodeRpc - connection to the filecoin node
+   * @returns the current transaction (new values has been set). This allows to chain more method calls easily.
+   */
   prepareToSend = async (nodeRpc: RPC): Promise<Transaction> => {
     const nonceResult = await nodeRpc.getNonce(this.from.toString())
     if ('error' in nonceResult) throw new Error(nonceResult.error.message)
