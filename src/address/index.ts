@@ -28,15 +28,51 @@ import {
 } from './errors.js'
 import { getChecksum, getLeb128Length, validateNetwork } from './utils.js'
 
+/**
+ * Address is an abstract class that holds fundamental fields that a filecoin address is composed by.
+ * Concrete class types will inherit from it, adding specific methods for each type. It will serve as a factory
+ * for parsing addresses from string and bytes as well.
+ */
 export abstract class Address {
-  constructor(public network: Network, public protocol: ProtocolIndicator) {}
+  /**
+   *
+   * @param network - indicates which network the address belongs.
+   * @param protocol - indicates the address types.
+   * @protected
+   */
+  protected constructor(public network: Network, public protocol: ProtocolIndicator) {}
 
+  /**
+   * Each address is composed by a payload
+   */
   abstract payload: Buffer
+
+  /**
+   * Addresses need to implement a method to generate the bytes format of an address.
+   * For more information about bytes format, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.bytes|link}.
+   * @returns address in bytes format (buffer)
+   */
   abstract toBytes: () => Buffer
+
+  /**
+   * Addresses need to implement a method to generate the string format of an address.
+   * For more information about string format, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.string|link}.
+   * @returns address in string format
+   */
   abstract toString: () => string
 
+  /**
+   * Allows to generate the checksum related to the address.
+   * For more information about string format, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.checksum|link}.
+   * @returns a buffer containing the calculated checksum
+   */
   getChecksum = (): Buffer => getChecksum(this.toBytes())
 
+  /**
+   * Allows to parse any address from string format to its corresponding type
+   * @param address - address to parse in string format
+   * @returns a new instance of a particular address type.
+   */
   static fromString = (address: string): Address => {
     const type = parseInt(address[1])
 
@@ -56,6 +92,12 @@ export abstract class Address {
     }
   }
 
+  /**
+   * Allows to parse any address from bytes format to its corresponding type
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param address - address to parse in bytes format (buffer)
+   * @returns a new instance of a particular address type.
+   */
   static fromBytes = (network: Network, address: Buffer): Address => {
     const type = address[0]
 
@@ -75,49 +117,108 @@ export abstract class Address {
     }
   }
 
-  // based on https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370
-  static fromEthAddress = (network: Network, ethAddr: Buffer): Address => {
+  /**
+   * Allows to create a new instance of an Address from an ethereum address
+   * @dev based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param ethAddr - ethereum address to parse (as buffer)
+   * @returns a new instance of a particular address type.
+   */
+  static fromEthAddress = (network: Network, ethAddr: Buffer): AddressId | FilEthAddress => {
     const idMask = Buffer.alloc(12)
     idMask[0] = 0xff
 
     if (idMask.compare(ethAddr, 0, 12) == 0) {
-      let  i = 12
-      while (ethAddr[i] == 0) {
-        i += 1
-      }
+      let i = 12
+      while (ethAddr[i] == 0) i += 1
 
       return new AddressId(network, ethAddr.slice(i))
     }
 
-    return new FilEthAddress(network, ethAddr)  
+    return new FilEthAddress(network, ethAddr)
   }
 
-  static fromEthAddressHex = (network: Network, ethAddr: string): Address => {
-    let tmp = ethAddr
-    if (ethAddr.startsWith('0x')) {
-      tmp = ethAddr.slice(2)
-    }
-
-    const buf = Buffer.from(tmp, 'hex')
-    return this.fromEthAddress(network, buf)
+  /**
+   * Allows to create a new instance of an Address from an ethereum address
+   * @dev based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param ethAddr - ethereum address to parse (as hex string)
+   * @returns a new instance of a particular address type.
+   */
+  static fromEthAddressHex = (network: Network, ethAddr: string): AddressId | FilEthAddress => {
+    const tmp = ethAddr.startsWith('0x') ? ethAddr.slice(2) : ethAddr
+    return this.fromEthAddress(network, Buffer.from(tmp, 'hex'))
   }
 
+  /**
+   * Allows to check if true value of an address instance is AddressId
+   * @param address - instance to check its actual type
+   * @returns whether the instance is AddressId or not
+   */
   static isAddressId = (address: Address): address is AddressId => address.protocol == ProtocolIndicator.ID
+
+  /**
+   * Allows to check if true value of an address instance is AddressBls
+   * @param address - instance to check its actual type
+   * @returns whether the instance is AddressId or not
+   */
   static isAddressBls = (address: Address): address is AddressBls => address.protocol == ProtocolIndicator.BLS
+
+  /**
+   * Allows to check if true value of an address instance is AddressSecp256k1
+   * @param address - instance to check its actual type
+   * @returns whether the instance is AddressSecp256k1 or not
+   */
   static isAddressSecp256k1 = (address: Address): address is AddressSecp256k1 => address.protocol == ProtocolIndicator.SECP256K1
+
+  /**
+   * Allows to check if true value of an address instance is AddressDelegated
+   * @param address - instance to check its actual type
+   * @returns whether the instance is AddressDelegated or not
+   */
   static isAddressDelegated = (address: Address): address is AddressDelegated => address.protocol == ProtocolIndicator.DELEGATED
+
+  /**
+   * Allows to check if true value of an address instance is AddressActor
+   * @param address - instance to check its actual type
+   * @returns whether the instance is AddressActor or not
+   */
   static isAddressActor = (address: Address): address is AddressActor => address.protocol == ProtocolIndicator.ACTOR
 }
 
+/**
+ * AddressBls is a concrete address type 3 on filecoin blockchain (f3/t3)
+ * For more information about bls addresses, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-3-bls|link}.
+ */
 export class AddressBls extends Address {
-  constructor(network: Network, public payload: Buffer) {
+  /**
+   * Contains BLS public key, base32 encoded
+   * For more information about payloads, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.payload|link}.
+   */
+  public payload: Buffer
+
+  /**
+   * Allows to create a new instance of bls address
+   * @param network - indicates which network the address belongs.
+   * @param payload - current address payload (buffer)
+   */
+  constructor(network: Network, payload: Buffer) {
     super(network, ProtocolIndicator.BLS)
 
     if (payload.byteLength !== BLS_PAYLOAD_LEN) throw new InvalidPayloadLength()
+    this.payload = payload
   }
 
+  /**
+   * Allows to get the bytes format of this address
+   * @returns bls address in bytes format
+   */
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
 
+  /**
+   * Allows to get the string format of this address
+   * @returns bls address in string format
+   */
   toString = (): string => {
     const checksum = this.getChecksum()
     return (
@@ -129,6 +230,11 @@ export class AddressBls extends Address {
     )
   }
 
+  /**
+   * Allows to create a new AddressBls instance from a string
+   * @param address - address in string format
+   * @returns a new instance of AddressBls
+   */
   static fromString(address: string): AddressBls {
     const network = address[0]
     const protocolIndicator = address[1]
@@ -146,6 +252,12 @@ export class AddressBls extends Address {
     return newAddress
   }
 
+  /**
+   * Allows to create a new AddressBls instance from bytes (buffer)
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param bytes - address to parse in bytes format (buffer)
+   * @returns a new instance of AddressBls
+   */
   static fromBytes(network: Network, bytes: Buffer): AddressBls {
     if (bytes[0] != ProtocolIndicator.BLS) throw new InvalidProtocolIndicator()
 
@@ -154,10 +266,27 @@ export class AddressBls extends Address {
   }
 }
 
+/**
+ * AddressId is a concrete address type 0 on filecoin blockchain (f0/t0)
+ * For more information about bls addresses, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-0-ids|link}.
+ */
 export class AddressId extends Address {
+  /**
+   * Contains the id in decimal
+   */
   public id: string
+
+  /**
+   * Contains leb128 encoded id
+   * For more information about payloads, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.payload|link}.
+   */
   public payload: Buffer
 
+  /**
+   * Allows to create a new instance of id address
+   * @param network - indicates which network the address belongs.
+   * @param payload - current address payload. It can be string (id in decimal) or buffer (leb128 encoded id)
+   */
   constructor(network: Network, payload: string | Buffer) {
     super(network, ProtocolIndicator.ID)
 
@@ -169,10 +298,23 @@ export class AddressId extends Address {
     this.id = this.toString().slice(2)
   }
 
+  /**
+   * Allows to get the bytes format of this address
+   * @returns id address in bytes format
+   */
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
 
+  /**
+   * Allows to get the string format of this address
+   * @returns id address in string format
+   */
   toString = (): string => this.network + this.protocol.toString() + leb.unsigned.decode(this.payload)
 
+  /**
+   * Allows to create a new AddressId instance from a string
+   * @param address - address in string format
+   * @returns a new instance of AddressId
+   */
   static fromString(address: string): AddressId {
     const network = address[0]
     const protocolIndicator = address[1]
@@ -184,6 +326,12 @@ export class AddressId extends Address {
     return new AddressId(network, payload)
   }
 
+  /**
+   * Allows to create a new AddressId instance from bytes (buffer)
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param bytes - address to parse in bytes format (buffer)
+   * @returns a new instance of AddressId
+   */
   static fromBytes(network: Network, bytes: Buffer): AddressId {
     if (bytes[0] != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
 
@@ -199,17 +347,40 @@ export class AddressId extends Address {
 
     return '0x' + buf.toString('hex')
   }
-
 }
 
+/**
+ * AddressSecp256k1 is a concrete address type 1 on filecoin blockchain (f1/t1)
+ * For more information about secp256k1 addresses, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-1-libsecpk1-elliptic-curve-public-keys|link}.
+ */
 export class AddressSecp256k1 extends Address {
-  constructor(network: Network, public payload: Buffer) {
+  /**
+   * Contains the Blake2b 160 hash of the uncompressed public key (65 bytes).
+   * For more information about payloads, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.payload|link}.
+   */
+  public payload: Buffer
+
+  /**
+   * Allows to create a new instance of secp256k1 address
+   * @param network - indicates which network the address belongs.
+   * @param payload - current address payload (buffer)
+   */
+  constructor(network: Network, payload: Buffer) {
     super(network, ProtocolIndicator.SECP256K1)
     if (payload.byteLength !== SECP256K1_PAYLOAD_LEN) throw new InvalidPayloadLength()
+    this.payload = payload
   }
 
+  /**
+   * Allows to get the bytes format of this address
+   * @returns secp256k1 address in bytes format
+   */
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
 
+  /**
+   * Allows to get the string format of this address
+   * @returns secp256k1 address in string format
+   */
   toString = (): string => {
     const checksum = this.getChecksum()
     return (
@@ -221,6 +392,11 @@ export class AddressSecp256k1 extends Address {
     )
   }
 
+  /**
+   * Allows to create a new AddressSecp256k1 instance from a string
+   * @param address - address in string format
+   * @returns a new instance of AddressSecp256k1
+   */
   static fromString(address: string): AddressSecp256k1 {
     const network = address[0]
     const protocolIndicator = address[1]
@@ -238,6 +414,12 @@ export class AddressSecp256k1 extends Address {
     return newAddress
   }
 
+  /**
+   * Allows to create a new AddressSecp256k1 instance from bytes (buffer)
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param bytes - address to parse in bytes format (buffer)
+   * @returns a new instance of AddressSecp256k1
+   */
   static fromBytes(network: Network, bytes: Buffer): AddressSecp256k1 {
     if (bytes[0] != ProtocolIndicator.SECP256K1) throw new InvalidProtocolIndicator()
 
@@ -246,14 +428,39 @@ export class AddressSecp256k1 extends Address {
   }
 }
 
+/**
+ * AddressActor is a concrete address type 2 on filecoin blockchain (f2/t2)
+ * For more information about actor addresses, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-2-actor|link}.
+ */
 export class AddressActor extends Address {
-  constructor(network: Network, public payload: Buffer) {
+  /**
+   * Contains the SHA256 hash of meaningful data produced as a result of creating the actor
+   * For more information about payloads, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.payload|link}.
+   */
+  public payload: Buffer
+
+  /**
+   * Allows to create a new instance of actor address
+   * @param network - indicates which network the address belongs.
+   * @param payload - current address payload (buffer)
+   */
+  constructor(network: Network, payload: Buffer) {
     super(network, ProtocolIndicator.ACTOR)
     if (payload.byteLength !== ACTOR_PAYLOAD_LEN) throw new InvalidPayloadLength()
+
+    this.payload = payload
   }
 
+  /**
+   * Allows to get the bytes format of this address
+   * @returns actor address in bytes format
+   */
   toBytes = (): Buffer => Buffer.concat([Buffer.from(`0${this.protocol}`, 'hex'), this.payload])
 
+  /**
+   * Allows to get the string format of this address
+   * @returns actor address in string format
+   */
   toString = (): string => {
     const checksum = this.getChecksum()
     return (
@@ -265,6 +472,11 @@ export class AddressActor extends Address {
     )
   }
 
+  /**
+   * Allows to create a new AddressActor instance from a string
+   * @param address - address in string format
+   * @returns a new instance of AddressActor
+   */
   static fromString(address: string): AddressActor {
     const network = address[0]
     const protocolIndicator = address[1]
@@ -282,6 +494,12 @@ export class AddressActor extends Address {
     return newAddress
   }
 
+  /**
+   * Allows to create a new AddressActor instance from bytes (buffer)
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param bytes - address to parse in bytes format (buffer)
+   * @returns a new instance of AddressActor
+   */
   static fromBytes(network: Network, bytes: Buffer): AddressActor {
     if (bytes[0] != ProtocolIndicator.ACTOR) throw new InvalidProtocolIndicator()
 
@@ -290,8 +508,13 @@ export class AddressActor extends Address {
   }
 }
 
+/**
+ * AddressDelegated is a concrete address type 4 on filecoin blockchain (f4/t4)
+ * For more information about delegated addresses, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.protocol-3-bls|link}.
+ */
 export class AddressDelegated extends Address {
   public payload: Buffer
+
   constructor(public network: Network, public namespace: string, public subAddress: Buffer) {
     super(network, ProtocolIndicator.DELEGATED)
 
@@ -301,6 +524,10 @@ export class AddressDelegated extends Address {
     this.payload = this.toBytes().slice(1)
   }
 
+  /**
+   * Allows to get the bytes format of this address
+   * @returns delegated address in bytes format
+   */
   toBytes = (): Buffer => {
     const namespaceBytes = Buffer.from(leb.unsigned.encode(this.namespace))
     const protocolBytes = Buffer.from(leb.unsigned.encode(this.protocol))
@@ -308,6 +535,10 @@ export class AddressDelegated extends Address {
     return Buffer.concat([protocolBytes, namespaceBytes, this.subAddress])
   }
 
+  /**
+   * Allows to get the string format of this address
+   * @returns delegated address in string format
+   */
   toString = (): string => {
     const checksum = this.getChecksum()
 
@@ -322,6 +553,11 @@ export class AddressDelegated extends Address {
     )
   }
 
+  /**
+   * Allows to create a new AddressDelegated instance from a string
+   * @param address - address in string format
+   * @returns a new instance of AddressDelegated
+   */
   static fromString(address: string): AddressDelegated {
     const network = address[0]
     const protocolIndicator = address[1]
@@ -343,6 +579,12 @@ export class AddressDelegated extends Address {
     return newAddress
   }
 
+  /**
+   * Allows to create a new AddressDelegated instance from bytes (buffer)
+   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param bytes - address to parse in bytes format (buffer)
+   * @returns a new instance of AddressDelegated
+   */
   static fromBytes(network: Network, bytes: Buffer): AddressDelegated {
     if (bytes[0] != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
