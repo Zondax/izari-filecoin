@@ -33,6 +33,11 @@ export const tryToPrivateKeyBuffer = (privateKey: string | Buffer): Buffer => {
   return privateKey
 }
 
+/**
+ * Generate the f1/t1 payload from public key
+ * @param uncompressedPublicKey public key
+ * @returns generated payload
+ */
 export const getPayloadSECP256K1 = (uncompressedPublicKey: Uint8Array): Buffer => {
   // blake2b-160
   const blakeCtx = blake.blake2bInit(20)
@@ -40,4 +45,9 @@ export const getPayloadSECP256K1 = (uncompressedPublicKey: Uint8Array): Buffer =
   return Buffer.from(blake.blake2bFinal(blakeCtx))
 }
 
+/**
+ * Validate if a given number is a valid signature type
+ * @param type possible signature type
+ * @returns whether the input is a signature type or not
+ */
 export const isSignatureType = (type: number): type is SignatureType => SignatureType.BLS === type || SignatureType.SECP256K1 === type
