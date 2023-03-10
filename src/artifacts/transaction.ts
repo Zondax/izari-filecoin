@@ -57,7 +57,7 @@ type Nonce = number
 export type TxInputData = [TxVersion, To, From, Nonce, Value, GasLimit, GasFeeCap, GasPremium, Method, Params]
 
 /**
- *
+ * JSON representation of a filecoin transaction
  */
 export type TransactionJSON = {
   To: string

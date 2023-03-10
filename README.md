@@ -66,14 +66,14 @@ ethereum address, either string or bytes format. Besides, you can do the other w
 
 #### Tokens
 
-Allow you to easily manage magnitudes used within Filecoin to do conversions between them, arithmetical operations, etc.
+Allow you to easily manage denominations used within Filecoin to do conversions between them, arithmetical operations, etc.
 
-| Feature                     | Atto               | Nano fil           | Whole              |
-|-----------------------------|--------------------|--------------------|--------------------|
-| Parse from string           | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Addition, subtraction, etc  | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Convert to other magnitudes | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Positive, negative, zero    | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Feature                         | Atto               | Nano fil           | Whole              |
+|---------------------------------|--------------------|--------------------|--------------------|
+| Parse from string               | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Addition, subtraction, etc      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Convert to other denominations  | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Positive, negative, zero        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 #### Transactions
 
@@ -155,7 +155,7 @@ Inside this package there are several entry points grouped by features. If you o
 **Note:** More information about these approach and its advantages can be found [here](https://webpack.js.org/guides/package-exports/) and [here](https://dev.to/binjospookie/exports-in-package-json-1fl2). 
 
 #### Examples 
-If I only need to convert some tokens between different magnitudes, both ways are valid.
+If I only need to convert some tokens between different denominations, both ways are valid.
 
 Using the main entry point
 ```typescript

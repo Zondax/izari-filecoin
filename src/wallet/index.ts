@@ -4,7 +4,7 @@ import * as ecc from '@bitcoinerlab/secp256k1'
 import secp256k1 from 'secp256k1'
 
 import { getCoinTypeFromPath, getDigest, getPayloadSECP256K1, isSignatureType, tryToPrivateKeyBuffer } from './utils.js'
-import { AccountData, Network, SignatureType } from '../artifacts/index.js'
+import { AccountData, Network, SignatureJSON, SignatureType } from '../artifacts/index.js'
 import { AddressSecp256k1 } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
 
@@ -12,15 +12,39 @@ import { Transaction } from '../transaction/index.js'
 const bip32_Secp256k1 = bip32Default.BIP32Factory(ecc)
 
 export class Wallet {
+  /**
+   * Generate a new random mnemonic which will be used to derive new accounts in a hierarchical way
+   * For more information about BIP39, please refer to this {@link https://en.bitcoin.it/wiki/BIP_0039|link}
+   * @returns string containing 24 words
+   */
   static generateMnemonic = (): string => bip39.generateMnemonic(256)
 
-  static mnemonicToSeed = (mnemonic: string, password?: string) => bip39.mnemonicToSeedSync(mnemonic, password)
+  /**
+   * Convert a given mnemonic to a seed
+   * @param mnemonic - input mnemonic
+   * @param password - optional password
+   * @returns a buffer containing the seed
+   */
+  static mnemonicToSeed = (mnemonic: string, password?: string): Buffer => bip39.mnemonicToSeedSync(mnemonic, password)
 
+  /**
+   * Derive a new account
+   * @param mnemonic - mnemonic to derive account from
+   * @param type - which type of account must be derived
+   * @param path - derivation path
+   * @param password - optional password
+   */
   static deriveAccount = (mnemonic: string, type: SignatureType, path: string, password?: string): AccountData => {
     const seed = Wallet.mnemonicToSeed(mnemonic, password)
     return Wallet.deriveAccountFromSeed(seed, type, path)
   }
 
+  /**
+   * Derive a new account
+   * @param seed - seed to derive account from
+   * @param type - which type of account must be derived
+   * @param path - derivation path
+   */
   static deriveAccountFromSeed = (seed: string | Buffer, type: SignatureType, path: string): AccountData => {
     if (typeof seed === 'string') seed = Buffer.from(seed, 'hex')
 
@@ -49,6 +73,13 @@ export class Wallet {
     }
   }
 
+  /**
+   * Try to recover account related data from raw private key
+   * @param network - network this account belongs
+   * @param type - which type of account must be derived
+   * @param privateKey - private key raw data to recover account from
+   * @param path - derivation path
+   */
   static recoverAccount(network: Network, type: SignatureType, privateKey: string | Buffer, path?: string): AccountData {
     switch (type) {
       case SignatureType.SECP256K1: {
@@ -69,6 +100,12 @@ export class Wallet {
     }
   }
 
+  /**
+   * Sign a transaction using account the private key
+   * @param accountData - account data generated from deriving a new account
+   * @param tx - tranasction to sign
+   * @returns generated signature
+   */
   static signTransaction = async (accountData: Pick<AccountData, 'privateKey' | 'type'>, tx: Transaction): Promise<Signature> => {
     const serializedTx = await tx.serialize()
     const txDigest = getDigest(serializedTx)
@@ -86,6 +123,12 @@ export class Wallet {
     }
   }
 
+  /**
+   * Verify whether a given signature is valid or not to a given transaction data
+   * @param signature - signature to validate
+   * @param tx - transaction data
+   * @returns whether the signature is valid or not
+   */
   static verifySignature = async (signature: Signature, tx: Transaction): Promise<boolean> => {
     const serializedTx = await tx.serialize()
     const txDigest = getDigest(serializedTx)
@@ -105,7 +148,19 @@ export class Wallet {
     }
   }
 
-  protected static getPublicSecp256k1FromPrivKey = (network: Network, privateKey: Buffer) => {
+  /**
+   * Generate the public key based on an account private key
+   * @param network - network this account belongs
+   * @param privateKey - private key raw data to recover account from
+   * @returns generated public key and new AddressSecp256k1 instance
+   */
+  protected static getPublicSecp256k1FromPrivKey = (
+    network: Network,
+    privateKey: Buffer
+  ): {
+    publicKey: Buffer
+    address: AddressSecp256k1
+  } => {
     const pubKey = secp256k1.publicKeyCreate(privateKey)
 
     const uncompressedPublicKey = new Uint8Array(65)
@@ -121,9 +176,22 @@ export class Wallet {
   }
 }
 
+/**
+ * Contains the data related to a transaction signature
+ */
 export class Signature {
+  /**
+   * Creates a new Signature instance based on a type and payload
+   * @param type - signature type
+   * @param data - signature payload
+   */
   constructor(protected type: SignatureType, protected data: Buffer) {}
 
+  /**
+   * Create a new Signature instance from a raw JSON object
+   * @param input - raw JSON input
+   * @returns new Signature instance
+   */
   fromJSON = (input: unknown): Signature => {
     if (typeof input !== 'object' || input === null) throw new Error('input should be an object')
     if (!('Type' in input) || typeof input.Type !== 'number' || isSignatureType(input.Type)) throw new Error("'Type' should be a number")
@@ -132,11 +200,29 @@ export class Signature {
     return new Signature(input.Type, Buffer.from(input.Data, 'base64'))
   }
 
-  toJSON = () => ({ Type: this.type, Data: this.data.toString('base64') })
+  /**
+   * Export a JSON object containing signature type and data (base64)
+   * @returns signature JSON object
+   */
+  toJSON = (): SignatureJSON => ({ Type: this.type, Data: this.data.toString('base64') })
 
-  getType = () => this.type
-  getData = () => this.data
+  /**
+   * Getter to signature type
+   */
+  getType = (): SignatureType => this.type
 
-  isSecp256k1 = () => this.type === SignatureType.SECP256K1
-  isBls = () => this.type === SignatureType.BLS
+  /**
+   * Getter to signature payload
+   */
+  getData = (): Buffer => this.data
+
+  /**
+   * Whether the signature type is SECP256K1 or not
+   */
+  isSecp256k1 = (): boolean => this.type === SignatureType.SECP256K1
+
+  /**
+   * Whether the signature type is BLS or not
+   */
+  isBls = (): boolean => this.type === SignatureType.BLS
 }
