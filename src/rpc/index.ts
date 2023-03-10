@@ -6,11 +6,13 @@ import {
   MpoolPushResponse,
   ReadStateResponse,
   RpcError,
-  SignedTransaction,
   StateWaitMsgResponse,
   WalletBalanceResponse,
 } from '../artifacts/rpc.js'
-import { TransactionJSON } from '../artifacts/transaction.js'
+import { Network } from '../artifacts/index.js'
+import { Address } from '../address/index.js'
+import { Transaction } from '../transaction/index.js'
+import { Signature } from '../wallet/index.js'
 
 type Args = { url: string; token: string }
 
@@ -26,17 +28,25 @@ export class RPC {
   /**
    * Http client used to communicate to the node
    */
-  fetcher: AxiosInstance
+  protected fetcher: AxiosInstance
+
+  /**
+   * Indicates which network this RPC interacts with
+   */
+  protected network
 
   /**
    * Create a new RPC instance
+   * @param network - indicates which network this RPC will be allowed to talk to
    * @param args - required connection parameters
    */
-  constructor(args: Args) {
+  constructor(network: Network, args: Args) {
     this.fetcher = axios.create({
       baseURL: args.url,
       headers: { Authorization: `Bearer ${args.token}` },
     })
+
+    this.network = network
   }
 
   /**
@@ -45,13 +55,15 @@ export class RPC {
    * @param address - address which next nonce to query
    * @returns the next nonce or error
    */
-  async getNonce(address: string): Promise<GetNonceResponse> {
+  async getNonce(address: Address): Promise<GetNonceResponse> {
+    this.validateNetwork(address)
+
     try {
       const response = await this.fetcher.post('', {
         jsonrpc: '2.0',
         method: 'Filecoin.MpoolGetNonce',
         id: 1,
-        params: [address],
+        params: [address.toString()],
       })
       return response.data as GetNonceResponse
     } catch (e: unknown) {
@@ -62,16 +74,20 @@ export class RPC {
   /**
    * Allows to send a new transaction to the blockchain
    * For more information about MpoolPush, please refer to this {@link https://lotus.filecoin.io/reference/lotus/mpool/#mpoolpush|link}
-   * @param signedTx - signed transactions to be broadcast
+   * @param tx - transaction to be broadcast
+   * @param signature - transaction signature to be broadcast
    * @returns the cid related to the tx or error
    */
-  async broadcastTransaction(signedTx: SignedTransaction): Promise<MpoolPushResponse> {
+  async broadcastTransaction(tx: Transaction, signature: Signature): Promise<MpoolPushResponse> {
+    this.validateNetwork(tx.to, 'receiver')
+    this.validateNetwork(tx.from, 'sender')
+
     try {
       const mpoolResponse = await this.fetcher.post<MpoolPushResponse>('', {
         jsonrpc: '2.0',
         method: 'Filecoin.MpoolPush',
         id: 1,
-        params: [signedTx],
+        params: [{ Message: tx.toJSON(), Signature: signature.toJSON() }],
       })
 
       return mpoolResponse.data
@@ -84,16 +100,19 @@ export class RPC {
    * Allows to get the proper fees values required to broadcast a new tx to the blockchain
    * For more information about how gas fees work, please refer to this {@link https://spec.filecoin.io/systems/filecoin_vm/gas_fee/#section-systems.filecoin_vm.gas_fee|link}
    * For more information about gas fees, please refer to this {@link https://lotus.filecoin.io/reference/lotus/gas/#gasestimatemessagegas|link}
-   * @param txJson - raw transaction that is intended to be broadcast
+   * @param tx - transaction that is intended to be broadcast
    * @returns the fees values or error
    */
-  async getGasEstimation(txJson: TransactionJSON): Promise<GasEstimationResponse> {
+  async getGasEstimation(tx: Transaction): Promise<GasEstimationResponse> {
+    this.validateNetwork(tx.to, 'receiver')
+    this.validateNetwork(tx.from, 'sender')
+
     try {
       const response = await this.fetcher.post('', {
         jsonrpc: '2.0',
         method: 'Filecoin.GasEstimateMessageGas',
         id: 1,
-        params: [txJson, { MaxFee: '0' }, null],
+        params: [tx.toJSON(), { MaxFee: '0' }, null],
       })
 
       return response.data as GasEstimationResponse
@@ -108,13 +127,15 @@ export class RPC {
    * @param address - address to read state
    * @returns the state or error
    */
-  async readState(address: string): Promise<ReadStateResponse> {
+  async readState(address: Address): Promise<ReadStateResponse> {
+    this.validateNetwork(address)
+
     try {
       const response = await this.fetcher.post('', {
         jsonrpc: '2.0',
         method: 'Filecoin.StateReadState',
         id: 1,
-        params: [address, null],
+        params: [address.toString(), null],
       })
 
       return response.data as ReadStateResponse
@@ -149,13 +170,15 @@ export class RPC {
    * @param address - address to fetch balance from
    * @returns the actual balance or error
    */
-  async walletBalance(address: string): Promise<WalletBalanceResponse> {
+  async walletBalance(address: Address): Promise<WalletBalanceResponse> {
+    this.validateNetwork(address)
+
     try {
       const response = await this.fetcher.post('', {
         jsonrpc: '2.0',
         method: 'Filecoin.WalletBalance',
         id: 1,
-        params: [address],
+        params: [address.toString()],
       })
       return response.data as WalletBalanceResponse
     } catch (e: unknown) {
@@ -179,5 +202,27 @@ export class RPC {
       if (e.message) return { error: { message: e.message } } as T
     }
     throw e
+  }
+
+  private validateNetwork = (address: Address, description = 'address') => {
+    if (address.getNetwork() !== this.network) throw new Error(`${description} belongs to ${address.getNetwork()} network while rpc allows ${this.network}`)
+  }
+}
+
+/**
+ * Filecoin RPC connection preloaded to interact with mainnet environment
+ */
+export class MainnetRPC extends RPC {
+  constructor(args: Args) {
+    super(Network.Mainnet, args)
+  }
+}
+
+/**
+ * Filecoin RPC connection preloaded to interact with testnet environment
+ */
+export class TestnetRPC extends RPC {
+  constructor(args: Args) {
+    super(Network.Testnet, args)
   }
 }

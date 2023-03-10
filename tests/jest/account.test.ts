@@ -20,9 +20,11 @@ if (!receiver_path) throw new Error('RECEIVER_ACCOUNT_PATH must be defined')
 
 describe('Account', () => {
   test('Send', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path)
+    const network = senderAccountData.address.getNetwork()
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
     const cid = await Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('100'))
     expect(cid).toBeDefined()
@@ -30,8 +32,10 @@ describe('Account', () => {
   })
 
   test('Balance', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
+    const network = senderAccountData.address.getNetwork()
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
     const balance = await Account.getBalance(rpcNode, senderAccountData)
     expect(balance.gt(Token.getDefault())).toBeTruthy()

@@ -1,5 +1,4 @@
-import { RPC } from '../../src/rpc'
-import { SignatureType, Wallet } from '../../src'
+import { SignatureType, Wallet, RPC, Address, Transaction, Token } from '../../src'
 
 jest.setTimeout(60 * 1000)
 
@@ -13,30 +12,20 @@ if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
 if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
 if (!sender_path) throw new Error('SENDER_ACCOUNT_PATH must be defined')
 
-const TX_TEMPLATE = {
-  From: 'REPLACE-ME',
-  To: 'REPLACE-ME',
-  Value: 'REPLACE-ME',
-  Method: 0,
-  Params: '',
-  Nonce: 'REPLACE-ME',
-  GasFeeCap: '0',
-  GasPremium: '0',
-  GasLimit: 0,
-}
-
 describe('Filecoin RPC', () => {
   test('Unauthorized', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: `${nodeToken}invalid` })
-    const response = await rpcNode.getNonce('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const addr = Address.fromString('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: `${nodeToken}invalid` })
+    const response = await rpcNode.getNonce(addr)
 
     expect('error' in response).toBe(true)
     expect('error' in response ? response.error.message : null).toBe('401 - Unauthorized')
   })
 
   test('Get nonce for new account', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
-    const response = await rpcNode.getNonce('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const addr = Address.fromString('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: nodeToken })
+    const response = await rpcNode.getNonce(addr)
 
     expect('error' in response).toBe(true)
     expect('error' in response ? response.error.message : null).toBe(
@@ -45,34 +34,27 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get nonce for existing account', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
-    const response = await rpcNode.getNonce('f410fr5lrinnngtqxl36rqvf6ykjm6tkmqi44ehqpybi')
+    const addr = Address.fromString('f410fr5lrinnngtqxl36rqvf6ykjm6tkmqi44ehqpybi')
+    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: nodeToken })
+    const response = await rpcNode.getNonce(addr)
 
     expect('error' in response).toBe(false)
     expect('result' in response ? response.result : null).toBeGreaterThan(0)
   })
 
-  test('Get nonce for wrong account', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
-    const response = await rpcNode.getNonce('f410fr5lrxxxxxxxxl36rqvf6ykjm6tkmqi44ehqpybi')
-
-    expect('error' in response).toBe(true)
-    expect('error' in response ? response.error.message : null).toBe(
-      "unmarshaling params for 'Filecoin.MpoolGetNonce' (param: *address.Address): invalid address checksum"
-    )
-  })
-
   test('Estimate fees for send tx', async () => {
-    const address = 'f410fr5lrinnngtqxl36rqvf6ykjm6tkmqi44ehqpybi'
+    const address = Address.fromString('f410fr5lrinnngtqxl36rqvf6ykjm6tkmqi44ehqpybi')
 
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
+    const rpcNode = new RPC(address.getNetwork(), { url: nodeUrl, token: nodeToken })
 
     const response = await rpcNode.getNonce(address)
     expect('error' in response).toBe(false)
     if ('error' in response) return
 
-    let tx = { ...TX_TEMPLATE, From: address, To: address, Nonce: response.result, Value: '100000' }
-    const fees = await rpcNode.getGasEstimation({ ...tx })
+    const tx = Transaction.getNew(address, address, '100000', 0)
+    tx.nonce = response.result
+
+    const fees = await rpcNode.getGasEstimation(tx)
 
     expect('error' in fees).toBe(false)
     expect('result' in fees).toBe(true)
@@ -85,8 +67,9 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get balance for account (0 balance)', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
-    const response = await rpcNode.walletBalance('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const addr = Address.fromString('f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: nodeToken })
+    const response = await rpcNode.walletBalance(addr)
 
     expect('error' in response).toBe(false)
     expect('result' in response).toBe(true)
@@ -95,9 +78,10 @@ describe('Filecoin RPC', () => {
 
   test('Get balance for account (some balance)', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
+    const network = senderAccountData.address.getNetwork()
 
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
-    const response = await rpcNode.walletBalance(senderAccountData.address.toString())
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+    const response = await rpcNode.walletBalance(senderAccountData.address)
 
     expect('error' in response).toBe(false)
     expect('result' in response).toBe(true)
