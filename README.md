@@ -68,12 +68,14 @@ ethereum address, either string or bytes format. Besides, you can do the other w
 
 Allow you to easily manage denominations used within Filecoin to do conversions between them, arithmetical operations, etc.
 
-| Feature                         | Atto               | Nano fil           | Whole              |
-|---------------------------------|--------------------|--------------------|--------------------|
-| Parse from string               | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Addition, subtraction, etc      | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Convert to other denominations  | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| Positive, negative, zero        | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Feature                         | Denomination       |
+|---------------------------------|--------------------|
+| Parse from string               | :white_check_mark: |
+| Addition, subtraction, etc      | :white_check_mark: |
+| Convert to other denominations  | :white_check_mark: |
+| Positive, negative, zero        | :white_check_mark: |
+
+**All denominations supported: atto, femto, pico, nano, micro, milli and whole.**
 
 #### Transactions
 
