@@ -4,13 +4,13 @@ jest.setTimeout(60 * 1000)
 
 describe('Token', () => {
   test('Zero', () => {
-    expect(Token.getDefault().toAtto()).toBe('0')
-    expect(Token.getDefault().toFemto()).toBe('0')
-    expect(Token.getDefault().toPico()).toBe('0')
-    expect(Token.getDefault().toNano()).toBe('0')
-    expect(Token.getDefault().toMicro()).toBe('0')
-    expect(Token.getDefault().toMilli()).toBe('0')
-    expect(Token.getDefault().toWhole()).toBe('0')
+    expect(Token.zero().toAtto()).toBe('0')
+    expect(Token.zero().toFemto()).toBe('0')
+    expect(Token.zero().toPico()).toBe('0')
+    expect(Token.zero().toNano()).toBe('0')
+    expect(Token.zero().toMicro()).toBe('0')
+    expect(Token.zero().toMilli()).toBe('0')
+    expect(Token.zero().toWhole()).toBe('0')
   })
 
   describe('Positive', () => {
@@ -83,15 +83,27 @@ describe('Token', () => {
       expect(Token.fromNano('10000000000').toWhole()).toBe('10')
 
       expect(Token.fromNano('1000000000000000000').toAtto()).toBe('1000000000000000000000000000')
+      expect(Token.fromNano('1000000000000000000').toFemto()).toBe('1000000000000000000000000')
+      expect(Token.fromNano('1000000000000000000').toPico()).toBe('1000000000000000000000')
       expect(Token.fromNano('1000000000000000000').toNano()).toBe('1000000000000000000')
+      expect(Token.fromNano('1000000000000000000').toMicro()).toBe('1000000000000000')
+      expect(Token.fromNano('1000000000000000000').toMilli()).toBe('1000000000000')
       expect(Token.fromNano('1000000000000000000').toWhole()).toBe('1000000000')
 
       expect(Token.fromNano('11231000000000000000000').toAtto()).toBe('11231000000000000000000000000000')
+      expect(Token.fromNano('10000000000000000000000').toFemto()).toBe('10000000000000000000000000000')
+      expect(Token.fromNano('10000000000000000000000').toPico()).toBe('10000000000000000000000000')
       expect(Token.fromNano('11231000000000000000000').toNano()).toBe('11231000000000000000000')
+      expect(Token.fromNano('10000000000000000000000').toMicro()).toBe('10000000000000000000')
+      expect(Token.fromNano('10000000000000000000000').toMilli()).toBe('10000000000000000')
       expect(Token.fromNano('11231000000000000000000').toWhole()).toBe('11231000000000')
 
       expect(Token.fromNano('11231000001100000000011').toAtto()).toBe('11231000001100000000011000000000')
+      expect(Token.fromNano('11231000001100000000011').toFemto()).toBe('11231000001100000000011000000')
+      expect(Token.fromNano('11231000001100000000011').toPico()).toBe('11231000001100000000011000')
       expect(Token.fromNano('11231000001100000000011').toNano()).toBe('11231000001100000000011')
+      expect(Token.fromNano('11231000001100000000011').toMicro()).toBe('11231000001100000000.011')
+      expect(Token.fromNano('11231000001100000000011').toMilli()).toBe('11231000001100000.000011')
       expect(Token.fromNano('11231000001100000000011').toWhole()).toBe('11231000001100.000000011')
     })
 

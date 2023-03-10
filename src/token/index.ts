@@ -23,7 +23,7 @@ export class Token {
   /**
    * Creates an instance with 0 as value
    */
-  static getDefault = () => new Token(new BN('0'))
+  static zero = () => new Token(new BN('0'))
 
   /**
    * Parse string value as attoFil
