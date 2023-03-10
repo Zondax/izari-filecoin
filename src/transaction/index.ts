@@ -175,12 +175,12 @@ export class Transaction {
    * @returns the current transaction (new values has been set). This allows to chain more method calls easily.
    */
   prepareToSend = async (nodeRpc: RPC): Promise<Transaction> => {
-    const nonceResult = await nodeRpc.getNonce(this.from.toString())
+    const nonceResult = await nodeRpc.getNonce(this.from)
     if ('error' in nonceResult) throw new Error(nonceResult.error.message)
 
     this.nonce = nonceResult.result
 
-    const gasResult = await nodeRpc.getGasEstimation(this.toJSON())
+    const gasResult = await nodeRpc.getGasEstimation(this)
     if ('error' in gasResult) throw new Error(gasResult.error.message)
 
     this.gasFeeCap = gasResult.result.GasFeeCap

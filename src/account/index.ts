@@ -26,7 +26,7 @@ export class Account {
 
     const signature = await Wallet.signTransaction(account, tx)
 
-    const response = await nodeRpc.broadcastTransaction({ Message: tx.toJSON(), Signature: signature.toJSON() })
+    const response = await nodeRpc.broadcastTransaction(tx, signature)
     if ('error' in response) throw new Error(response.error.message)
 
     return response.result['/']
@@ -39,7 +39,7 @@ export class Account {
    * @returns the current account balance
    */
   static getBalance = async (nodeRpc: RPC, account: Pick<AccountData, 'address'>): Promise<Token> => {
-    const response = await nodeRpc.walletBalance(account.address.toString())
+    const response = await nodeRpc.walletBalance(account.address)
     if ('error' in response) throw new Error(response.error.message)
 
     return Token.fromAtto(response.result)
