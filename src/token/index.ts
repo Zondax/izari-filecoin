@@ -1,10 +1,13 @@
 import BN from 'bn.js'
+
 import { bnToString } from './utils.js'
+import { ATTO_DECIMALS, FEMTO_DECIMALS, PICO_DECIMALS, NANO_DECIMALS, MICRO_DECIMALS, MILLI_DECIMALS } from '../artifacts/token.js'
 
-const ATTO_DECIMALS = 18
-const NANO_DECIMALS = 9
-
+const FEMTO_MUL = new BN(10).pow(new BN(MILLI_DECIMALS))
+const PICO_MUL = new BN(10).pow(new BN(MICRO_DECIMALS))
 const NANO_MUL = new BN(10).pow(new BN(NANO_DECIMALS))
+const MICRO_MUL = new BN(10).pow(new BN(PICO_DECIMALS))
+const MILLI_MUL = new BN(10).pow(new BN(FEMTO_DECIMALS))
 const WHOLE_MUL = new BN(10).pow(new BN(ATTO_DECIMALS))
 
 /**
@@ -27,7 +30,21 @@ export class Token {
    * @param value - attoFil value to parse
    * @returns new Token instance
    */
-  static fromAtto = (value: string) => new Token(new BN(value))
+  static fromAtto = (value: string) => new Token(new BN(value)) // new BN(value).mul(ATTO_MUL)
+
+  /**
+   * Parse string value as femtoFil
+   * @param value - femtoFil value to parse
+   * @returns new Token instance
+   */
+  static fromFemto = (value: string) => new Token(new BN(value).mul(FEMTO_MUL))
+
+  /**
+   * Parse string value as picoFil
+   * @param value - picoFil value to parse
+   * @returns new Token instance
+   */
+  static fromPico = (value: string) => new Token(new BN(value).mul(PICO_MUL))
 
   /**
    * Parse string value as nanoFil
@@ -35,6 +52,20 @@ export class Token {
    * @returns new Token instance
    */
   static fromNano = (value: string) => new Token(new BN(value).mul(NANO_MUL))
+
+  /**
+   * Parse string value as microFIL
+   * @param value - microFIL value to parse
+   * @returns new Token instance
+   */
+  static fromMicro = (value: string) => new Token(new BN(value).mul(MICRO_MUL))
+
+  /**
+   * Parse string value as milliFIL
+   * @param value - milliFIL value to parse
+   * @returns new Token instance
+   */
+  static fromMilli = (value: string) => new Token(new BN(value).mul(MILLI_MUL))
 
   /**
    * Parse string value as FIL (tokens as whole unit)
@@ -113,17 +144,41 @@ export class Token {
    * Express the current value as fil (token unit as whole)
    * @returns the value expressed as whole
    */
-  toWhole = (): string => bnToString(this.value, ATTO_DECIMALS)
+  toWhole = (): string => bnToString(this.value, ATTO_DECIMALS) // precision: ATTO_DECIMALS - WHOLE_DECIMALS
+
+  /**
+   * Express the current value as milliFil
+   * @returns the value expressed as milliFil
+   */
+  toMilli = (): string => bnToString(this.value, ATTO_DECIMALS - MILLI_DECIMALS)
+
+  /**
+   * Express the current value as microFil
+   * @returns the value expressed as microFil
+   */
+  toMicro = (): string => bnToString(this.value, ATTO_DECIMALS - MICRO_DECIMALS)
 
   /**
    * Express the current value as nanoFil
    * @returns the value expressed as nanoFil
    */
-  toNano = (): string => bnToString(this.value, NANO_DECIMALS)
+  toNano = (): string => bnToString(this.value, ATTO_DECIMALS - NANO_DECIMALS)
+
+  /**
+   * Express the current value as picoFil
+   * @returns the value expressed as picoFil
+   */
+  toPico = (): string => bnToString(this.value, ATTO_DECIMALS - PICO_DECIMALS)
+
+  /**
+   * Express the current value as femtoFil
+   * @returns the value expressed as femtoFil
+   */
+  toFemto = (): string => bnToString(this.value, ATTO_DECIMALS - FEMTO_DECIMALS)
 
   /**
    * Express the current value as attoFil.
    * @returns the value expressed as attoFil
    */
-  toAtto = (): string => bnToString(this.value, 0)
+  toAtto = (): string => bnToString(this.value, 0) // precision: ATTO_DECIMALS - ATTO_DECIMALS
 }
