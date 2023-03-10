@@ -38,6 +38,6 @@ describe('Account', () => {
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
     const balance = await Account.getBalance(rpcNode, senderAccountData)
-    expect(balance.gt(Token.getDefault())).toBeTruthy()
+    expect(balance.gt(Token.zero())).toBeTruthy()
   })
 })
