@@ -101,8 +101,12 @@ export abstract class Address {
         return AddressSecp256k1.fromString(address)
       case ProtocolIndicator.BLS:
         return AddressBls.fromString(address)
-      case ProtocolIndicator.DELEGATED:
-        return AddressDelegated.fromString(address)
+      case ProtocolIndicator.DELEGATED: {
+        const addr = AddressDelegated.fromString(address)
+        if (Address.isFilEthAddress(addr)) return new FilEthAddress(addr.getNetwork(), addr.getSubAddress())
+
+        return addr
+      }
       default:
         throw new UnknownProtocolIndicator()
     }
@@ -126,8 +130,12 @@ export abstract class Address {
         return AddressSecp256k1.fromBytes(network, address)
       case ProtocolIndicator.BLS:
         return AddressBls.fromBytes(network, address)
-      case ProtocolIndicator.DELEGATED:
-        return AddressDelegated.fromBytes(network, address)
+      case ProtocolIndicator.DELEGATED: {
+        const addr = AddressDelegated.fromBytes(network, address)
+        if (Address.isFilEthAddress(addr)) return new FilEthAddress(addr.getNetwork(), addr.getSubAddress())
+
+        return addr
+      }
       default:
         throw new UnknownProtocolIndicator()
     }
@@ -186,6 +194,14 @@ export abstract class Address {
    * @returns whether the instance is AddressDelegated or not
    */
   static isAddressDelegated = (address: Address): address is AddressDelegated => address.protocol == ProtocolIndicator.DELEGATED
+
+  /**
+   * Allows to check if true value of an address instance is FilEthAddress
+   * @param address - instance to check its actual type
+   * @returns whether the instance is FilEthAddress or not
+   */
+  static isFilEthAddress = (address: Address): address is FilEthAddress =>
+    address.protocol == ProtocolIndicator.DELEGATED && 'namespace' in address && address.namespace == DelegatedNamespace.ETH
 
   /**
    * Allows to check if true value of an address instance is AddressActor
