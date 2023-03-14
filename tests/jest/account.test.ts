@@ -1,8 +1,9 @@
 import { Account } from '../../src/account'
+import { Address } from '../../src/address'
 import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
 import { Token } from '../../src/token'
-import { SignatureType } from '../../src/artifacts'
+import { Network, SignatureType } from '../../src/artifacts'
 
 jest.setTimeout(60 * 1000)
 
@@ -27,6 +28,18 @@ describe('Account', () => {
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
     const cid = await Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('100'))
+    expect(cid).toBeDefined()
+    expect(typeof cid).toBe('string')
+  })
+
+  test('Send to t410 (eth address)', async () => {
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
+    const receiverAddress = Address.fromEthAddress(Network.Mainnet, '0x8f571435AD34E175EFd1854BEC292Cf4D4c8239C')
+    const network = senderAccountData.address.getNetwork()
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+
+    const cid = await Account.send(rpcNode, senderAccountData, receiverAddress, Token.fromAtto('100'))
     expect(cid).toBeDefined()
     expect(typeof cid).toBe('string')
   })
