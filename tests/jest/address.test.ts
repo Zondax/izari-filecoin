@@ -207,9 +207,13 @@ describe('Address', () => {
       })
 
       test('Correct eth address', async () => {
-        const addr = FilEthAddress.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
-        expect(addr.getNamespace()).toBe('10')
-        expect(addr.getSubAddress().toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
+        const addr = Address.fromString('f410feot7hrogmplrcupubsdbbqarkdewmb4vkwc5qqq')
+
+        expect(Address.isFilEthAddress(addr)).toBeTruthy()
+        if (Address.isFilEthAddress(addr)) {
+          expect(addr.getNamespace()).toBe('10')
+          expect(addr.getSubAddress().toString('hex')).toBe('23a7f3c5c663d71151f40c8610c01150c9660795')
+        }
       })
     })
 
@@ -239,13 +243,16 @@ describe('Address', () => {
       })
 
       test('To ethereum address (ID)', async () => {
-        const addr = AddressId.fromString('f0101')
+        const addr = Address.fromString('f0101')
 
-        expect(addr.toEthAddressHex(true)).toBe('0xff00000000000000000000000000000000000065')
-        expect(addr.toEthAddressHex(false)).toBe('ff00000000000000000000000000000000000065')
+        expect(Address.isAddressId(addr)).toBeTruthy()
+        if (Address.isAddressId(addr)) {
+          expect(addr.toEthAddressHex(true)).toBe('0xff00000000000000000000000000000000000065')
+          expect(addr.toEthAddressHex(false)).toBe('ff00000000000000000000000000000000000065')
+        }
       })
 
-      test('From ethereum address (DelegatedAddress)', async () => {
+      test('From ethereum address (EthFilAddress)', async () => {
         const addr = Address.fromEthAddress(Network.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da')
 
         expect(addr.getProtocol()).toBe(ProtocolIndicator.DELEGATED)
@@ -253,12 +260,16 @@ describe('Address', () => {
         expect(addr.toString()).toBe('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
       })
 
-      test('To ethereum address (DelegatedAddress)', async () => {
-        const addr = FilEthAddress.fromString('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
+      test('To ethereum address (EthFilAddress)', async () => {
+        const addr = Address.fromString('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
 
         expect(addr.getNetwork()).toBe(Network.Mainnet)
-        expect(addr.toEthAddressHex(true)).toBe('0xd4c5fb16488aa48081296299d54b0c648c9333da')
-        expect(addr.toEthAddressHex()).toBe('d4c5fb16488aa48081296299d54b0c648c9333da')
+        expect(Address.isFilEthAddress(addr)).toBeTruthy()
+        expect(Address.isAddressDelegated(addr)).toBeTruthy()
+        if (Address.isFilEthAddress(addr)) {
+          expect(addr.toEthAddressHex(true)).toBe('0xd4c5fb16488aa48081296299d54b0c648c9333da')
+          expect(addr.toEthAddressHex()).toBe('d4c5fb16488aa48081296299d54b0c648c9333da')
+        }
       })
     })
   })

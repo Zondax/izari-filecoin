@@ -70,3 +70,12 @@ export type TransactionJSON = {
   Method: number
   Params: string
 }
+
+/**
+ * Specific method to call on an actor
+ * For more information about actor, please refer to this {@link https://spec.filecoin.io/systems/filecoin_vm/actor/#section-systems.filecoin_vm.actor|link}
+ */
+export enum Methods {
+  Transfer = 0,
+  InvokeEVM = 3844450837,
+}
