@@ -11,7 +11,7 @@ import { RPC } from '../rpc/index.js'
 export class Account {
   /**
    * Allows to transfer some funds from one account to another in an easy and straightforward way.
-   * @param nodeRpc - rpc connection to broadcast used to interact with the node
+   * @param nodeRpc - rpc connection used to interact with the node
    * @param fromAccount - sender account data, required to sign the transaction
    * @param to - receiver address
    * @param value - amount of tokens to be transferred
