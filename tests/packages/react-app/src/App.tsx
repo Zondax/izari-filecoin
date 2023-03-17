@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Address, Wallet, Transaction, Signature, SignatureType } from '@zondax/izari-tools'
+import { Address, Wallet, Transaction, Signature, SignatureType } from '@zondax/izari-filecoin'
 
 import logo from './logo.svg'
 import './App.css'
