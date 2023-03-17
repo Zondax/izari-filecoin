@@ -1,14 +1,23 @@
-# Izari Tools
+# Izari Filecoin
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin)
 [![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin)
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/main.yaml)
 
+---
+
+![zondax_light](docs/assets/zondax_light.png#gh-light-mode-only)
+![zondax_dark](docs/assets/zondax_dark.png#gh-dark-mode-only)
+
+_Please visit our website at [zondax.ch](https://www.zondax.ch)_
+
+---
+
 ## Introduction
-Izari Tools is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
+Izari Filecoin is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
 from web projects using React to backend applications using NodeJS. It enables developers to easily manage and access blockchain data, including transactions, smart contracts, and assets.
 
-Izari Tools makes it easy for developers to incorporate blockchain technology into their projects, unlocking new possibilities for innovation and growth.
+Izari Filecoin makes it easy for developers to incorporate blockchain technology into their projects, unlocking new possibilities for innovation and growth.
 
 Some key points: 
  - It is written in **Typescript**
