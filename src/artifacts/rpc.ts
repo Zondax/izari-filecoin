@@ -45,7 +45,10 @@ export type StateWaitMsgResponse =
       result: {
         Message: { '/': string }
         Receipt: { ExitCode: number; Return: string; GasUsed: number }
-        ReturnDec: string
+        ReturnDec?: {
+          IDAddress: string
+          RobustAddress: string
+        }
         TipSet: { '/': string }[]
         Height: number
       }
