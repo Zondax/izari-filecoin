@@ -1,7 +1,7 @@
 import { IpldDagCbor } from '../external/dag-cbor.js'
 import { Multiformats } from '../external/multiformats.js'
 import { waitFor } from '../utils/sleep.js'
-import { ActorsV10, SystemActorIDs, AccountData, ActorsV13, Cid } from '../artifacts/index.js'
+import { SystemActorIDs, AccountData, ActorsV13, Cid } from '../artifacts/index.js'
 import { Address, AddressId } from '../address/index.js'
 import { Transaction } from '../transaction'
 import { RPC } from '../rpc/index.js'
@@ -84,6 +84,7 @@ export class PaymentChannel {
     const paymentChannelParams = [from.toBytes(), to.toBytes()]
 
     // Create constructor arguments for init actor
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const paymentChannelCid = multiformats.CID.parse(ActorsV13.PaymentChannel)
     const constructorParams = [paymentChannelCid, cbor.encode(paymentChannelParams)]
 
@@ -116,9 +117,9 @@ export class PaymentChannel {
   ): Promise<string> => {
     const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
 
-    let voucher = [timeLockMin, timeLockMax, Buffer.alloc(0), null, lane, nonce, amount, minSettleHeight, [], Buffer.alloc(0)]
+    const voucher = [timeLockMin, timeLockMax, Buffer.alloc(0), null, lane, nonce, amount, minSettleHeight, [], Buffer.alloc(0)]
 
-    let serializedVoucher = cbor.encode(voucher)
+    const serializedVoucher = cbor.encode(voucher)
 
     return Buffer.from(serializedVoucher).toString('base64')
   }
