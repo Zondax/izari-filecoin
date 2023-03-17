@@ -1,8 +1,8 @@
 # Izari Tools
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![node-current](https://img.shields.io/node/v/@zondax/izari-tools)
-[![Package](https://badge.fury.io/js/%40zondax%2Fizari-tools.svg)](https://badge.fury.io/js/%40zondax%2Fizari-tools)
-[![GithubActions](https://github.com/Zondax/izari-tools/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-tools/blob/master/.github/workflows/main.yaml)
+![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin)
+[![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin)
+[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/main.yaml)
 
 ## Introduction
 Izari Tools is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
@@ -121,11 +121,11 @@ These features group actions related to high-level account features like send fu
 Just run the following command to add the package to your project
 
 ```yarn
-yarn add @zondax/izari-tools
+yarn add @zondax/izari-filecoin
 ```
 or 
 ```npm
-npm install --save @zondax/izari-tools
+npm install --save @zondax/izari-filecoin
 ```
 
 ### Use
@@ -133,12 +133,12 @@ The package can be imported easily on any place you need it. Choose the way to i
 
 For ESM modules
 ```typescript
-import { Wallet, Transaction, Account } from "@zondax/izari-tools"
+import { Wallet, Transaction, Account } from "@zondax/izari-filecoin"
 ```
 
 For CommonJS modules
 ```typescript
-const { Wallet, Transaction, Account } = require("@zondax/izari-tools")
+const { Wallet, Transaction, Account } = require("@zondax/izari-filecoin")
 ```
 
 ### Specific features
@@ -146,13 +146,13 @@ Inside this package there are several entry points grouped by features. If you o
 
 | Entry point                       | Features                    | Project Folder           |
 |-----------------------------------|-----------------------------|--------------------------|
-| `@zondax/izari-tools`             | All features                | src/index.ts             | 
-| `@zondax/izari-tools/rpc`         | Node Communications         | src/rpc/index.ts         | 
-| `@zondax/izari-tools/address`     | Address                     | src/address/index.ts     | 
-| `@zondax/izari-tools/transaction` | Transaction                 | src/transaction/index.ts | 
-| `@zondax/izari-tools/wallet`      | Wallet                      | src/wallet/index.ts      | 
-| `@zondax/izari-tools/account`     | Account                     | src/account/index.ts     | 
-| `@zondax/izari-tools/artifacts`   | Types, constants and errors | src/artifacts/index.tx   |
+| `@zondax/izari-filecoin`             | All features                | src/index.ts             | 
+| `@zondax/izari-filecoin/rpc`         | Node Communications         | src/rpc/index.ts         | 
+| `@zondax/izari-filecoin/address`     | Address                     | src/address/index.ts     | 
+| `@zondax/izari-filecoin/transaction` | Transaction                 | src/transaction/index.ts | 
+| `@zondax/izari-filecoin/wallet`      | Wallet                      | src/wallet/index.ts      | 
+| `@zondax/izari-filecoin/account`     | Account                     | src/account/index.ts     | 
+| `@zondax/izari-filecoin/artifacts`   | Types, constants and errors | src/artifacts/index.tx   |
 
 **Note:** More information about these approach and its advantages can be found [here](https://webpack.js.org/guides/package-exports/) and [here](https://dev.to/binjospookie/exports-in-package-json-1fl2). 
 
@@ -161,14 +161,14 @@ If I only need to convert some tokens between different denominations, both ways
 
 Using the main entry point
 ```typescript
-import { Token } from "@zondax/izari-tools"
+import { Token } from "@zondax/izari-filecoin"
 
 const valueInFil = Token.fromAtto("10000000000000000")
 ```
 
 Or just simply importing the token features
 ```typescript
-import { Token } from "@zondax/izari-tools/token"
+import { Token } from "@zondax/izari-filecoin/token"
 
 const valueInFil = Token.fromAtto("10000000000000000")
 ```
@@ -246,8 +246,8 @@ that forced us to do it. It was done following the [jest documentation site](htt
 
 #### React
 - React app is based on create-react-app utility. It has been [ejected](https://create-react-app.dev/docs/available-scripts/#npm-run-eject) in order
-to configure webpack to polyfill some NodeJS native modules. In particular, you can find the custom configs added [here](https://github.com/Zondax/izari-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L308)
-and [here](https://github.com/Zondax/izari-tools/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L693).
+to configure webpack to polyfill some NodeJS native modules. In particular, you can find the custom configs added [here](https://github.com/Zondax/izari-filecoin/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L308)
+and [here](https://github.com/Zondax/izari-filecoin/blob/791d58e06cb05b38cb7fe6f3532ca8e19b094c60/tests/package/react-app/config/webpack.config.js#L693).
 
 
 https://jestjs.io/docs/ecmascript-modules

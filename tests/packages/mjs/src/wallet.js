@@ -1,6 +1,6 @@
-import { Wallet } from '@zondax/izari-tools/wallet'
-import { Transaction } from '@zondax/izari-tools/transaction'
-import { Network, SignatureType } from '@zondax/izari-tools/artifacts'
+import { Wallet } from '@zondax/izari-filecoin/wallet'
+import { Transaction } from '@zondax/izari-filecoin/transaction'
+import { Network, SignatureType } from '@zondax/izari-filecoin/artifacts'
 
 import assert from 'assert'
 
