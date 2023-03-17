@@ -23,7 +23,7 @@ export class Account {
 
     const method = Address.isFilEthAddress(to) ? Methods.InvokeEVM : Methods.Transfer
 
-    const tx = Transaction.getNew(to, fromAccount.address, value.toAtto(), method)
+    const tx = Transaction.getNew(to, fromAccount.address, value, method)
     await tx.prepareToSend(nodeRpc)
 
     const signature = await Wallet.signTransaction(fromAccount, tx)

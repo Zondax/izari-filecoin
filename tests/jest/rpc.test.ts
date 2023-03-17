@@ -63,7 +63,7 @@ describe('Filecoin RPC', () => {
     expect('error' in response).toBe(false)
     if ('error' in response) return
 
-    const tx = Transaction.getNew(address, address, '100000', 0)
+    const tx = Transaction.getNew(address, address, Token.fromAtto('100000'), 0)
     tx.nonce = response.result
 
     const fees = await rpcNode.getGasEstimation(tx)
