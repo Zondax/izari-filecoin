@@ -3,7 +3,7 @@ import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
 import { SignatureType } from '../../src/artifacts'
 
-jest.setTimeout(60 * 1000)
+jest.setTimeout(120 * 1000)
 
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
@@ -17,7 +17,20 @@ const sender_path = "44'/461'/0'/0/0" // f1s4oa6y3srhqdulq4e4hijd2lo3izfmzaczxpb
 const receiver_path = "44'/461'/0'/0/1" // f1tnspiqlb3ga2ft7dwxjc47nw53twttri2vle4ty
 
 describe('Payment channel', () => {
-  test('Create channel', async () => {
+  test('New (broadcast and wait)', async () => {
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
+    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path)
+    const network = senderAccountData.address.getNetwork()
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+
+    const pyChannel = await PaymentChannel.new(rpcNode, senderAccountData, receiverAccountData.address)
+    expect(pyChannel.getAddress()).toBeDefined()
+    expect(pyChannel.getFrom()).toBeDefined()
+    expect(pyChannel.getTo()).toBeDefined()
+  })
+
+  test('Create (only broadcast)', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path)
     const network = senderAccountData.address.getNetwork()
