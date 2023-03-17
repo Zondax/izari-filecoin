@@ -8,14 +8,13 @@ jest.setTimeout(60 * 1000)
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
 const mnemonic = process.env.ACCOUNT_MNEMONIC
-const sender_path = process.env.SENDER_ACCOUNT_PATH
-const receiver_path = process.env.RECEIVER_ACCOUNT_PATH
 
 if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
 if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
 if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
-if (!sender_path) throw new Error('SENDER_ACCOUNT_PATH must be defined')
-if (!receiver_path) throw new Error('RECEIVER_ACCOUNT_PATH must be defined')
+
+const sender_path = "44'/461'/0'/0/0" // f1s4oa6y3srhqdulq4e4hijd2lo3izfmzaczxpb6i
+const receiver_path = "44'/461'/0'/0/1" // f1tnspiqlb3ga2ft7dwxjc47nw53twttri2vle4ty
 
 describe('Payment channel', () => {
   test('Create channel', async () => {
