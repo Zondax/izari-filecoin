@@ -69,6 +69,11 @@ export class RPC {
   }
 
   /**
+   * Getter for network value
+   */
+  getNetwork = () => this.network
+
+  /**
    * Allows to get the next address nonce, required to broadcast a new tx to the blockchain
    * For more information about MpoolGetNonce, please refer to this {@link https://lotus.filecoin.io/reference/lotus/mpool/#mpoolgetnonce|link}
    * @param address - address which next nonce to query
