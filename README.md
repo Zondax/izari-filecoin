@@ -37,8 +37,7 @@ Besides, you could check [this blog post](https://viglucci.io/articles/how-to-po
 
 ## Features
 
-### Filecoin 
-#### Node Comms
+### Node Comms
 
 Allow you to communicate to the filecoin node in order to fetch on-chain data (miners, fees, nonce, etc), broadcast new transactions and more. 
 
@@ -49,7 +48,7 @@ Allow you to communicate to the filecoin node in order to fetch on-chain data (m
 | Broadcast a new tx       | :white_check_mark: |
 | Read tx state            | :white_check_mark: |
 
-#### Addresses
+### Addresses
 
 Allow you to easily handle the entire set of filecoin address types available. You will be able to inspect how each address is composed, convert from 
 string format to bytes format, parse from both formats, etc. For more information about filecoin addresses, please 
@@ -67,13 +66,13 @@ refer to [this doc](https://spec.filecoin.io/appendix/address/)
 | Get namespace     | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 | Get sub address   | :heavy_minus_sign:   | :heavy_minus_sign:     | :heavy_minus_sign:    | :heavy_minus_sign:   | :white_check_mark: |
 
-#### Ethereum Addresses 
+### Ethereum Addresses 
 This is a particular case for a delegated address. Ethereum addresses on the Filecoin EVM are handled by the ethereum account manager, which actor id is 10. 
 For this reason, there is a particular class to handle Ethereum addresses conversions. It will help you to get the filecoin equivalent address from an 
 ethereum address, either string or bytes format. Besides, you can do the other way around: get the ethereum address from a filecoin one (f4/t4).
 
 
-#### Tokens
+### Tokens
 
 Allow you to easily manage denominations used within Filecoin to do conversions between them, arithmetical operations, etc.
 
@@ -86,7 +85,7 @@ Allow you to easily manage denominations used within Filecoin to do conversions 
 
 **All denominations supported: atto, femto, pico, nano, micro, milli and whole.**
 
-#### Transactions
+### Transactions
 
 In order to interact to the Filecoin network, transactions need to be sent to it. These features will allow you to create and manipulate them in an easy and
 intuitive way. From creating new ones with minimum arguments or serializing them to CBOR or JSON, to fetch values from the network that they need in order to 
@@ -101,7 +100,7 @@ be valid to be sent.
 | Serialize (to cbor)                  | :white_check_mark: |
 | Prepare to send (get nonce and fees) | :white_check_mark: |
 
-#### Wallet
+### Wallet
 
 These features group actions related to wallets itself: from creating new ones, deriving addresses
 from it, and signing new txs to be broadcast.
@@ -114,7 +113,7 @@ from it, and signing new txs to be broadcast.
 | Sign transactions        | :white_check_mark: | :x:                |
 | Verify signatures        | :white_check_mark: | :x:                |
 
-#### Account
+### Account
 
 These features group actions related to high-level account features like send funds, fetch balances, etc.
 
@@ -150,11 +149,17 @@ For CommonJS modules
 const { Wallet, Transaction, Account } = require("@zondax/izari-filecoin")
 ```
 
+**Notes**
+
+The `tests/jest` folder is a great place to understand more about each one of the available features, and have a sense on how to 
+use them. Besides, if you are interested in one particular environment, like NodeJS or React, `tests/package` can have the answer 
+you are looking for. Please, give them a chance! 
+
 ### Specific features
 Inside this package there are several entry points grouped by features. If you only need to use specific features among all others, please choose the entry point you want to import from
 
-| Entry point                       | Features                    | Project Folder           |
-|-----------------------------------|-----------------------------|--------------------------|
+| Entry point                          | Features                    | Project Folder           |
+|--------------------------------------|-----------------------------|--------------------------|
 | `@zondax/izari-filecoin`             | All features                | src/index.ts             | 
 | `@zondax/izari-filecoin/rpc`         | Node Communications         | src/rpc/index.ts         | 
 | `@zondax/izari-filecoin/address`     | Address                     | src/address/index.ts     | 
@@ -218,11 +223,25 @@ yarn test
 ```
 
 **Notes**
-- Please, there are some env vars you need to set first in order to run the tests. Check it first. 
+
+- Please, there are some env vars you need to set first in order to run the tests: 
+  - Some tests will try to connect to a node in order to run some transactions. Therefore, **a node rpc url and token will be required.**
+  - Some of those transactions includes token transfers. For that reason, an account seed is required. We will derive some 
+  accounts from it. **Those accounts must have some tokens in order to be able to test transfers.**
+
 
 ## Tests
 
-So far, the package has been tested in different environments. We are trying to assure it works in as many platforms as we can. 
+So far, the package has been tested in different environments and filecoin networks. We are trying to assure it works in as many platforms as we can. 
+
+### Networks
+| Networks    | Tested?            |
+|-------------|--------------------|
+| Devnet      | :x:                |
+| Hypersapce  | :white_check_mark: |
+| Butterfly   | :x:                |
+| Calibration | :x:                |
+| Mainnet     | :x:                |
 
 ### Environments
 | Environments             | Tested?            |
@@ -232,8 +251,6 @@ So far, the package has been tested in different environments. We are trying to 
 | Integration tests (Jest) | :white_check_mark: |
 | React app                | :white_check_mark: |
 | NextJS                   | :x:                |
-
-
 
 ### Web Browsers
 | Web browsers    | Tested?            |
