@@ -60,6 +60,7 @@ jobs:
       - name: Run tests
         run: yarn test:silent
         env:
+          NETWORK: "hyperspace"
           NODE_RPC_URL: ${{ secrets.HYPERSPACE_NODE_RPC_URL }}
           NODE_RPC_TOKEN: ${{ secrets.HYPERSPACE_NODE_RPC_TOKEN }}
           ACCOUNT_MNEMONIC: ${{ secrets.ACCOUNT_MNEMONIC }}
