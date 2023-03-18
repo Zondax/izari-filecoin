@@ -25,6 +25,8 @@ jobs:
         run: npm install -g yarn
       - name: Install yalc
         run: npm install -g yalc
+      - name: Install dependencies
+        run: yarn install
       - name: Lint
         run: yarn lint
       - name: Format
