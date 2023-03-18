@@ -35,12 +35,27 @@ import('multiformats')
  * For more information about payment channels on Filecoin, please refer to this {@link https://spec.filecoin.io/systems/filecoin_token/payment_channels|link}
  */
 export class PaymentChannel {
+  /**
+   * Create new PaymentChannel instance from raw data
+   * @param channelAddress - payment channel address
+   * @param from - payment channel sender address
+   * @param to - payment channel receiver address
+   */
   constructor(protected channelAddress: Address, protected from: Address, protected to: Address) {}
 
+  /**
+   * Getter for payment channel address
+   */
   getAddress = (): Address => this.channelAddress
 
+  /**
+   * Getter for payment channel receiver address
+   */
   getTo = (): Address => this.to
 
+  /**
+   * Getter for payment channel sender address
+   */
   getFrom = (): Address => this.from
 
   /**
@@ -107,6 +122,7 @@ export class PaymentChannel {
     return response1.result['/']
   }
 
+  /*
   static createVoucher = async (
     timeLockMin: string,
     timeLockMax: string,
@@ -122,5 +138,5 @@ export class PaymentChannel {
     const serializedVoucher = cbor.encode(voucher)
 
     return Buffer.from(serializedVoucher).toString('base64')
-  }
+  }*/
 }
