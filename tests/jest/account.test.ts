@@ -34,7 +34,7 @@ describe('Account', () => {
 
   test('Send to t410 (eth address)', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
-    const receiverAddress = Address.fromEthAddress(Network.Mainnet, '0x8f571435AD34E175EFd1854BEC292Cf4D4c8239C')
+    const receiverAddress = Address.fromEthAddress(Network.Mainnet, '0x689c9B3232210aa9B84Ef444D0Ef35D11102AD1F')
     const network = senderAccountData.address.getNetwork()
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
