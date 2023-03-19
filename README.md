@@ -222,12 +222,24 @@ Finally, in order to run tests, just do it by simply running the next command.
 yarn test
 ```
 
-**Notes**
-
-- Please, there are some env vars you need to set first in order to run the tests: 
+### Notes
+#### Environmental vars
+Please, there are some env vars you need to set first in order to run the tests: 
   - Some tests will try to connect to a node in order to run some transactions. Therefore, **a node rpc url and token will be required.**
   - Some of those transactions includes token transfers. For that reason, an account seed is required. We will derive some 
   accounts from it. **Those accounts must have some tokens in order to be able to test transfers.**
+
+#### Faucets 
+
+Here you can find faucets for each testnet you want to test the library on
+
+| Network     | Link                                                               |
+|-------------|--------------------------------------------------------------------|
+| Devnet      | :x:                                                                |
+| Hypersapce  | [:link:](https://beryx.zondax.ch/faucet)                           |
+| Butterfly   | :x:                                                                |
+| Calibration | [:link:](https://faucet.triangleplatform.com/filecoin/calibration) |
+| Mainnet     | :x:                                                                |
 
 
 ## Tests
@@ -235,7 +247,7 @@ yarn test
 So far, the package has been tested in different environments and filecoin networks. We are trying to assure it works in as many platforms as we can. 
 
 ### Networks
-| Networks    | Tested?            |
+| Network     | Tested?            |
 |-------------|--------------------|
 | Devnet      | :x:                |
 | Hypersapce  | :white_check_mark: |
