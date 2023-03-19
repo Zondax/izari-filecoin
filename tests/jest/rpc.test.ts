@@ -61,8 +61,8 @@ describe('Filecoin RPC', () => {
     if ('result' in fees) {
       const { GasFeeCap, GasPremium, GasLimit } = fees.result
       expect(GasFeeCap).toBeDefined()
-      expect(GasFeeCap).toBeDefined()
-      expect(GasFeeCap).toBeDefined()
+      expect(GasPremium).toBeDefined()
+      expect(GasLimit).toBeDefined()
     }
   })
 
