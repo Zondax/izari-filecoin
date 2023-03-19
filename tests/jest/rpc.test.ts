@@ -34,7 +34,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get nonce for existing account', async () => {
-    const addr = Address.fromString('f410fr5lrinnngtqxl36rqvf6ykjm6tkmqi44ehqpybi')
+    const addr = Address.fromString('f1s4oa6y3srhqdulq4e4hijd2lo3izfmzaczxpb6i')
     const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.getNonce(addr)
 
@@ -43,7 +43,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Estimate fees for send tx', async () => {
-    const address = Address.fromString('f410fr5lrinnngtqxl36rqvf6ykjm6tkmqi44ehqpybi')
+    const address = Address.fromString('f1s4oa6y3srhqdulq4e4hijd2lo3izfmzaczxpb6i')
 
     const rpcNode = new RPC(address.getNetwork(), { url: nodeUrl, token: nodeToken })
 
