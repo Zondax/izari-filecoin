@@ -247,13 +247,13 @@ Here you can find faucets for each testnet you want to test the library on
 So far, the package has been tested in different environments and filecoin networks. We are trying to assure it works in as many platforms as we can. 
 
 ### Networks
-| Network     | Tested?            |
-|-------------|--------------------|
-| Devnet      | :x:                |
-| Hypersapce  | :white_check_mark: |
-| Butterfly   | :x:                |
-| Calibration | :x:                |
-| Mainnet     | :x:                |
+| Network     | Tested?             |
+|-------------|---------------------|
+| Devnet      | :x:                 |
+| Hypersapce  | :white_check_mark:  |
+| Butterfly   | :x:                 |
+| Calibration | :white_check_mark:  |
+| Mainnet     | :white_check_mark:  |
 
 ### Environments
 | Environments             | Tested?            |

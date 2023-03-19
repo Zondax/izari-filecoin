@@ -70,6 +70,39 @@ jobs:
           SENDER_ACCOUNT_PATH: ${{ secrets.SENDER_ACCOUNT_PATH }}
           RECEIVER_ACCOUNT_PATH: ${{ secrets.RECEIVER_ACCOUNT_PATH }}
 
+  test-mainnet:
+    name: "Test on Mainnet Network"
+    needs: [lint-build]
+    runs-on: "self-hosted"
+    strategy:
+      matrix:
+        version: [16, 18]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.version }}
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install yalc
+        run: npm install -g yalc
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2
+          yarn install
+      - name: Run tests
+        run: yarn test:silent
+        env:
+          NETWORK: "mainnet"
+          NODE_RPC_URL: ${{ secrets.MAINNET_NODE_RPC_URL }}
+          NODE_RPC_TOKEN: ${{ secrets.MAINNET_NODE_RPC_TOKEN }}
+          ACCOUNT_MNEMONIC: ${{ secrets.ACCOUNT_MNEMONIC }}
+          SENDER_ACCOUNT_PATH: ${{ secrets.SENDER_ACCOUNT_PATH }}
+          RECEIVER_ACCOUNT_PATH: ${{ secrets.RECEIVER_ACCOUNT_PATH }}
+
   test-hyperspace:
     name: "Test on Hypersapce Network"
     needs: [lint-build]
