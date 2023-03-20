@@ -1,33 +1,10 @@
-import { IpldDagCbor } from '../external/dag-cbor.js'
-import { Multiformats } from '../external/multiformats.js'
-import { waitFor } from '../utils/sleep.js'
-import { SystemActorIDs, AccountData, ActorsV13, Cid } from '../artifacts/index.js'
-import { Address, AddressId } from '../address/index.js'
-import { Transaction } from '../transaction'
+import { AccountData, ActorsV13, Cid } from '../artifacts/index.js'
+import { Address } from '../address/index.js'
 import { RPC } from '../rpc/index.js'
 import { Token } from '../token/index.js'
 import { Wallet } from '../wallet/index.js'
-
-// Loading this module dynamically as it has no support to CJS
-// The only way to keep CJS supported on our side is to load it dynamically
-// The interface IpldDagCbor has been copied from the repo itself
-let globalCbor: IpldDagCbor | undefined
-import('@ipld/dag-cbor')
-  .then(localCbor => {
-    globalCbor = localCbor
-  })
-  .catch(e => {
-    throw e
-  })
-
-let globalMultiformats: Multiformats | undefined
-import('multiformats')
-  .then(localMultiformats => {
-    globalMultiformats = localMultiformats
-  })
-  .catch(e => {
-    throw e
-  })
+import { InitActor, ExecParams } from '../actors/init/index'
+import { ConstructorParams } from '../actors/paymentChannel'
 
 /**
  * Payment channels are generally used as a mechanism to increase the scalability of blockchains and enable users to transact without involving
@@ -88,27 +65,12 @@ export class PaymentChannel {
    * @param to - receiver address
    */
   static create = async (rpc: RPC, fromAccountData: AccountData, to: Address): Promise<Cid> => {
-    const from = fromAccountData.address
+    const { address: from } = fromAccountData
     if (to.getNetwork() !== from.getNetwork()) throw new Error('both "from" and "to" addressees should belong to the same network')
 
-    // Load ESM only packages
-    const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
-    const multiformats: Multiformats = await waitFor<Multiformats>(() => globalMultiformats)
-
-    // Create constructor arguments for new payment channel
-    const paymentChannelParams = [from.toBytes(), to.toBytes()]
-
-    // Create constructor arguments for init actor
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const paymentChannelCid = multiformats.CID.parse(ActorsV13.PaymentChannel)
-    const constructorParams = [paymentChannelCid, cbor.encode(paymentChannelParams)]
-
-    // Serialize params to cbor
-    const serialized = cbor.encode(constructorParams)
-
-    // Create new tx
-    const initActor = new AddressId(rpc.getNetwork(), SystemActorIDs.Init.toString())
-    const tx = Transaction.getNew(initActor, from, Token.zero(), 2, Buffer.from(serialized))
+    const payChan = await new ConstructorParams(from, to).serialize()
+    const execParams = new ExecParams(ActorsV13.PaymentChannel, payChan)
+    const tx = await InitActor.newExecTx(from, Token.zero(), execParams)
     await tx.prepareToSend(rpc)
 
     // Sign tx

@@ -14,6 +14,12 @@ export enum SystemActorIDs {
   EAM = 10,
 }
 
+export enum InitActorMethods {
+  Exec = 2,
+
+  Exec4 = 3,
+}
+
 /**
  * Actor content IDs version 10
  * For more information about the actors cid v10, please refer to this {@link https://github.com/filecoin-project/lotus/releases/tag/v1.20.0|link}
