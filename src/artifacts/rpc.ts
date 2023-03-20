@@ -2,17 +2,17 @@ import { TransactionJSON } from './transaction.js'
 import { SignatureJSON } from './wallet.js'
 
 export type SignedTransactionJSON = {
-    Message: TransactionJSON
-    Signature: SignatureJSON
+  Message: TransactionJSON
+  Signature: SignatureJSON
 }
 
 /**
  * Generic rpc error that can be received on any rpc call
  */
 export type RpcError = {
-    error: {
-        message: string
-    }
+  error: {
+    message: string
+  }
 }
 
 /**
@@ -20,11 +20,10 @@ export type RpcError = {
  * For more information about MpoolGetNonce, please refer to this {@link https://lotus.filecoin.io/reference/lotus/mpool/#mpoolgetnonce|link}
  */
 export type GetNonceResponse =
-    | {
-        result: number
+  | {
+      result: number
     }
-    | RpcError
-
+  | RpcError
 
 /**
  * Gas estimation result or error
@@ -32,35 +31,34 @@ export type GetNonceResponse =
  * For more information about gas fees, please refer to this {@link https://lotus.filecoin.io/reference/lotus/gas/#gasestimatemessagegas|link}
  */
 export type GasEstimationResponse =
-    | {
-        result: { GasFeeCap: string; GasPremium: string; GasLimit: number }
+  | {
+      result: { GasFeeCap: string; GasPremium: string; GasLimit: number }
     }
-    | RpcError
-
+  | RpcError
 
 /**
  * StateWaitMsg result or error
  * For more information about waitMsgState, please refer to this {@link https://lotus.filecoin.io/reference/lotus/state/#statewaitmsg|link}
  */
 export type StateWaitMsgResponse =
-    | {
-    result: {
+  | {
+      result: {
         Message: { '/': string }
         Receipt: { ExitCode: number; Return: string; GasUsed: number }
         ReturnDec: string
         TipSet: { '/': string }[]
         Height: number
+      }
     }
-}
-    | RpcError
+  | RpcError
 
 /**
  * MpoolPush successful response
  */
 export type MpoolPushOk = {
-    result: {
-        ['/']: string
-    }
+  result: {
+    ['/']: string
+  }
 }
 
 /**
@@ -75,7 +73,6 @@ export type MpoolPushResponse = MpoolPushOk | RpcError
  */
 export type ReadStateResponse = { Balance: string; Code: { '/': string } } | RpcError
 
-
 /**
  * Balance of the given address at the current head of the chain or error
  * For more information about walletBalance, please refer to this {@link https://lotus.filecoin.io/reference/lotus/wallet/#walletbalance|link}
@@ -86,10 +83,10 @@ export type WalletBalanceResponse = { result: string } | RpcError
  * List of miners or rpc error
  */
 export type ListMinersResponse =
-    | {
-    result: string[]
-}
-    | RpcError
+  | {
+      result: string[]
+    }
+  | RpcError
 
 export type BeneficiaryTerm = { Quota: string; UsedQuota: string; Expiration: number }
 
@@ -97,14 +94,14 @@ export type BeneficiaryTerm = { Quota: string; UsedQuota: string; Expiration: nu
  * Miner information or rpc error
  */
 export type GetMinerInfoResponse =
-    | {
-    result: {
+  | {
+      result: {
         Owner: string
         Worker: string
         NewWorker: string
         ControlAddresses: string | null
         WorkerChangeEpoch: number
-        PeerId: string
+        PeerId: string | null
         Multiaddrs: string | null
         WindowPoStProofType: number
         SectorSize: number
@@ -113,27 +110,27 @@ export type GetMinerInfoResponse =
         Beneficiary: string
         BeneficiaryTerm: BeneficiaryTerm
         PendingBeneficiaryTerm: BeneficiaryTerm | null
+      }
     }
-}
-    | RpcError
+  | RpcError
 
 /**
  * Storage conditions for a particular miner, or error
  */
 export type AskForStorageResponse =
-    | {
-    result: {
+  | {
+      result: {
         Response: {
-            Price: string
-            VerifiedPrice: string
-            MinPieceSize: number
-            MaxPieceSize: number
-            Miner: string
-            Timestamp: number
-            Expiry: number
-            SeqNo: number
+          Price: string
+          VerifiedPrice: string
+          MinPieceSize: number
+          MaxPieceSize: number
+          Miner: string
+          Timestamp: number
+          Expiry: number
+          SeqNo: number
         }
         DealProtocols: string[]
+      }
     }
-}
-    | RpcError
+  | RpcError
