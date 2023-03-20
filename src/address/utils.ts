@@ -50,3 +50,10 @@ export const validateNetwork = (network: string): network is Network => Object.v
  * @returns network prefix
  */
 export const getNetworkPrefix = (network: Network): NetworkPrefix => (network === Network.Mainnet ? NetworkPrefix.Mainnet : NetworkPrefix.Testnet)
+
+/**
+ * Check if a given network is testnet or not
+ * @param network - input string to validate
+ * @returns network prefix
+ */
+export const isTestnet = (network: Network): boolean => network !== Network.Mainnet
