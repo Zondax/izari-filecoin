@@ -1,6 +1,6 @@
 import { Wallet } from '@zondax/izari-filecoin/wallet'
 import { Transaction } from '@zondax/izari-filecoin/transaction'
-import { Network, SignatureType } from '@zondax/izari-filecoin/artifacts'
+import { NetworkPrefix, SignatureType } from '@zondax/izari-filecoin/artifacts'
 
 import assert from 'assert'
 
@@ -41,7 +41,7 @@ export async function run() {
     privKey: '/mTHfeTNwxj1EYjBgbk7ZORx5nKe4ShunXXtvVQ58CA=',
   }
 
-  const accountData = Wallet.recoverAccount(Network.Mainnet, 1, rawTx.privKey)
+  const accountData = Wallet.recoverAccount(NetworkPrefix.Mainnet, 1, rawTx.privKey)
   const signature = await Wallet.signTransaction(accountData, Transaction.fromJSON(rawTx.tx))
   assert(signature.toJSON().Data === rawTx.signature.data)
   assert(signature.toJSON().Type === rawTx.signature.type)
