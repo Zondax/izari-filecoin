@@ -47,6 +47,11 @@ Allow you to communicate to the filecoin node in order to fetch on-chain data (m
 | Estimate fees for new tx | :white_check_mark: |
 | Broadcast a new tx       | :white_check_mark: |
 | Read tx state            | :white_check_mark: |
+| Wait for tx to appear    | :white_check_mark: |
+| -                        | -                  |
+| Get miners               | :white_check_mark: |
+| Get miner info           | :white_check_mark: |
+| Ask for storage to miner | :white_check_mark: |
 
 ### Addresses
 
