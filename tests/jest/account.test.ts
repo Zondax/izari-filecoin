@@ -25,9 +25,8 @@ const network = networkStr == 'mainnet' ? Network.Mainnet : Network.Testnet
 
 describe('Account', () => {
   test('Send', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
-    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path)
-    const network = senderAccountData.address.getNetwork()
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', network)
+    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', network)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
@@ -37,7 +36,7 @@ describe('Account', () => {
   })
 
   test('Send to t410 (eth address)', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', network)
     const receiverAddress = Address.fromEthAddress(network, '0x689c9B3232210aa9B84Ef444D0Ef35D11102AD1F')
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
@@ -48,8 +47,7 @@ describe('Account', () => {
   })
 
   test('Balance', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
-    const network = senderAccountData.address.getNetwork()
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', network)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 

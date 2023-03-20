@@ -16,13 +16,14 @@ if (!sender_path) throw new Error('SENDER_ACCOUNT_PATH must be defined')
 
 const network = networkStr == 'mainnet' ? Network.Mainnet : Network.Testnet
 
-const normalizeAddressByNetwork = (network: Network, add: string) => network + add.slice(1)
+const normalizeAddressByNetwork = (currentNet: Network, add: string) => `${currentNet}${add.slice(1)}`
 
 describe('Filecoin RPC', () => {
   test('Unauthorized', async () => {
     const addrStr = normalizeAddressByNetwork(network, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
     const addr = Address.fromString(addrStr)
-    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: `${nodeToken}invalid` })
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: `${nodeToken}invalid` })
     const response = await rpcNode.getNonce(addr)
 
     expect('error' in response).toBe(true)
@@ -32,7 +33,7 @@ describe('Filecoin RPC', () => {
   test('Get nonce for new account', async () => {
     const addrStr = normalizeAddressByNetwork(network, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
     const addr = Address.fromString(addrStr)
-    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: nodeToken })
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.getNonce(addr)
 
     expect('error' in response).toBe(true)
@@ -40,8 +41,10 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get nonce for existing account', async () => {
-    const addr = Address.fromString('f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi')
-    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: nodeToken })
+    const addrStr = normalizeAddressByNetwork(network, 'f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi')
+    const addr = Address.fromString(addrStr)
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.getNonce(addr)
 
     expect('error' in response).toBe(false)
@@ -52,7 +55,7 @@ describe('Filecoin RPC', () => {
     const addrStr = normalizeAddressByNetwork(network, 'f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi')
     const address = Address.fromString(addrStr)
 
-    const rpcNode = new RPC(address.getNetwork(), { url: nodeUrl, token: nodeToken })
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
     const response = await rpcNode.getNonce(address)
     expect('error' in response).toBe(false)
@@ -77,7 +80,7 @@ describe('Filecoin RPC', () => {
     const addrStr = normalizeAddressByNetwork(network, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
     const addr = Address.fromString(addrStr)
 
-    const rpcNode = new RPC(addr.getNetwork(), { url: nodeUrl, token: nodeToken })
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.walletBalance(addr)
 
     expect('error' in response).toBe(false)
@@ -86,8 +89,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get balance for account (some balance)', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
-    const network = senderAccountData.address.getNetwork()
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', network)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.walletBalance(senderAccountData.address)
