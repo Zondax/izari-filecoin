@@ -633,8 +633,8 @@ export class AddressDelegated extends Address {
     if (!validateNetwork(network)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
-    const namespace = address.slice(2, address.indexOf(network, 2))
-    const dataEncoded = address.slice(address.indexOf(network, 2) + 1)
+    const namespace = address.slice(2, address.indexOf('f', 2))
+    const dataEncoded = address.slice(address.indexOf('f', 2) + 1)
     const dataDecoded = base32Decode(dataEncoded.toUpperCase(), 'RFC4648')
 
     const subAddress = Buffer.from(dataDecoded.slice(0, -4))
