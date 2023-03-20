@@ -33,6 +33,9 @@ describe('Account', () => {
     const cid = await Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('100'))
     expect(cid).toBeDefined()
     expect(typeof cid).toBe('string')
+
+    // Wait until the tx is confirmed
+    await rpcNode.waitMsgState({ '/': cid })
   })
 
   test('Send to t410 (eth address)', async () => {
@@ -44,6 +47,9 @@ describe('Account', () => {
     const cid = await Account.send(rpcNode, senderAccountData, receiverAddress, Token.fromAtto('100'))
     expect(cid).toBeDefined()
     expect(typeof cid).toBe('string')
+
+    // Wait until the tx is confirmed
+    await rpcNode.waitMsgState({ '/': cid })
   })
 
   test('Balance', async () => {
