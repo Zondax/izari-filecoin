@@ -1,5 +1,5 @@
 const { Address } = require('@zondax/izari-filecoin/address')
-const { ProtocolIndicator, Network } = require('@zondax/izari-filecoin/artifacts')
+const { ProtocolIndicator, NetworkPrefix } = require('@zondax/izari-filecoin/artifacts')
 const assert = require('assert')
 
 function run() {
@@ -7,7 +7,7 @@ function run() {
   assert(addr.toString() === 't08666')
   assert(addr.toBytes().toString('hex') === '00da43')
   assert(addr.getProtocol() === ProtocolIndicator.ID)
-  assert(addr.getNetwork() === Network.Testnet)
+  assert(addr.getNetworkPrefix() === NetworkPrefix.Testnet)
 }
 
 module.exports = { run }

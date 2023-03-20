@@ -1,5 +1,5 @@
 import blake from 'blakejs'
-import { Network } from '../artifacts/address.js'
+import { Network, NetworkPrefix } from '../artifacts/address.js'
 
 /**
  * Calculates the checksum of a given payload according to filecoin specifications
@@ -30,7 +30,30 @@ export function getLeb128Length(input: Buffer): number {
 }
 
 /**
+ * Validate is the given string is a valid filecoin network prefix type
+ * @param networkPrefix - input string to validate
+ * @returns whether the input is a valid network prefix or not
+ */
+export const validateNetworkPrefix = (networkPrefix: string): networkPrefix is NetworkPrefix =>
+  Object.values(NetworkPrefix).includes(networkPrefix as NetworkPrefix)
+
+/**
  * Validate is the given string is a valid filecoin network type
  * @param network - input string to validate
+ * @returns whether the input is a valid network or not
  */
-export const validateNetwork = (network: string): network is Network => network == Network.Mainnet || network == Network.Testnet
+export const validateNetwork = (network: string): network is Network => Object.values(Network).includes(network as Network)
+
+/**
+ * Get network prefix from a given network
+ * @param network - input string to validate
+ * @returns network prefix
+ */
+export const getNetworkPrefix = (network: Network): NetworkPrefix => (network === Network.Mainnet ? NetworkPrefix.Mainnet : NetworkPrefix.Testnet)
+
+/**
+ * Check if a given network is testnet or not
+ * @param network - input string to validate
+ * @returns network prefix
+ */
+export const isTestnet = (network: Network): boolean => network !== Network.Mainnet

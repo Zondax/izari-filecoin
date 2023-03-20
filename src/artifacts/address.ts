@@ -27,10 +27,21 @@ export enum ProtocolIndicator {
 }
 
 /**
+ * Different Filecoin networks.
+ * For more information, please refer to this {@link https://docs.filecoin.io/basics/what-is-filecoin/networks/|link}.
+ */
+export enum Network {
+  Mainnet = 'mainnet',
+  Calibration = 'calibration',
+  Butterfly = 'butterfly',
+  Hyperspace = 'hyperspace',
+}
+
+/**
  * Prefix that indicates what network the address corresponds.
  * For more information, please refer to this {@link https://spec.filecoin.io/appendix/address/#section-appendix.address.network-prefix|link}.
  */
-export enum Network {
+export enum NetworkPrefix {
   Mainnet = 'f',
   Testnet = 't',
 }

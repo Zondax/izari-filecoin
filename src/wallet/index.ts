@@ -4,7 +4,7 @@ import * as ecc from '@bitcoinerlab/secp256k1'
 import secp256k1 from 'secp256k1'
 
 import { getCoinTypeFromPath, getDigest, getPayloadSECP256K1, isSignatureType, tryToPrivateKeyBuffer } from './utils.js'
-import { AccountData, Network, SignatureJSON, SignatureType } from '../artifacts/index.js'
+import { AccountData, NetworkPrefix, SignatureJSON, SignatureType } from '../artifacts/index.js'
 import { AddressSecp256k1 } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
 
@@ -33,11 +33,11 @@ export class Wallet {
    * @param type - which type of account must be derived
    * @param path - derivation path
    * @param password - can be a blank string
-   * @param network - network the new address will belong to. If the network is undefined, it will be chosen based on the derivation path
+   * @param networkPrefix - network the new address will belong to. If the network is undefined, it will be chosen based on the derivation path
    */
-  static deriveAccount = (mnemonic: string, type: SignatureType, path: string, password?: string, network?: Network): AccountData => {
+  static deriveAccount = (mnemonic: string, type: SignatureType, path: string, password?: string, networkPrefix?: NetworkPrefix): AccountData => {
     const seed = Wallet.mnemonicToSeed(mnemonic, password)
-    return Wallet.deriveAccountFromSeed(seed, type, path, network)
+    return Wallet.deriveAccountFromSeed(seed, type, path, networkPrefix)
   }
 
   /**
@@ -45,9 +45,9 @@ export class Wallet {
    * @param seed - seed to derive account from
    * @param type - which type of account must be derived
    * @param path - derivation path
-   * @param network - network the new address will belong to. If the network is undefined, it will be chosen based on the derivation path
+   * @param networkPrefix - network the new address will belong to. If the network is undefined, it will be chosen based on the derivation path
    */
-  static deriveAccountFromSeed = (seed: string | Buffer, type: SignatureType, path: string, network?: Network): AccountData => {
+  static deriveAccountFromSeed = (seed: string | Buffer, type: SignatureType, path: string, networkPrefix?: NetworkPrefix): AccountData => {
     if (typeof seed === 'string') seed = Buffer.from(seed, 'hex')
 
     switch (type) {
@@ -57,9 +57,9 @@ export class Wallet {
 
         if (!privateKey) throw new Error('privateKey not generated')
 
-        if (!network) network = getCoinTypeFromPath(path) === '1' ? Network.Testnet : Network.Mainnet
+        if (!networkPrefix) networkPrefix = getCoinTypeFromPath(path) === '1' ? NetworkPrefix.Testnet : NetworkPrefix.Mainnet
 
-        const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(network, privateKey)
+        const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(networkPrefix, privateKey)
 
         return {
           type,
@@ -77,16 +77,16 @@ export class Wallet {
 
   /**
    * Try to recover account related data from raw private key
-   * @param network - network this account belongs
+   * @param networkPrefix - network type this account belongs
    * @param type - which type of account must be derived
    * @param privateKey - private key raw data to recover account from
    * @param path - derivation path
    */
-  static recoverAccount(network: Network, type: SignatureType, privateKey: string | Buffer, path?: string): AccountData {
+  static recoverAccount(networkPrefix: NetworkPrefix, type: SignatureType, privateKey: string | Buffer, path?: string): AccountData {
     switch (type) {
       case SignatureType.SECP256K1: {
         privateKey = tryToPrivateKeyBuffer(privateKey)
-        const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(network, privateKey)
+        const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(networkPrefix, privateKey)
 
         return {
           type,
@@ -152,12 +152,12 @@ export class Wallet {
 
   /**
    * Generate the public key based on an account private key
-   * @param network - network this account belongs
+   * @param networkPrefix - network type this account belongs
    * @param privateKey - private key raw data to recover account from
    * @returns generated public key and new AddressSecp256k1 instance
    */
   protected static getPublicSecp256k1FromPrivKey = (
-    network: Network,
+    networkPrefix: NetworkPrefix,
     privateKey: Buffer
   ): {
     publicKey: Buffer
@@ -173,7 +173,7 @@ export class Wallet {
 
     return {
       publicKey: uncompressedPublicKeyBuf,
-      address: new AddressSecp256k1(network, payload),
+      address: new AddressSecp256k1(networkPrefix, payload),
     }
   }
 }

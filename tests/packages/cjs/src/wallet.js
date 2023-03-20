@@ -1,6 +1,6 @@
 const { Wallet } = require('@zondax/izari-filecoin/wallet')
 const { Transaction } = require('@zondax/izari-filecoin/transaction')
-const { Network } = require('@zondax/izari-filecoin/artifacts')
+const { NetworkPrefix } = require('@zondax/izari-filecoin/artifacts')
 
 const assert = require('assert')
 
@@ -40,7 +40,7 @@ async function run() {
     privKey: '/mTHfeTNwxj1EYjBgbk7ZORx5nKe4ShunXXtvVQ58CA=',
   }
 
-  const accountData = Wallet.recoverAccount(Network.Mainnet, 1, rawTx.privKey)
+  const accountData = Wallet.recoverAccount(NetworkPrefix.Mainnet, 1, rawTx.privKey)
   const signature = await Wallet.signTransaction(accountData, Transaction.fromJSON(rawTx.tx))
   assert(signature.toJSON().Data === rawTx.signature.data)
   assert(signature.toJSON().Type === rawTx.signature.type)

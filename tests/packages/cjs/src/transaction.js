@@ -1,10 +1,10 @@
 const { Transaction } = require('@zondax/izari-filecoin/transaction')
-const { Network } = require('@zondax/izari-filecoin/artifacts')
+const { NetworkPrefix } = require('@zondax/izari-filecoin/artifacts')
 const assert = require('assert')
 
 async function run() {
   const tx = await Transaction.fromCBOR(
-    Network.Mainnet,
+    NetworkPrefix.Mainnet,
     '8a0042006355013bfb6c6d897dc4104539164b155378463cdc5faa197c58440001733519cbac4400011d0f4300028f1a0001257e40'
   )
   assert(tx.to.toString() === 'f099')

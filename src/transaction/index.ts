@@ -3,7 +3,7 @@ import BN from 'bn.js'
 import { Address } from '../address/index.js'
 import { serializeBigNum } from './utils.js'
 import { RPC } from '../rpc/index.js'
-import { TransactionJSON, TxInputData, TxVersion, Network } from '../artifacts/index.js'
+import { TransactionJSON, TxInputData, TxVersion, NetworkPrefix } from '../artifacts/index.js'
 import { IpldDagCbor } from '../external/dag-cbor.js'
 import { waitFor } from '../utils/sleep.js'
 
@@ -52,11 +52,11 @@ export class Transaction {
 
   /**
    * Create a new Transaction instance from a cbor encoded transaction
-   * @param network - network this tx comes from
+   * @param networkPrefix - network type this tx comes from
    * @param cborMessage - cbor encoded tx to parse
    * @returns a new Transaction instance
    */
-  static fromCBOR = async (network: Network, cborMessage: Buffer | string): Promise<Transaction> => {
+  static fromCBOR = async (networkPrefix: NetworkPrefix, cborMessage: Buffer | string): Promise<Transaction> => {
     if (typeof cborMessage === 'string') cborMessage = Buffer.from(cborMessage, 'hex')
 
     const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
@@ -75,8 +75,8 @@ export class Transaction {
 
     return new Transaction(
       txVersion,
-      Address.fromBytes(network, toRaw),
-      Address.fromBytes(network, fromRaw),
+      Address.fromBytes(networkPrefix, toRaw),
+      Address.fromBytes(networkPrefix, fromRaw),
       nonceRaw,
       value,
       gasLimitRaw,

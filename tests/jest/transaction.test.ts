@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Network, Transaction } from '../../src'
+import { NetworkPrefix, Transaction } from '../../src'
 import { TransactionJSON } from '../../src/artifacts/transaction'
 
 jest.setTimeout(60 * 1000)
@@ -22,7 +22,7 @@ describe('Transaction', () => {
   describe('From CBOR encoded', () => {
     vectors.forEach(({ cbor, tx }, i) => {
       test('Tx ' + i, async () => {
-        const parseTx = await Transaction.fromCBOR(Network.Mainnet, cbor)
+        const parseTx = await Transaction.fromCBOR(NetworkPrefix.Mainnet, cbor)
 
         expect(parseTx.to.toString()).toBe(tx.To)
         expect(parseTx.from.toString()).toBe(tx.From)

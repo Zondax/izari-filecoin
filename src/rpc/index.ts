@@ -16,6 +16,7 @@ import { Network } from '../artifacts/index.js'
 import { Address } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
 import { Signature } from '../wallet/index.js'
+import { getNetworkPrefix } from '../address/utils.js'
 import {
   ClientQueryAsk,
   GasEstimateMessageGas,
@@ -51,7 +52,7 @@ export class RPC {
   /**
    * Indicates which network this RPC interacts with
    */
-  protected network
+  protected network: Network
 
   /**
    * Create a new RPC instance
@@ -271,15 +272,18 @@ export class RPC {
   }
 
   private validateNetwork = (address: Address | string, description = 'address'): Address => {
+    const networkPrefix = getNetworkPrefix(this.network)
+
     if (typeof address == 'string') address = Address.fromString(address)
-    if (address.getNetwork() !== this.network) throw new Error(`${description} belongs to ${address.getNetwork()} network while rpc allows ${this.network}`)
+    if (address.getNetworkPrefix() !== networkPrefix)
+      throw new Error(`${description} belongs to ${address.getNetworkPrefix()} network while rpc allows ${networkPrefix}`)
 
     return address
   }
 }
 
 /**
- * Filecoin RPC connection preloaded to interact with mainnet environment
+ * Filecoin RPC connection preloaded to interact with mainnet network
  */
 export class MainnetRPC extends RPC {
   constructor(args: Args) {
@@ -288,10 +292,28 @@ export class MainnetRPC extends RPC {
 }
 
 /**
- * Filecoin RPC connection preloaded to interact with testnet environment
+ * Filecoin RPC connection preloaded to interact with calibration network
  */
-export class TestnetRPC extends RPC {
+export class CalibrationRPC extends RPC {
   constructor(args: Args) {
-    super(Network.Testnet, args)
+    super(Network.Calibration, args)
+  }
+}
+
+/**
+ * Filecoin RPC connection preloaded to interact with butterfly network
+ */
+export class ButterflyRPC extends RPC {
+  constructor(args: Args) {
+    super(Network.Butterfly, args)
+  }
+}
+
+/**
+ * Filecoin RPC connection preloaded to interact with hyperspace network
+ */
+export class HyperspaceRPC extends RPC {
+  constructor(args: Args) {
+    super(Network.Hyperspace, args)
   }
 }

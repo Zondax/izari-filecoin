@@ -45,7 +45,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img id={'logo'} src={logo} className="App-logo" alt="logo" />
-        <div id={'network'}>{`Network: ${address.getNetwork().toString()}`}</div>
+        <div id={'network'}>{`Network: ${address.getNetworkPrefix().toString()}`}</div>
         <div id={'protocol'}>{`Protocol: ${address.getProtocol().toString()}`}</div>
         <div id={'string'}>{`String: ${address.toString()}`}</div>
         <div id={'bytes'}>{`Bytes: ${address.toBytes().toString('hex')}`}</div>

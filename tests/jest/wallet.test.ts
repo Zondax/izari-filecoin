@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { Network, Transaction, Wallet, Signature } from '../../src'
+import { NetworkPrefix, Transaction, Wallet, Signature } from '../../src'
 import { TransactionJSON, SignatureType } from '../../src/artifacts'
 
 jest.setTimeout(60 * 1000)
@@ -76,7 +76,7 @@ describe('Wallet', () => {
     vectors.forEach(({ addresses, mnemonic }) => {
       addresses.forEach(([type, path, address]) => {
         const account = Wallet.deriveAccount(mnemonic, type, path)
-        const recoveredAccount = Wallet.recoverAccount(Network.Mainnet, type, account.privateKey.toString('base64'))
+        const recoveredAccount = Wallet.recoverAccount(NetworkPrefix.Mainnet, type, account.privateKey.toString('base64'))
 
         expect(recoveredAccount.address.toString()).toBe(account.address.toString())
         expect(recoveredAccount.publicKey).toStrictEqual(account.publicKey)
@@ -92,7 +92,7 @@ describe('Wallet', () => {
       vectors.forEach(({ tx: txJSON, signature, privateKey }, i) => {
         test('Tx ' + i, async () => {
           const tx = Transaction.fromJSON(txJSON)
-          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privateKey)
+          const account = Wallet.recoverAccount(NetworkPrefix.Mainnet, signature.type, privateKey)
           const sig = await Wallet.signTransaction(account, tx)
 
           expect(sig.toJSON().Data).toBe(signature.data)
@@ -104,8 +104,8 @@ describe('Wallet', () => {
     describe('From CBOR encoded', () => {
       vectors.forEach(({ cbor, signature, privateKey }, i) => {
         test('Tx ' + i, async () => {
-          const tx = await Transaction.fromCBOR(Network.Mainnet, cbor)
-          const account = Wallet.recoverAccount(Network.Mainnet, signature.type, privateKey)
+          const tx = await Transaction.fromCBOR(NetworkPrefix.Mainnet, cbor)
+          const account = Wallet.recoverAccount(NetworkPrefix.Mainnet, signature.type, privateKey)
           const sig = await Wallet.signTransaction(account, tx)
 
           expect(sig.toJSON().Data).toBe(signature.data)
