@@ -1,26 +1,28 @@
-import { Address, Network, RPC, SignatureType, Transaction, Wallet } from '../../src'
+import { Address, Network, NetworkPrefix, RPC, SignatureType, Transaction, Wallet } from '../../src'
+import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
 
 jest.setTimeout(240 * 1000)
 
-const networkStr = process.env.NETWORK
+const network = process.env.NETWORK
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
 const mnemonic = process.env.ACCOUNT_MNEMONIC
 const sender_path = process.env.SENDER_ACCOUNT_PATH
 
-if (!networkStr) throw new Error('NETWORK must be defined')
+if (!network) throw new Error('NETWORK must be defined')
 if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
 if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
 if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
 if (!sender_path) throw new Error('SENDER_ACCOUNT_PATH must be defined')
 
-const network = networkStr == 'mainnet' ? Network.Mainnet : Network.Testnet
+if (!validateNetwork(network)) throw new Error('invalid network')
+const networkPrefix = getNetworkPrefix(network)
 
-const normalizeAddressByNetwork = (currentNet: Network, add: string) => `${currentNet}${add.slice(1)}`
+const normalizeAddressByNetwork = (networkPrefix: NetworkPrefix, add: string) => `${networkPrefix}${add.slice(1)}`
 
 describe('Filecoin RPC', () => {
   test('Unauthorized', async () => {
-    const addrStr = normalizeAddressByNetwork(network, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const addrStr = normalizeAddressByNetwork(networkPrefix, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
     const addr = Address.fromString(addrStr)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: `${nodeToken}invalid` })
@@ -31,7 +33,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get nonce for new account', async () => {
-    const addrStr = normalizeAddressByNetwork(network, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const addrStr = normalizeAddressByNetwork(networkPrefix, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
     const addr = Address.fromString(addrStr)
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.getNonce(addr)
@@ -41,7 +43,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get nonce for existing account', async () => {
-    const addrStr = normalizeAddressByNetwork(network, 'f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi')
+    const addrStr = normalizeAddressByNetwork(networkPrefix, 'f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi')
     const addr = Address.fromString(addrStr)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
@@ -52,7 +54,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Estimate fees for send tx', async () => {
-    const addrStr = normalizeAddressByNetwork(network, 'f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi')
+    const addrStr = normalizeAddressByNetwork(networkPrefix, 'f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi')
     const address = Address.fromString(addrStr)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
@@ -77,7 +79,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get balance for account (0 balance)', async () => {
-    const addrStr = normalizeAddressByNetwork(network, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
+    const addrStr = normalizeAddressByNetwork(networkPrefix, 'f410fnw2vjf7s7zk72dmwmvpnuxpgiowkdkehejijqey')
     const addr = Address.fromString(addrStr)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
@@ -89,7 +91,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get balance for account (some balance)', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', network)
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.walletBalance(senderAccountData.address)

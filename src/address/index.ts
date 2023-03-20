@@ -12,7 +12,7 @@ import {
   ETH_ADDRESS_LEN,
   ID_PAYLOAD_MAX_LEN,
   ID_PAYLOAD_MAX_NUM,
-  Network,
+  NetworkPrefix,
   ProtocolIndicator,
   SECP256K1_PAYLOAD_LEN,
   SUB_ADDRESS_MAX_LEN,
@@ -27,7 +27,7 @@ import {
   InvalidSubAddress,
   UnknownProtocolIndicator,
 } from './errors.js'
-import { getChecksum, getLeb128Length, validateNetwork } from './utils.js'
+import { getChecksum, getLeb128Length, validateNetworkPrefix } from './utils.js'
 
 /**
  * Address is an abstract class that holds fundamental fields that a filecoin address is composed by.
@@ -37,10 +37,10 @@ import { getChecksum, getLeb128Length, validateNetwork } from './utils.js'
 export abstract class Address {
   /**
    *
-   * @param network - indicates which network the address belongs.
+   * @param networkPrefix - indicates which network the address belongs.
    * @param protocol - indicates the address types.
    */
-  protected constructor(protected network: Network, protected protocol: ProtocolIndicator) {}
+  protected constructor(protected networkPrefix: NetworkPrefix, protected protocol: ProtocolIndicator) {}
 
   /**
    * Each address is composed by a payload
@@ -56,7 +56,7 @@ export abstract class Address {
   /**
    * Getter for network type
    */
-  getNetwork = (): Network => this.network
+  getNetworkPrefix = (): NetworkPrefix => this.networkPrefix
 
   /**
    * Getter for protocol indicator
@@ -103,7 +103,7 @@ export abstract class Address {
         return AddressBls.fromString(address)
       case ProtocolIndicator.DELEGATED: {
         const addr = AddressDelegated.fromString(address)
-        if (Address.isFilEthAddress(addr)) return new FilEthAddress(addr.getNetwork(), addr.getSubAddress())
+        if (Address.isFilEthAddress(addr)) return new FilEthAddress(addr.getNetworkPrefix(), addr.getSubAddress())
 
         return addr
       }
@@ -114,25 +114,25 @@ export abstract class Address {
 
   /**
    * Allows to parse any address from bytes format to its corresponding type
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param address - address to parse in bytes format (buffer)
    * @returns a new instance of a particular address type.
    */
-  static fromBytes = (network: Network, address: Buffer): Address => {
+  static fromBytes = (networkPrefix: NetworkPrefix, address: Buffer): Address => {
     const type = address[0]
 
     switch (type) {
       case ProtocolIndicator.ID:
-        return AddressId.fromBytes(network, address)
+        return AddressId.fromBytes(networkPrefix, address)
       case ProtocolIndicator.ACTOR:
-        return AddressActor.fromBytes(network, address)
+        return AddressActor.fromBytes(networkPrefix, address)
       case ProtocolIndicator.SECP256K1:
-        return AddressSecp256k1.fromBytes(network, address)
+        return AddressSecp256k1.fromBytes(networkPrefix, address)
       case ProtocolIndicator.BLS:
-        return AddressBls.fromBytes(network, address)
+        return AddressBls.fromBytes(networkPrefix, address)
       case ProtocolIndicator.DELEGATED: {
-        const addr = AddressDelegated.fromBytes(network, address)
-        if (Address.isFilEthAddress(addr)) return new FilEthAddress(addr.getNetwork(), addr.getSubAddress())
+        const addr = AddressDelegated.fromBytes(networkPrefix, address)
+        if (Address.isFilEthAddress(addr)) return new FilEthAddress(addr.getNetworkPrefix(), addr.getSubAddress())
 
         return addr
       }
@@ -144,11 +144,11 @@ export abstract class Address {
   /**
    * Allows to create a new instance of an Address from an ethereum address.
    * It is based on {@link https://github.com/filecoin-project/lotus/blob/80aa6d1d646c9984761c77dcb7cf63be094b9407/chain/types/ethtypes/eth_types.go#L370|this code}
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param ethAddr - ethereum address to parse (buffer or hex string, with or without prefix)
    * @returns a new instance of a particular address type.
    */
-  static fromEthAddress = (network: Network, ethAddr: Buffer | string): AddressId | FilEthAddress => {
+  static fromEthAddress = (networkPrefix: NetworkPrefix, ethAddr: Buffer | string): AddressId | FilEthAddress => {
     if (typeof ethAddr === 'string') {
       const tmp = ethAddr.startsWith('0x') ? ethAddr.slice(2) : ethAddr
       ethAddr = Buffer.from(tmp, 'hex')
@@ -161,10 +161,10 @@ export abstract class Address {
       let i = 12
       while (ethAddr[i] == 0) i += 1
 
-      return new AddressId(network, ethAddr.slice(i))
+      return new AddressId(networkPrefix, ethAddr.slice(i))
     }
 
-    return new FilEthAddress(network, ethAddr)
+    return new FilEthAddress(networkPrefix, ethAddr)
   }
 
   /**
@@ -224,11 +224,11 @@ export class AddressBls extends Address {
 
   /**
    * Allows to create a new instance of bls address
-   * @param network - indicates which network the address belongs.
+   * @param networkPrefix - indicates which network the address belongs.
    * @param payload - current address payload (buffer)
    */
-  constructor(network: Network, payload: Buffer) {
-    super(network, ProtocolIndicator.BLS)
+  constructor(networkPrefix: NetworkPrefix, payload: Buffer) {
+    super(networkPrefix, ProtocolIndicator.BLS)
 
     if (payload.byteLength !== BLS_PAYLOAD_LEN) throw new InvalidPayloadLength()
     this.payload = payload
@@ -247,7 +247,7 @@ export class AddressBls extends Address {
   toString = (): string => {
     const checksum = this.getChecksum()
     return (
-      this.network +
+      this.networkPrefix +
       this.protocol.toString() +
       base32Encode(Buffer.concat([this.payload, checksum]), 'RFC4648', {
         padding: false,
@@ -261,17 +261,17 @@ export class AddressBls extends Address {
    * @returns a new instance of AddressBls
    */
   static fromString(address: string): AddressBls {
-    const network = address[0]
+    const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetwork(network)) throw new InvalidNetwork()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.BLS) throw new InvalidProtocolIndicator()
 
     const decodedData = base32Decode(address.slice(2).toUpperCase(), 'RFC4648')
     const payload = Buffer.from(decodedData.slice(0, -4))
     const checksum = Buffer.from(decodedData.slice(-4))
 
-    const newAddress = new AddressBls(network, payload)
+    const newAddress = new AddressBls(networkPrefix, payload)
     if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
 
     return newAddress
@@ -279,15 +279,15 @@ export class AddressBls extends Address {
 
   /**
    * Allows to create a new AddressBls instance from bytes (buffer)
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param bytes - address to parse in bytes format (buffer)
    * @returns a new instance of AddressBls
    */
-  static fromBytes(network: Network, bytes: Buffer): AddressBls {
+  static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressBls {
     if (bytes[0] != ProtocolIndicator.BLS) throw new InvalidProtocolIndicator()
 
     const payload = Buffer.from(bytes.slice(1))
-    return new AddressBls(network, payload)
+    return new AddressBls(networkPrefix, payload)
   }
 }
 
@@ -309,11 +309,11 @@ export class AddressId extends Address {
 
   /**
    * Allows to create a new instance of id address
-   * @param network - indicates which network the address belongs.
+   * @param networkPrefix - indicates which network the address belongs.
    * @param payload - current address payload. It can be string (id in decimal) or buffer (leb128 encoded id)
    */
-  constructor(network: Network, payload: string | Buffer) {
-    super(network, ProtocolIndicator.ID)
+  constructor(networkPrefix: NetworkPrefix, payload: string | Buffer) {
+    super(networkPrefix, ProtocolIndicator.ID)
 
     const payloadBuff = typeof payload === 'string' ? leb.unsigned.encode(payload) : payload
 
@@ -333,7 +333,7 @@ export class AddressId extends Address {
    * Allows to get the string format of this address
    * @returns id address in string format
    */
-  toString = (): string => this.network + this.protocol.toString() + leb.unsigned.decode(this.payload)
+  toString = (): string => this.networkPrefix + this.protocol.toString() + leb.unsigned.decode(this.payload)
 
   /**
    * Getter for actor id
@@ -346,27 +346,27 @@ export class AddressId extends Address {
    * @returns a new instance of AddressId
    */
   static fromString(address: string): AddressId {
-    const network = address[0]
+    const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetwork(network)) throw new InvalidNetwork()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
 
     const payload = leb.unsigned.encode(address.substr(2))
-    return new AddressId(network, payload)
+    return new AddressId(networkPrefix, payload)
   }
 
   /**
    * Allows to create a new AddressId instance from bytes (buffer)
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param bytes - address to parse in bytes format (buffer)
    * @returns a new instance of AddressId
    */
-  static fromBytes(network: Network, bytes: Buffer): AddressId {
+  static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressId {
     if (bytes[0] != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
 
     const payload = bytes.slice(1)
-    return new AddressId(network, payload)
+    return new AddressId(networkPrefix, payload)
   }
 
   /**
@@ -397,11 +397,11 @@ export class AddressSecp256k1 extends Address {
 
   /**
    * Allows to create a new instance of secp256k1 address
-   * @param network - indicates which network the address belongs.
+   * @param networkPrefix - indicates which network the address belongs.
    * @param payload - current address payload (buffer)
    */
-  constructor(network: Network, payload: Buffer) {
-    super(network, ProtocolIndicator.SECP256K1)
+  constructor(networkPrefix: NetworkPrefix, payload: Buffer) {
+    super(networkPrefix, ProtocolIndicator.SECP256K1)
     if (payload.byteLength !== SECP256K1_PAYLOAD_LEN) throw new InvalidPayloadLength()
     this.payload = payload
   }
@@ -419,7 +419,7 @@ export class AddressSecp256k1 extends Address {
   toString = (): string => {
     const checksum = this.getChecksum()
     return (
-      this.network +
+      this.networkPrefix +
       this.protocol.toString() +
       base32Encode(Buffer.concat([this.payload, checksum]), 'RFC4648', {
         padding: false,
@@ -433,17 +433,17 @@ export class AddressSecp256k1 extends Address {
    * @returns a new instance of AddressSecp256k1
    */
   static fromString(address: string): AddressSecp256k1 {
-    const network = address[0]
+    const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetwork(network)) throw new InvalidNetwork()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.SECP256K1) throw new InvalidProtocolIndicator()
 
     const decodedData = base32Decode(address.slice(2).toUpperCase(), 'RFC4648')
     const payload = Buffer.from(decodedData.slice(0, -4))
     const checksum = Buffer.from(decodedData.slice(-4))
 
-    const newAddress = new AddressSecp256k1(network, payload)
+    const newAddress = new AddressSecp256k1(networkPrefix, payload)
     if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
 
     return newAddress
@@ -451,15 +451,15 @@ export class AddressSecp256k1 extends Address {
 
   /**
    * Allows to create a new AddressSecp256k1 instance from bytes (buffer)
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param bytes - address to parse in bytes format (buffer)
    * @returns a new instance of AddressSecp256k1
    */
-  static fromBytes(network: Network, bytes: Buffer): AddressSecp256k1 {
+  static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressSecp256k1 {
     if (bytes[0] != ProtocolIndicator.SECP256K1) throw new InvalidProtocolIndicator()
 
     const payload = Buffer.from(bytes.slice(1))
-    return new AddressSecp256k1(network, payload)
+    return new AddressSecp256k1(networkPrefix, payload)
   }
 }
 
@@ -476,11 +476,11 @@ export class AddressActor extends Address {
 
   /**
    * Allows to create a new instance of actor address
-   * @param network - indicates which network the address belongs.
+   * @param networkPrefix - indicates which network the address belongs.
    * @param payload - current address payload (buffer)
    */
-  constructor(network: Network, payload: Buffer) {
-    super(network, ProtocolIndicator.ACTOR)
+  constructor(networkPrefix: NetworkPrefix, payload: Buffer) {
+    super(networkPrefix, ProtocolIndicator.ACTOR)
     if (payload.byteLength !== ACTOR_PAYLOAD_LEN) throw new InvalidPayloadLength()
 
     this.payload = payload
@@ -499,7 +499,7 @@ export class AddressActor extends Address {
   toString = (): string => {
     const checksum = this.getChecksum()
     return (
-      this.network +
+      this.networkPrefix +
       this.protocol.toString() +
       base32Encode(Buffer.concat([this.payload, checksum]), 'RFC4648', {
         padding: false,
@@ -513,17 +513,17 @@ export class AddressActor extends Address {
    * @returns a new instance of AddressActor
    */
   static fromString(address: string): AddressActor {
-    const network = address[0]
+    const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetwork(network)) throw new InvalidNetwork()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.ACTOR) throw new InvalidProtocolIndicator()
 
     const decodedData = base32Decode(address.slice(2).toUpperCase(), 'RFC4648')
     const payload = Buffer.from(decodedData.slice(0, -4))
     const checksum = Buffer.from(decodedData.slice(-4))
 
-    const newAddress = new AddressActor(network, payload)
+    const newAddress = new AddressActor(networkPrefix, payload)
     if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
 
     return newAddress
@@ -531,15 +531,15 @@ export class AddressActor extends Address {
 
   /**
    * Allows to create a new AddressActor instance from bytes (buffer)
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param bytes - address to parse in bytes format (buffer)
    * @returns a new instance of AddressActor
    */
-  static fromBytes(network: Network, bytes: Buffer): AddressActor {
+  static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressActor {
     if (bytes[0] != ProtocolIndicator.ACTOR) throw new InvalidProtocolIndicator()
 
     const payload = Buffer.from(bytes.slice(1))
-    return new AddressActor(network, payload)
+    return new AddressActor(networkPrefix, payload)
   }
 }
 
@@ -567,12 +567,12 @@ export class AddressDelegated extends Address {
 
   /**
    * Allows to create a new instance of delegated address
-   * @param network - indicates which network the address belongs.
+   * @param networkPrefix - indicates which network the address belongs.
    * @param namespace - account manager actor id
    * @param subAddress - user-defined address the account manager will know and administrate (buffer)
    */
-  constructor(network: Network, namespace: string, subAddress: Buffer) {
-    super(network, ProtocolIndicator.DELEGATED)
+  constructor(networkPrefix: NetworkPrefix, namespace: string, subAddress: Buffer) {
+    super(networkPrefix, ProtocolIndicator.DELEGATED)
 
     if (new BN(namespace).gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidNamespace()
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
@@ -611,7 +611,7 @@ export class AddressDelegated extends Address {
     const checksum = this.getChecksum()
 
     return (
-      this.network +
+      this.networkPrefix +
       this.protocol.toString() +
       this.namespace +
       'f' +
@@ -627,10 +627,10 @@ export class AddressDelegated extends Address {
    * @returns a new instance of AddressDelegated
    */
   static fromString(address: string): AddressDelegated {
-    const network = address[0]
+    const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetwork(network)) throw new InvalidNetwork()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
     const namespace = address.slice(2, address.indexOf('f', 2))
@@ -640,7 +640,7 @@ export class AddressDelegated extends Address {
     const subAddress = Buffer.from(dataDecoded.slice(0, -4))
     const checksum = Buffer.from(dataDecoded.slice(-4))
 
-    const newAddress = new AddressDelegated(network, namespace, subAddress)
+    const newAddress = new AddressDelegated(networkPrefix, namespace, subAddress)
 
     if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
 
@@ -649,18 +649,18 @@ export class AddressDelegated extends Address {
 
   /**
    * Allows to create a new AddressDelegated instance from bytes (buffer)
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param bytes - address to parse in bytes format (buffer)
    * @returns a new instance of AddressDelegated
    */
-  static fromBytes(network: Network, bytes: Buffer): AddressDelegated {
+  static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressDelegated {
     if (bytes[0] != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
 
     const namespaceLength = getLeb128Length(bytes.slice(1))
     const namespace = leb.unsigned.decode(bytes.slice(1, 1 + namespaceLength))
     const subAddress = bytes.slice(namespaceLength + 1)
 
-    return new AddressDelegated(network, namespace, subAddress)
+    return new AddressDelegated(networkPrefix, namespace, subAddress)
   }
 }
 
@@ -671,28 +671,28 @@ export class AddressDelegated extends Address {
 export class FilEthAddress extends AddressDelegated {
   /**
    * Allows to create a new instance of EthereumAddress
-   * @param network - indicates which network the address belongs.
+   * @param networkPrefix - indicates which network the address belongs.
    * @param ethAddress - valid ethereum address to wrap (as buffer)
    */
 
-  constructor(network: Network, ethAddress: Buffer) {
-    super(network, DelegatedNamespace.ETH, ethAddress)
+  constructor(networkPrefix: NetworkPrefix, ethAddress: Buffer) {
+    super(networkPrefix, DelegatedNamespace.ETH, ethAddress)
 
     if (ethAddress.length !== ETH_ADDRESS_LEN) throw new Error('invalid ethereum address: length should be 32 bytes')
   }
 
   /**
    * Allows to create a new EthereumAddress instance from filecoin address in bytes format (buffer)
-   * @example network: 'f' - bytesFilAddress: 040a23a7f3c5c663d71151f40c8610c01150c9660795
-   * @param network - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
+   * @example networkPrefix: 'f' - bytesFilAddress: 040a23a7f3c5c663d71151f40c8610c01150c9660795
+   * @param networkPrefix - indicates which network the address belongs, as the bytes format does not hold the network the address corresponds
    * @param bytesFilAddress - address to parse in bytes format (buffer)
    * @returns a new instance of EthereumAddress
    */
-  static fromBytes(network: Network, bytesFilAddress: Buffer): FilEthAddress {
-    const addr = AddressDelegated.fromBytes(network, bytesFilAddress)
+  static fromBytes(networkPrefix: NetworkPrefix, bytesFilAddress: Buffer): FilEthAddress {
+    const addr = AddressDelegated.fromBytes(networkPrefix, bytesFilAddress)
     if (addr.getNamespace() !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
 
-    return new FilEthAddress(addr.getNetwork(), addr.getSubAddress())
+    return new FilEthAddress(addr.getNetworkPrefix(), addr.getSubAddress())
   }
 
   /**
@@ -705,7 +705,7 @@ export class FilEthAddress extends AddressDelegated {
     const addr = AddressDelegated.fromString(strFilAddress)
     if (addr.getNamespace() !== DelegatedNamespace.ETH) throw new Error('invalid filecoin address for ethereum space')
 
-    return new FilEthAddress(addr.getNetwork(), addr.getSubAddress())
+    return new FilEthAddress(addr.getNetworkPrefix(), addr.getSubAddress())
   }
 
   /**
