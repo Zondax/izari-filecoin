@@ -16,8 +16,8 @@ if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
 if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
 if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
 
-const sender_path = "44'/461'/0'/0/1" // f1s4oa6y3srhqdulq4e4hijd2lo3izfmzaczxpb6i
-const receiver_path = "44'/461'/0'/0/2" // f1tnspiqlb3ga2ft7dwxjc47nw53twttri2vle4ty
+const sender_path = "44'/461'/0'/0/1" // f1ovlkmtnqji7wrvdpcys3i22c62obbamgokmg35q
+const receiver_path = "44'/461'/0'/0/2" // f1pnc33cba2c2a3olqadho7wiohyosbkl3upescei
 
 if (!validateNetwork(network)) throw new Error('invalid network')
 const networkPrefix = getNetworkPrefix(network)
