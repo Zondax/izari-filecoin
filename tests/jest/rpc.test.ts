@@ -100,7 +100,7 @@ describe('Filecoin RPC', () => {
   })
 
   test('List miners', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
     const response = await rpcNode.listMiners()
 
     expect('error' in response).toBe(false)
@@ -112,23 +112,36 @@ describe('Filecoin RPC', () => {
   })
 
   test('Get miner info', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
-    const response = await rpcNode.getMinerInfo('t01000')
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
-    expect('error' in response).toBe(false)
-    expect('result' in response).toBe(true)
-    if ('result' in response) {
-      const { Owner, Worker, ControlAddresses, PeerId } = response.result
-      expect(PeerId).toBe('12D3KooWGJUwebTPdqHzWHGULsQjQ7kC8XX4TEUx4vsmRP5GDTXm')
-      expect(Owner).toBe('t0100')
-      expect(Worker).toBe('t0100')
-      expect(ControlAddresses).toBe(null)
+    const response1 = await rpcNode.listMiners()
+    expect('error' in response1).toBe(false)
+    if ('error' in response1) throw new Error(response1.error.message)
+
+    const response2 = await rpcNode.getMinerInfo(response1.result[0])
+    expect('error' in response2).toBe(false)
+    expect('result' in response2).toBe(true)
+
+    if ('result' in response2) {
+      const { Owner, Worker, PeerId } = response2.result
+      expect(PeerId).toBeDefined()
+      expect(Owner).toBeDefined()
+      expect(Worker).toBeDefined()
     }
   })
 
   test('Ask for storage to a miner', async () => {
-    const rpcNode = new RPC({ url: nodeUrl, token: nodeToken })
-    const response = await rpcNode.askForStorage('t01000', '12D3KooWGJUwebTPdqHzWHGULsQjQ7kC8XX4TEUx4vsmRP5GDTXm')
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+
+    const response1 = await rpcNode.listMiners()
+    expect('error' in response1).toBe(false)
+    if ('error' in response1) throw new Error(response1.error.message)
+
+    const response2 = await rpcNode.getMinerInfo(response1.result[0])
+    expect('error' in response2).toBe(false)
+    if ('error' in response2) throw new Error(response2.error.message)
+
+    const response = await rpcNode.askForStorage(response1.result[0], response2.result.PeerId)
 
     expect('error' in response).toBe(false)
     expect('result' in response).toBe(true)
@@ -136,18 +149,13 @@ describe('Filecoin RPC', () => {
       const { Response, DealProtocols } = response.result
       const { Miner, Price, VerifiedPrice, MaxPieceSize, MinPieceSize } = Response
 
-      expect(Miner).toBe('t01000')
-      expect(Price).toBe('500000000')
-      expect(VerifiedPrice).toBe('50000000')
-      expect(MinPieceSize).toBe(256)
-      expect(MaxPieceSize).toBe(536870912)
+      expect(Miner).toBeDefined()
+      expect(Price).toBeDefined()
+      expect(VerifiedPrice).toBeDefined()
+      expect(MinPieceSize).toBeDefined()
+      expect(MaxPieceSize).toBeDefined()
 
       expect(DealProtocols.length).toBeGreaterThan(0)
     }
-  })
-
-  test('Broadcast new transaction', () => {
-    // TODO
-    // Need to sign a message first in order to test this
   })
 })

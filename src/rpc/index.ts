@@ -3,7 +3,8 @@ import {
   AskForStorageResponse,
   GasEstimationResponse,
   GetMinerInfoResponse,
-  GetNonceResponse, ListMinersResponse,
+  GetNonceResponse,
+  ListMinersResponse,
   MpoolPushOk,
   MpoolPushResponse,
   ReadStateResponse,
@@ -16,14 +17,17 @@ import { Address } from '../address/index.js'
 import { Transaction } from '../transaction/index.js'
 import { Signature } from '../wallet/index.js'
 import {
-  ClientQueryAsk, GasEstimateMessageGas,
+  ClientQueryAsk,
+  GasEstimateMessageGas,
   MpoolGetNonce,
   MpoolPush,
   RpcVersion,
   StateListMiners,
-  StateMinerInfo, StateReadState, StateWaitMsg,
-  WalletBalance
-} from "./constants.js";
+  StateMinerInfo,
+  StateReadState,
+  StateWaitMsg,
+  WalletBalance,
+} from './constants.js'
 
 /**
  * Parameters to create a new RPC connection
@@ -228,7 +232,7 @@ export class RPC {
         jsonrpc: RpcVersion,
         method: StateMinerInfo,
         id: 1,
-        params: [minerAddr, null],
+        params: [minerAddr.toString(), null],
       })
 
       return response.data as GetMinerInfoResponse
@@ -245,7 +249,7 @@ export class RPC {
         jsonrpc: RpcVersion,
         method: ClientQueryAsk,
         id: 1,
-        params: [peerId, minerAddr],
+        params: [peerId, minerAddr.toString()],
       })
 
       return response.data as AskForStorageResponse
@@ -266,8 +270,8 @@ export class RPC {
     throw e
   }
 
-  private validateNetwork = (address: Address | string, description = 'address') : Address => {
-    if(typeof address == "string") address = Address.fromString(address)
+  private validateNetwork = (address: Address | string, description = 'address'): Address => {
+    if (typeof address == 'string') address = Address.fromString(address)
     if (address.getNetwork() !== this.network) throw new Error(`${description} belongs to ${address.getNetwork()} network while rpc allows ${this.network}`)
 
     return address
