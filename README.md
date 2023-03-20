@@ -244,7 +244,10 @@ Here you can find faucets for each testnet you want to test the library on
 
 ## Tests
 
-So far, the package has been tested in different environments and filecoin networks. We are trying to assure it works in as many platforms as we can. 
+So far, the package has been **tested in different environments and filecoin networks**. 
+We are trying to assure it works in **as many platforms as we can**. Besides, in order to prove the package is fully functional 
+on the current network version, **the CI is scheduled to run every day**. If something changes on the network, we will detect it 
+right away.
 
 ### Networks
 | Network     | Tested?             |
