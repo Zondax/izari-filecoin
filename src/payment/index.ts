@@ -1,10 +1,11 @@
-import { AccountData, ActorsV13, Cid } from '../artifacts/index.js'
+import { AccountData, Cid } from '../artifacts/index.js'
 import { Address } from '../address/index.js'
 import { RPC } from '../rpc/index.js'
 import { Token } from '../token/index.js'
 import { Wallet } from '../wallet/index.js'
 import { InitActor, ExecParams } from '../actors/init/index'
 import { ConstructorParams } from '../actors/paymentChannel'
+import { getActorCidsFromNetwork } from '../actors/utils'
 
 /**
  * Payment channels are generally used as a mechanism to increase the scalability of blockchains and enable users to transact without involving
@@ -66,10 +67,14 @@ export class PaymentChannel {
    */
   static create = async (rpc: RPC, fromAccountData: AccountData, to: Address): Promise<Cid> => {
     const { address: from } = fromAccountData
-    if (to.getNetwork() !== from.getNetwork()) throw new Error('both "from" and "to" addressees should belong to the same network')
+    if (to.getNetworkPrefix() !== from.getNetworkPrefix()) throw new Error('both "from" and "to" addressees should belong to the same network')
 
-    const payChan = await new ConstructorParams(from, to).serialize()
-    const execParams = new ExecParams(ActorsV13.PaymentChannel, payChan)
+    // Get payment channel data
+    const payChanCid = getActorCidsFromNetwork(rpc.getNetwork()).PaymentChannel
+    const payChanParams = await new ConstructorParams(from, to).serialize()
+
+    // Create exec tx to init new actor
+    const execParams = new ExecParams(payChanCid, payChanParams)
     const tx = await InitActor.newExecTx(from, Token.zero(), execParams)
     await tx.prepareToSend(rpc)
 

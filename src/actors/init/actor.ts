@@ -6,7 +6,7 @@ import { ExecParams } from './types.js'
 
 export class InitActor {
   protected static newTx = (from: Address, value: Token, method: number, params: Uint8Array): Transaction => {
-    const initActor = new AddressId(from.getNetwork(), SystemActorIDs.Init.toString())
+    const initActor = new AddressId(from.getNetworkPrefix(), SystemActorIDs.Init.toString())
     return Transaction.getNew(initActor, from, value, method, Buffer.from(params))
   }
 
