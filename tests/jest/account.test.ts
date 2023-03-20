@@ -5,7 +5,7 @@ import { Wallet } from '../../src/wallet'
 import { Token } from '../../src/token'
 import { Network, SignatureType } from '../../src/artifacts'
 
-jest.setTimeout(60 * 1000)
+jest.setTimeout(240 * 1000)
 
 const networkStr = process.env.NETWORK
 const nodeUrl = process.env.NODE_RPC_URL

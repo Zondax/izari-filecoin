@@ -1,6 +1,6 @@
 import { Address, Network, RPC, SignatureType, Transaction, Wallet } from '../../src'
 
-jest.setTimeout(60 * 1000)
+jest.setTimeout(240 * 1000)
 
 const networkStr = process.env.NETWORK
 const nodeUrl = process.env.NODE_RPC_URL
