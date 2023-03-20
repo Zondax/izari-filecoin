@@ -137,11 +137,24 @@ describe('Filecoin RPC', () => {
     expect('error' in response1).toBe(false)
     if ('error' in response1) throw new Error(response1.error.message)
 
-    const response2 = await rpcNode.getMinerInfo(response1.result[0])
-    expect('error' in response2).toBe(false)
-    if ('error' in response2) throw new Error(response2.error.message)
+    let peerId = null,
+      minerId = null,
+      i = 0
 
-    const response = await rpcNode.askForStorage(response1.result[0], response2.result.PeerId)
+    // Look for a miner that has peer id
+    while (!peerId || !minerId) {
+      const response2 = await rpcNode.getMinerInfo(response1.result[i])
+      expect('error' in response2).toBe(false)
+      if ('error' in response2) throw new Error(response2.error.message)
+
+      if (response2.result.PeerId) {
+        peerId = response2.result.PeerId
+        minerId = response1.result[i]
+      }
+      i++
+    }
+
+    const response = await rpcNode.askForStorage(minerId, peerId)
 
     expect('error' in response).toBe(false)
     expect('result' in response).toBe(true)
