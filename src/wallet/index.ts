@@ -32,11 +32,12 @@ export class Wallet {
    * @param mnemonic - mnemonic to derive account from
    * @param type - which type of account must be derived
    * @param path - derivation path
-   * @param password - optional password
+   * @param password - can be a blank string
+   * @param network - network the new address will belong to. If the network is undefined, it will be chosen based on the derivation path
    */
-  static deriveAccount = (mnemonic: string, type: SignatureType, path: string, password?: string): AccountData => {
+  static deriveAccount = (mnemonic: string, type: SignatureType, path: string, password?: string, network?: Network): AccountData => {
     const seed = Wallet.mnemonicToSeed(mnemonic, password)
-    return Wallet.deriveAccountFromSeed(seed, type, path)
+    return Wallet.deriveAccountFromSeed(seed, type, path, network)
   }
 
   /**
@@ -44,8 +45,9 @@ export class Wallet {
    * @param seed - seed to derive account from
    * @param type - which type of account must be derived
    * @param path - derivation path
+   * @param network - network the new address will belong to. If the network is undefined, it will be chosen based on the derivation path
    */
-  static deriveAccountFromSeed = (seed: string | Buffer, type: SignatureType, path: string): AccountData => {
+  static deriveAccountFromSeed = (seed: string | Buffer, type: SignatureType, path: string, network?: Network): AccountData => {
     if (typeof seed === 'string') seed = Buffer.from(seed, 'hex')
 
     switch (type) {
@@ -55,7 +57,7 @@ export class Wallet {
 
         if (!privateKey) throw new Error('privateKey not generated')
 
-        const network = getCoinTypeFromPath(path) === '1' ? Network.Testnet : Network.Mainnet
+        if (!network) network = getCoinTypeFromPath(path) === '1' ? Network.Testnet : Network.Mainnet
 
         const { publicKey, address } = Wallet.getPublicSecp256k1FromPrivKey(network, privateKey)
 
@@ -103,7 +105,7 @@ export class Wallet {
   /**
    * Sign a transaction using account the private key
    * @param accountData - account data generated from deriving a new account
-   * @param tx - tranasction to sign
+   * @param tx - transaction to sign
    * @returns generated signature
    */
   static signTransaction = async (accountData: Pick<AccountData, 'privateKey' | 'type'>, tx: Transaction): Promise<Signature> => {
