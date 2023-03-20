@@ -2,25 +2,30 @@ import { PaymentChannel } from '../../src/payment'
 import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
 import { SignatureType } from '../../src/artifacts'
+import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
 
 jest.setTimeout(120 * 1000)
 
+const network = process.env.NETWORK
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
 const mnemonic = process.env.ACCOUNT_MNEMONIC
 
+if (!network) throw new Error('NETWORK must be defined')
 if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
 if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
 if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
 
-const sender_path = "44'/461'/0'/0/0" // f1s4oa6y3srhqdulq4e4hijd2lo3izfmzaczxpb6i
-const receiver_path = "44'/461'/0'/0/1" // f1tnspiqlb3ga2ft7dwxjc47nw53twttri2vle4ty
+const sender_path = "44'/461'/0'/0/1" // f1s4oa6y3srhqdulq4e4hijd2lo3izfmzaczxpb6i
+const receiver_path = "44'/461'/0'/0/2" // f1tnspiqlb3ga2ft7dwxjc47nw53twttri2vle4ty
+
+if (!validateNetwork(network)) throw new Error('invalid network')
+const networkPrefix = getNetworkPrefix(network)
 
 describe('Payment channel', () => {
   test('New (broadcast and wait)', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
-    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path)
-    const network = senderAccountData.address.getNetwork()
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
+    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
@@ -31,9 +36,8 @@ describe('Payment channel', () => {
   })
 
   test('Create (only broadcast)', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path)
-    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path)
-    const network = senderAccountData.address.getNetwork()
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
+    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 

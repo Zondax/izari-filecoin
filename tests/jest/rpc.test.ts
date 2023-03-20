@@ -1,4 +1,4 @@
-import { Address, Network, NetworkPrefix, RPC, SignatureType, Transaction, Wallet } from '../../src'
+import { Address, Token, NetworkPrefix, RPC, SignatureType, Transaction, Wallet } from '../../src'
 import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
 
 jest.setTimeout(240 * 1000)
