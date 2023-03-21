@@ -1,6 +1,7 @@
 import { PaymentChannel } from '../../src/payment'
 import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
+import { Address } from '../../src/address'
 import { SignatureType } from '../../src/artifacts'
 import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
 
@@ -23,7 +24,7 @@ if (!validateNetwork(network)) throw new Error('invalid network')
 const networkPrefix = getNetworkPrefix(network)
 
 describe('Payment channel', () => {
-  test('New (broadcast and wait)', async () => {
+  test('New/Collect', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
@@ -33,9 +34,11 @@ describe('Payment channel', () => {
     expect(pyChannel.getAddress()).toBeDefined()
     expect(pyChannel.getFrom()).toBeDefined()
     expect(pyChannel.getTo()).toBeDefined()
+
+    await expect(pyChannel.collect(rpcNode, senderAccountData)).rejects.toThrow(new RegExp(/payment channel not settling or settled/))
   })
 
-  test('Create (only broadcast)', async () => {
+  test('Create/Settle', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
@@ -44,5 +47,14 @@ describe('Payment channel', () => {
     const cid = await PaymentChannel.create(rpcNode, senderAccountData, receiverAccountData.address)
     expect(cid).toBeDefined()
     expect(typeof cid).toBe('string')
+
+    const payCh = await PaymentChannel.newFromCid(rpcNode, senderAccountData.address, receiverAccountData.address, cid)
+
+    const settleTxId = await payCh.settle(rpcNode, senderAccountData)
+    expect(settleTxId).toBeDefined()
+    expect(typeof settleTxId).toBe('string')
+
+    const settleResult = await rpcNode.waitMsgState({ '/': settleTxId })
+    expect(settleResult).toBeDefined()
   })
 })

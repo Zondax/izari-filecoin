@@ -20,6 +20,14 @@ export enum InitActorMethods {
   Exec4 = 3,
 }
 
+export enum PayChActorMethods {
+  UpdateChannelState = 2,
+
+  Settle = 3,
+
+  Collect = 4,
+}
+
 /**
  Actor content IDs version 13 for hyperspace network
  * For more information about the actors cid v10, please refer to this {@link https://github.com/filecoin-project/lotus/releases/tag/v1.20.0|link}
