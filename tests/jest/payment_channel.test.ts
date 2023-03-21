@@ -1,11 +1,10 @@
 import { PaymentChannel } from '../../src/payment'
 import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
-import { Address } from '../../src/address'
 import { SignatureType } from '../../src/artifacts'
 import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
 
-jest.setTimeout(120 * 1000)
+jest.setTimeout(240 * 1000)
 
 const network = process.env.NETWORK
 const nodeUrl = process.env.NODE_RPC_URL
@@ -24,7 +23,7 @@ if (!validateNetwork(network)) throw new Error('invalid network')
 const networkPrefix = getNetworkPrefix(network)
 
 describe('Payment channel', () => {
-  test('New/Collect', async () => {
+  test('New and Collect', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
@@ -38,7 +37,7 @@ describe('Payment channel', () => {
     await expect(pyChannel.collect(rpcNode, senderAccountData)).rejects.toThrow(new RegExp(/payment channel not settling or settled/))
   })
 
-  test('Create/Settle', async () => {
+  test('Create and Settle', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
