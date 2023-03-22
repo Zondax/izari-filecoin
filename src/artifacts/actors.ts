@@ -14,12 +14,20 @@ export enum SystemActorIDs {
   EAM = 10,
 }
 
+/**
+ * Init actor methods
+ * For more information about this type, please refer to this {@link https://github.com/filecoin-project/builtin-actors/blob/master/actors/init/src/lib.rs|code}
+ */
 export enum InitActorMethods {
   Exec = 2,
 
   Exec4 = 3,
 }
 
+/**
+ * Payment channel actor methods
+ * For more information about this type, please refer to this {@link https://github.com/filecoin-project/builtin-actors/blob/master/actors/paych/src/lib.rs|code}
+ */
 export enum PayChActorMethods {
   UpdateChannelState = 2,
 
@@ -29,7 +37,7 @@ export enum PayChActorMethods {
 }
 
 /**
- Actor content IDs version 13 for hyperspace network
+ * Actor content IDs version 13 for hyperspace network
  * For more information about the actors cid v10, please refer to this {@link https://github.com/filecoin-project/lotus/releases/tag/v1.20.0|link}
  */
 export enum ActorsHyperspaceV13 {
