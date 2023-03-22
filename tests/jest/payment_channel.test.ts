@@ -26,26 +26,7 @@ const networkPrefix = getNetworkPrefix(network)
 const rpcTimeout = 15 * 1000
 
 describe('Payment channel', () => {
-  test('New and Collect', async () => {
-    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
-    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
-
-    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken, timeout: rpcTimeout })
-
-    const pyChannel = await PaymentChannel.new(rpcNode, senderAccountData, receiverAccountData.address)
-    expect(pyChannel.getAddress()).toBeDefined()
-    expect(pyChannel.getFrom()).toBeDefined()
-    expect(pyChannel.getTo()).toBeDefined()
-
-    await expect(pyChannel.collect(rpcNode, senderAccountData)).rejects.toThrow(new RegExp(/payment channel not settling or settled/))
-
-    // Settle channel in order to reclaim tokens back to the sender account
-    const settleTxId = await pyChannel.settle(rpcNode, senderAccountData)
-    expect(settleTxId).toBeDefined()
-    expect(typeof settleTxId).toBe('string')
-  })
-
-  test('Create and Settle', async () => {
+  test('Create, Settle and Collect', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
@@ -56,10 +37,12 @@ describe('Payment channel', () => {
     expect(typeof cid).toBe('string')
 
     const payCh = await retry<PaymentChannel>(
-      () => PaymentChannel.newFromCid(rpcNode, senderAccountData.address, receiverAccountData.address, cid),
-      3,
+      () => PaymentChannel.loadFromCid(rpcNode, senderAccountData.address, receiverAccountData.address, cid),
+      20,
       10 * 1000
     )
+
+    await expect(payCh.collect(rpcNode, senderAccountData)).rejects.toThrow(new RegExp(/payment channel not settling or settled/))
 
     const settleTxId = await payCh.settle(rpcNode, senderAccountData)
     expect(settleTxId).toBeDefined()
