@@ -15,7 +15,6 @@ concurrency: mainnet
 jobs:
   test-mainnet:
     name: "Test on Mainnet Network"
-    needs: [lint-build]
     runs-on: "self-hosted"
     strategy:
       max-parallel: 1

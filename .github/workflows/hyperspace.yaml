@@ -15,7 +15,6 @@ concurrency: hyperspace
 jobs:
   test-hyperspace:
     name: "Test on Hypersapce Network"
-    needs: [lint-build]
     runs-on: "self-hosted"
     strategy:
       max-parallel: 1
