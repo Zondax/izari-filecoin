@@ -23,12 +23,14 @@ const receiver_path = "44'/461'/0'/0/2" // f1pnc33cba2c2a3olqadho7wiohyosbkl3upe
 if (!validateNetwork(network)) throw new Error('invalid network')
 const networkPrefix = getNetworkPrefix(network)
 
+const rpcTimeout = 15 * 1000
+
 describe('Payment channel', () => {
   test('New and Collect', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
-    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken, timeout: rpcTimeout })
 
     const pyChannel = await PaymentChannel.new(rpcNode, senderAccountData, receiverAccountData.address)
     expect(pyChannel.getAddress()).toBeDefined()
@@ -47,7 +49,7 @@ describe('Payment channel', () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
-    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken, timeout: rpcTimeout })
 
     const cid = await PaymentChannel.create(rpcNode, senderAccountData, receiverAccountData.address)
     expect(cid).toBeDefined()
