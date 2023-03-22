@@ -1,0 +1,52 @@
+name: "Hyperspace"
+on:
+  schedule:
+    # Runs every day at 00:00 to ensure everything is still working
+    - cron: "0 0 * * *"
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+concurrency: hyperspace
+
+jobs:
+  test-hyperspace:
+    name: "Test on Hypersapce Network"
+    needs: [lint-build]
+    runs-on: "self-hosted"
+    strategy:
+      max-parallel: 1
+      matrix:
+        version: [16, 18]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.version }}
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install yalc
+        run: npm install -g yalc
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2
+          yarn install
+      - name: Lint
+        run: yarn lint
+      - name: Format
+        run: yarn format
+      - name: Build
+        run: yarn build
+      - name: Run tests
+        run: yarn test:silent
+        env:
+          NETWORK: "hyperspace"
+          NODE_RPC_URL: ${{ secrets.HYPERSPACE_NODE_RPC_URL }}
+          NODE_RPC_TOKEN: ${{ secrets.HYPERSPACE_NODE_RPC_TOKEN }}
+          ACCOUNT_MNEMONIC: ${{ secrets.ACCOUNT_MNEMONIC }}
