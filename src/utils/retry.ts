@@ -7,7 +7,7 @@
  * @returns a generic type T
  */
 export const retry = async <T>(fn: () => Promise<T>, qty: number, interval: number): Promise<T> => {
-  let retry = 0
+  let retry = 1
 
   // "while" condition should never be false, as it should either return or throw an error before.
   while (retry < qty + 1) {

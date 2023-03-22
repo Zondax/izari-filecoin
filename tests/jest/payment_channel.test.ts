@@ -36,6 +36,11 @@ describe('Payment channel', () => {
     expect(pyChannel.getTo()).toBeDefined()
 
     await expect(pyChannel.collect(rpcNode, senderAccountData)).rejects.toThrow(new RegExp(/payment channel not settling or settled/))
+
+    // Settle channel in order to reclaim tokens back to the sender account
+    const settleTxId = await pyChannel.settle(rpcNode, senderAccountData)
+    expect(settleTxId).toBeDefined()
+    expect(typeof settleTxId).toBe('string')
   })
 
   test('Create and Settle', async () => {
