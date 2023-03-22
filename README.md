@@ -128,7 +128,7 @@ These features group actions related to high-level account features like send fu
 | Fetch current balance | :white_check_mark:  |
 
 
-### Payment Channel
+### Payment Channel [:link:](https://www.evernote.com/shard/s10/client/snv?noteGuid=135ecd3b-b743-4f6d-8943-e9c381fbf7df&noteKey=51f2120ace7d6ed6&sn=https%3A%2F%2Fwww.evernote.com%2Fshard%2Fs10%2Fsh%2F135ecd3b-b743-4f6d-8943-e9c381fbf7df%2F51f2120ace7d6ed6&title=Filecoin%2527s%2Bexisting%2Bpayment%2Bchannels%2B-%2BFilecoin%2BRetrieval%2BMarket%2B-%2BConfluence)
 
 A payment channel on the Filecoin blockchain is a mechanism that allows two parties to transact with each other off-chain 
 without requiring each transaction to be recorded on the blockchain. This feature allows users to handle the whole 
