@@ -10,11 +10,11 @@ export const retry = async <T>(fn: () => Promise<T>, qty: number, interval: numb
   let retry = 0
 
   // "while" condition should never be false, as it should either return or throw an error before.
-  while (retry > qty + 1) {
+  while (retry < qty + 1) {
     try {
       return await fn()
     } catch (e) {
-      if (retry > qty) throw e
+      if (retry == qty) throw e
     }
 
     await new Promise(resolve => {
