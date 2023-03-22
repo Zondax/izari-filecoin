@@ -33,7 +33,7 @@ import {
 /**
  * Parameters to create a new RPC connection
  */
-type Args = { url: string; token: string }
+type Args = { url: string; token: string; timeout?: number }
 
 /**
  * In order to interact with a node remotely, filecoin nodes implement the rpc protocol. By this communication, there are a set of predefined actions
@@ -62,6 +62,7 @@ export class RPC {
   constructor(network: Network, args: Args) {
     this.fetcher = axios.create({
       baseURL: args.url,
+      timeout: args.timeout,
       headers: { Authorization: `Bearer ${args.token}` },
     })
 
