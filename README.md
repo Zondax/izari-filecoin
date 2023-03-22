@@ -127,6 +127,22 @@ These features group actions related to high-level account features like send fu
 | Send funds to address | :white_check_mark:  |
 | Fetch current balance | :white_check_mark:  |
 
+
+### Payment Channel
+
+A payment channel on the Filecoin blockchain is a mechanism that allows two parties to transact with each other off-chain 
+without requiring each transaction to be recorded on the blockchain. This feature allows users to handle the whole 
+payment channel lifecycle: create, update, settle and collect. 
+
+| Feature            | Supported?         |
+|--------------------|--------------------|
+| Create new channel | :white_check_mark: |
+| Create new voucher | :x:                |
+| Sign voucher       | :x:                |
+| Update channel     | :x:                |
+| Settle             | :white_check_mark: |
+| Collect            | :white_check_mark: |
+
 ## Usage
 
 ### Install 
