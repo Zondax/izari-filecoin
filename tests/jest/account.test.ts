@@ -36,7 +36,7 @@ describe('Account', () => {
     expect(typeof cid).toBe('string')
 
     // Wait until the tx is confirmed
-    await rpcNode.waitMsgState({ '/': cid })
+    await rpcNode.waitMsgState({ '/': cid }, 2, 100)
   })
 
   test('Send to t410 (eth address)', async () => {
@@ -50,7 +50,7 @@ describe('Account', () => {
     expect(typeof cid).toBe('string')
 
     // Wait until the tx is confirmed
-    await rpcNode.waitMsgState({ '/': cid })
+    await rpcNode.waitMsgState({ '/': cid }, 2, 100)
   })
 
   test('Balance', async () => {

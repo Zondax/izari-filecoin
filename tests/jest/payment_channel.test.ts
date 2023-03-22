@@ -53,7 +53,7 @@ describe('Payment channel', () => {
     expect(settleTxId).toBeDefined()
     expect(typeof settleTxId).toBe('string')
 
-    const settleResult = await rpcNode.waitMsgState({ '/': settleTxId })
+    const settleResult = await rpcNode.waitMsgState({ '/': settleTxId }, 2, 100)
     expect(settleResult).toBeDefined()
   })
 })

@@ -81,7 +81,7 @@ export class PaymentChannel {
    * @returns new PaymentChannel instance
    */
   static newFromCid = async (rpc: RPC, from: Address, to: Address, cid: Cid): Promise<PaymentChannel> => {
-    const creationResult = await rpc.waitMsgState({ '/': cid })
+    const creationResult = await rpc.waitMsgState({ '/': cid }, 1, 100)
     if ('error' in creationResult) throw new Error(creationResult.error.message)
     if (!creationResult.result.ReturnDec) throw new Error('new payment channel address missing')
 
