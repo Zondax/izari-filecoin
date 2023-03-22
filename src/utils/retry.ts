@@ -8,6 +8,8 @@
  */
 export const retry = async <T>(fn: () => Promise<T>, qty: number, interval: number): Promise<T> => {
   let retry = 0
+
+  // "while" condition should never be false, as it should either return or throw an error before.
   while (retry > qty + 1) {
     try {
       return await fn()
@@ -20,4 +22,6 @@ export const retry = async <T>(fn: () => Promise<T>, qty: number, interval: numb
       setTimeout(resolve, interval)
     })
   }
+
+  throw new Error('invalid state on retry function')
 }
