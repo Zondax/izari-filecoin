@@ -7,6 +7,7 @@ import { ExecParams, InitActor } from '../actors/init/index.js'
 import { ConstructorParams } from '../actors/paymentChannel/index.js'
 import { getActorCidsFromNetwork } from '../actors/utils.js'
 import { Transaction } from '../transaction/index.js'
+import { retry } from '../utils/retry.js'
 
 /**
  * Payment channels are generally used as a mechanism to increase the scalability of blockchains and enable users to transact without involving
@@ -46,7 +47,7 @@ export class PaymentChannel {
    */
   static new = async (rpc: RPC, fromAccountData: AccountData, to: Address): Promise<PaymentChannel> => {
     const cid = await PaymentChannel.create(rpc, fromAccountData, to)
-    return await PaymentChannel.newFromCid(rpc, fromAccountData.address, to, cid)
+    return await retry<PaymentChannel>(() => PaymentChannel.newFromCid(rpc, fromAccountData.address, to, cid), 3, 10000)
   }
 
   /**
@@ -77,7 +78,7 @@ export class PaymentChannel {
    * @param rpc - rpc connection used to interact with the node
    * @param from - sender address
    * @param to - receiver address
-   * @param cid - id of the transaction to create the payment channel (broadcasted to the network)
+   * @param cid - id of the transaction to create the payment channel (broadcast to the network)
    * @returns new PaymentChannel instance
    */
   static newFromCid = async (rpc: RPC, from: Address, to: Address, cid: Cid): Promise<PaymentChannel> => {

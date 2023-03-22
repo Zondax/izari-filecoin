@@ -3,6 +3,7 @@ import { RPC } from '../../src/rpc'
 import { Wallet } from '../../src/wallet'
 import { SignatureType } from '../../src/artifacts'
 import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
+import { retry } from '../../src/utils/retry'
 
 jest.setTimeout(240 * 1000)
 
@@ -47,7 +48,11 @@ describe('Payment channel', () => {
     expect(cid).toBeDefined()
     expect(typeof cid).toBe('string')
 
-    const payCh = await PaymentChannel.newFromCid(rpcNode, senderAccountData.address, receiverAccountData.address, cid)
+    const payCh = await retry<PaymentChannel>(
+      () => PaymentChannel.newFromCid(rpcNode, senderAccountData.address, receiverAccountData.address, cid),
+      3,
+      10 * 1000
+    )
 
     const settleTxId = await payCh.settle(rpcNode, senderAccountData)
     expect(settleTxId).toBeDefined()
