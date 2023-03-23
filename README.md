@@ -292,8 +292,8 @@ right away.
 | Web browsers    | Tested?            |
 |-----------------|--------------------|
 | Chromium        | :white_check_mark: |
-| Firefox         | :x:                |
-| Safari          | :x:                |
+| Firefox         | :white_check_mark: |
+| Safari          | :white_check_mark: |
 
 ### Notes
 
