@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install
-          sudo npx playwright install-deps
+          npx playwright install-deps
       - name: Lint
         run: yarn lint
       - name: Format
