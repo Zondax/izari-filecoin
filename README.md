@@ -188,6 +188,7 @@ Inside this package there are several entry points grouped by features. If you o
 | `@zondax/izari-filecoin/wallet`      | Wallet                      | src/wallet/index.ts      | 
 | `@zondax/izari-filecoin/account`     | Account                     | src/account/index.ts     | 
 | `@zondax/izari-filecoin/artifacts`   | Types, constants and errors | src/artifacts/index.tx   |
+| `@zondax/izari-filecoin/payment`     | Payment Channel             | src/payment/index.tx     |
 
 **Note:** More information about these approach and its advantages can be found [here](https://webpack.js.org/guides/package-exports/) and [here](https://dev.to/binjospookie/exports-in-package-json-1fl2). 
 
@@ -260,7 +261,7 @@ Here you can find faucets for each testnet you want to test the library on
 | Hypersapce  | [:link:](https://beryx.zondax.ch/faucet)                           |
 | Butterfly   | :x:                                                                |
 | Calibration | [:link:](https://faucet.triangleplatform.com/filecoin/calibration) |
-| Mainnet     | :x:                                                                |
+| Mainnet     | :heavy_minus_sign:                                                 |
 
 
 ## Tests
