@@ -2,7 +2,10 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin)
 [![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin)
-[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/main.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/main.yaml)
+
+[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/hyperspace.yaml)
+[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/calibration.yaml)
+[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/mainnet.yaml)
 
 ---
 
@@ -188,6 +191,7 @@ Inside this package there are several entry points grouped by features. If you o
 | `@zondax/izari-filecoin/wallet`      | Wallet                      | src/wallet/index.ts      | 
 | `@zondax/izari-filecoin/account`     | Account                     | src/account/index.ts     | 
 | `@zondax/izari-filecoin/artifacts`   | Types, constants and errors | src/artifacts/index.tx   |
+| `@zondax/izari-filecoin/payment`     | Payment Channel             | src/payment/index.tx     |
 
 **Note:** More information about these approach and its advantages can be found [here](https://webpack.js.org/guides/package-exports/) and [here](https://dev.to/binjospookie/exports-in-package-json-1fl2). 
 
@@ -260,7 +264,7 @@ Here you can find faucets for each testnet you want to test the library on
 | Hypersapce  | [:link:](https://beryx.zondax.ch/faucet)                           |
 | Butterfly   | :x:                                                                |
 | Calibration | [:link:](https://faucet.triangleplatform.com/filecoin/calibration) |
-| Mainnet     | :x:                                                                |
+| Mainnet     | :heavy_minus_sign:                                                 |
 
 
 ## Tests
@@ -292,8 +296,8 @@ right away.
 | Web browsers    | Tested?            |
 |-----------------|--------------------|
 | Chromium        | :white_check_mark: |
-| Firefox         | :x:                |
-| Safari          | :x:                |
+| Firefox         | :white_check_mark: |
+| Safari          | :white_check_mark: |
 
 ### Notes
 
