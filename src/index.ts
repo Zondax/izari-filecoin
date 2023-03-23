@@ -5,3 +5,6 @@ export * from './transaction/index.js'
 export * from './token/index.js'
 export * from './account/index.js'
 export * from './artifacts/index.js'
+export * from './payment/index.js'
+
+export * from './utils/retry.js'

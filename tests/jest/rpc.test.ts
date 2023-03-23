@@ -1,4 +1,4 @@
-import { Address, Network, NetworkPrefix, RPC, SignatureType, Transaction, Wallet } from '../../src'
+import { Address, Token, NetworkPrefix, RPC, SignatureType, Transaction, Wallet } from '../../src'
 import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
 
 jest.setTimeout(240 * 1000)
@@ -7,13 +7,13 @@ const network = process.env.NETWORK
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
 const mnemonic = process.env.ACCOUNT_MNEMONIC
-const sender_path = process.env.SENDER_ACCOUNT_PATH
 
 if (!network) throw new Error('NETWORK must be defined')
 if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
 if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
 if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
-if (!sender_path) throw new Error('SENDER_ACCOUNT_PATH must be defined')
+
+const sender_path = "44'/461'/0'/0/0"
 
 if (!validateNetwork(network)) throw new Error('invalid network')
 const networkPrefix = getNetworkPrefix(network)
@@ -63,7 +63,7 @@ describe('Filecoin RPC', () => {
     expect('error' in response).toBe(false)
     if ('error' in response) return
 
-    const tx = Transaction.getNew(address, address, '100000', 0)
+    const tx = Transaction.getNew(address, address, Token.fromAtto('100000'), 0)
     tx.nonce = response.result
 
     const fees = await rpcNode.getGasEstimation(tx)

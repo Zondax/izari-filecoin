@@ -33,7 +33,7 @@ import {
 /**
  * Parameters to create a new RPC connection
  */
-type Args = { url: string; token: string }
+type Args = { url: string; token: string; timeout?: number }
 
 /**
  * In order to interact with a node remotely, filecoin nodes implement the rpc protocol. By this communication, there are a set of predefined actions
@@ -62,11 +62,17 @@ export class RPC {
   constructor(network: Network, args: Args) {
     this.fetcher = axios.create({
       baseURL: args.url,
+      timeout: args.timeout,
       headers: { Authorization: `Bearer ${args.token}` },
     })
 
     this.network = network
   }
+
+  /**
+   * Getter for network value
+   */
+  getNetwork = () => this.network
 
   /**
    * Allows to get the next address nonce, required to broadcast a new tx to the blockchain
@@ -164,18 +170,20 @@ export class RPC {
   }
 
   /**
-   * Allows to look back in the chain for a message. If not found, it blocks until the message arrives on chain, and gets to the indicated confidence depth.
+   * Allows to look back in the chain for a message. If not found, it blocks until the message arrives at chain, and gets to the indicated confidence depth.
    * For more information about waitMsgState, please refer to this {@link https://lotus.filecoin.io/reference/lotus/state/#statewaitmsg|link}
    * @param cid - transaction cid to wait
+   * @param confidence - guarantees that the message has been on chain for at least confidence epochs without being reverted before returning.
+   * @param lookBackLimit - limit to how many epochs it will search backward
    * @returns the transaction state or error
    */
-  async waitMsgState(cid: MpoolPushOk['result']): Promise<StateWaitMsgResponse> {
+  async waitMsgState(cid: MpoolPushOk['result'], confidence: number, lookBackLimit: number): Promise<StateWaitMsgResponse> {
     try {
       const response = await this.fetcher.post('', {
         jsonrpc: RpcVersion,
         method: StateWaitMsg,
         id: 1,
-        params: [cid, 0, null, false],
+        params: [cid, confidence, lookBackLimit, false],
       })
       return response.data as StateWaitMsgResponse
     } catch (e: unknown) {

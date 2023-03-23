@@ -6,6 +6,7 @@ import { RPC } from '../rpc/index.js'
 import { TransactionJSON, TxInputData, TxVersion, NetworkPrefix } from '../artifacts/index.js'
 import { IpldDagCbor } from '../external/dag-cbor.js'
 import { waitFor } from '../utils/sleep.js'
+import { Token } from '../token/index.js'
 
 // Loading this module dynamically as it has no support to CJS
 // The only way to keep CJS supported on our side is to load it dynamically
@@ -34,7 +35,9 @@ export class Transaction {
     public gasPremium: string,
     public method: number,
     public params: string
-  ) {}
+  ) {
+    if (value === '' || value.includes('-')) throw new Error('value must not be empty or negative')
+  }
 
   /**
    * Create a new Transaction instance with the minimal values required
@@ -42,13 +45,11 @@ export class Transaction {
    * @param from - transaction sender actor
    * @param value - tokens to be transferred from sender to receiver
    * @param method - method to be executed on the receiver actor
+   * @param params - parameters related to the current tx. It is an optional parameter
    * @returns a new Transaction instance
    */
-  static getNew = (to: Address, from: Address, value: string, method: number): Transaction => {
-    if (value === '' || value.includes('-')) throw new Error('value must not be empty or negative')
-
-    return new Transaction(TxVersion.Zero, to, from, 0, value, 0, '0', '0', method, '')
-  }
+  static getNew = (to: Address, from: Address, value: Token, method: number, params = Buffer.alloc(0)): Transaction =>
+    new Transaction(TxVersion.Zero, to, from, 0, value.toAtto(), 0, '0', '0', method, params.toString('base64'))
 
   /**
    * Create a new Transaction instance from a cbor encoded transaction

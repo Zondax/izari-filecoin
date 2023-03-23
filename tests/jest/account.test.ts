@@ -12,15 +12,14 @@ const network = process.env.NETWORK
 const nodeUrl = process.env.NODE_RPC_URL
 const nodeToken = process.env.NODE_RPC_TOKEN
 const mnemonic = process.env.ACCOUNT_MNEMONIC
-const sender_path = process.env.SENDER_ACCOUNT_PATH
-const receiver_path = process.env.RECEIVER_ACCOUNT_PATH
 
 if (!network) throw new Error('NETWORK must be defined')
 if (!nodeUrl) throw new Error('NODE_RPC_URL must be defined')
 if (!nodeToken) throw new Error('NODE_RPC_TOKEN must be defined')
 if (!mnemonic) throw new Error('ACCOUNT_MNEMONIC must be defined')
-if (!sender_path) throw new Error('SENDER_ACCOUNT_PATH must be defined')
-if (!receiver_path) throw new Error('RECEIVER_ACCOUNT_PATH must be defined')
+
+const sender_path = "44'/461'/0'/0/0" // f16evrgvbuk3htf44rrp647zrwzuglk4ynoiivvgi
+const receiver_path = "44'/461'/0'/0/1" // f1ovlkmtnqji7wrvdpcys3i22c62obbamgokmg35q
 
 if (!validateNetwork(network)) throw new Error('invalid network')
 const networkPrefix = getNetworkPrefix(network)
@@ -37,7 +36,7 @@ describe('Account', () => {
     expect(typeof cid).toBe('string')
 
     // Wait until the tx is confirmed
-    await rpcNode.waitMsgState({ '/': cid })
+    await rpcNode.waitMsgState({ '/': cid }, 2, 100)
   })
 
   test('Send to t410 (eth address)', async () => {
@@ -51,7 +50,7 @@ describe('Account', () => {
     expect(typeof cid).toBe('string')
 
     // Wait until the tx is confirmed
-    await rpcNode.waitMsgState({ '/': cid })
+    await rpcNode.waitMsgState({ '/': cid }, 2, 100)
   })
 
   test('Balance', async () => {
