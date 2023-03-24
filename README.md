@@ -34,6 +34,9 @@ Some key points:
 - NodeJS >= 16.0.0
 - Native BigInt support (or global polyfill)
 
+**Notes**
+- Izari-Filecoin is not using native BigInt implementation internally. However, some dependencies are, and that is why it is required. One of them is `cborg`, which is used by `@ipld/dag-cbor`.
+
 ### React
 - In order to use this package in browsers (like react, react-native, etc), some modules need to be polyfill (like Buffer, stream, etc). Most projects use
 webpack to bundle JS code.  If your project uses it, please refer to [this](https://webpack.js.org/configuration/resolve/#resolvefallback) doc in order to configure it correctly. 
