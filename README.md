@@ -2,10 +2,12 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin)
 [![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
 
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/hyperspace.yaml)
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/calibration.yaml)
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/mainnet.yaml)
+
 
 ---
 
@@ -32,6 +34,10 @@ Some key points:
 
 ## Requisites 
 - NodeJS >= 16.0.0
+- Native BigInt support (or global polyfill)
+
+**Notes**
+- Izari-Filecoin is not using native BigInt implementation internally. However, some dependencies are, and that is why it is required. One of them is `cborg`, which is used by `@ipld/dag-cbor`.
 
 ### React
 - In order to use this package in browsers (like react, react-native, etc), some modules need to be polyfill (like Buffer, stream, etc). Most projects use
@@ -84,12 +90,14 @@ ethereum address, either string or bytes format. Besides, you can do the other w
 
 Allow you to easily manage denominations used within Filecoin to do conversions between them, arithmetical operations, etc.
 
-| Feature                         | Denomination       |
-|---------------------------------|--------------------|
-| Parse from string               | :white_check_mark: |
-| Addition, subtraction, etc      | :white_check_mark: |
-| Convert to other denominations  | :white_check_mark: |
-| Positive, negative, zero        | :white_check_mark: |
+| Feature                        | Denomination       |
+|--------------------------------|--------------------|
+| Parse from string              | :white_check_mark: |
+| Deserialize from buffer        | :white_check_mark: |
+| Serialize to buffer            | :white_check_mark: |
+| Addition, subtraction, etc     | :white_check_mark: |
+| Convert to other denominations | :white_check_mark: |
+| Positive, negative, zero       | :white_check_mark: |
 
 **All denominations supported: atto, femto, pico, nano, micro, milli and whole.**
 
