@@ -2,6 +2,7 @@ import BN from 'bn.js'
 
 import { bnToString } from './utils.js'
 import { ATTO_DECIMALS, FEMTO_DECIMALS, PICO_DECIMALS, NANO_DECIMALS, MICRO_DECIMALS, MILLI_DECIMALS } from '../artifacts/token.js'
+import { deserializeBigNum, serializeBigNum } from '../transaction/utils.js'
 
 const FEMTO_MUL = new BN(10).pow(new BN(MILLI_DECIMALS))
 const PICO_MUL = new BN(10).pow(new BN(MICRO_DECIMALS))
@@ -24,6 +25,13 @@ export class Token {
    * Creates an instance with 0 as value
    */
   static zero = () => new Token(new BN('0'))
+
+  /**
+   * Parse buffer value as attoFil.
+   * @param value - attoFil value to parse
+   * @returns new Token instance
+   */
+  static deserialize = (value: Buffer) => new Token(new BN(deserializeBigNum(value)))
 
   /**
    * Parse string value as attoFil
@@ -181,4 +189,12 @@ export class Token {
    * @returns the value expressed as attoFil
    */
   toAtto = (): string => bnToString(this.value, 0) // precision: ATTO_DECIMALS - ATTO_DECIMALS
+
+  /**
+   * Serialize the current value as bigint (buffer) per Filecoin specification.
+   * The result denomination is atto fil.
+   * 1 byte sign (0x00 positive - 0x01 negative) + arbitrary buffer length (big endian)
+   * @returns serialized value
+   */
+  serialize = () => serializeBigNum(this.value.toString())
 }
