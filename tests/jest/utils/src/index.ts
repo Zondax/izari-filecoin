@@ -4,11 +4,12 @@ import path from 'path'
 import glif from '@glif/filecoin-address'
 import * as fst from '@zondax/filecoin-signing-tools/js'
 
-import { AddressTestCase, TxTestCase } from './types'
+import { AddressTestCase, BigNumTestCase, TxTestCase } from './types'
 
 const RAW_TXS_FILE_PATH = './raw/txs.json'
 const ADDRESSES_VECTOR_FILE_PATH = './output/addresses.json'
 const TXS_VECTOR_FILE_PATH = './output/txs.json'
+const BIGNUMS_VECTOR_FILE_PATH = './output/bigNums.json'
 
 function generateAddresses() {
   const txsRaw = JSON.parse(fs.readFileSync(path.join(RAW_TXS_FILE_PATH), 'utf-8')) as any
@@ -83,5 +84,46 @@ function generateTransactions() {
   fs.writeFileSync(path.join(TXS_VECTOR_FILE_PATH), JSON.stringify(testCases, null, 2))
 }
 
+function generateBigNums() {
+  const testCases: BigNumTestCase[] = []
+
+  function getTestCase(value: BigInt) {
+    const valueHex = value.toString(16)
+    const paddedValueHex = valueHex.length % 2 != 0 ? '0' + valueHex : valueHex
+
+    if (value === 0n) {
+      testCases.push({ numString: '0', numSerialized: '' })
+      return
+    }
+
+    testCases.push({ numString: value.toString(), numSerialized: '00' + paddedValueHex })
+    testCases.push({ numString: '-' + value.toString(), numSerialized: '01' + paddedValueHex })
+  }
+
+  let i = 0
+  while (i < 100000) {
+    const value = BigInt(Math.round(Math.random() * i))
+    getTestCase(value)
+    i += 10
+  }
+
+  i = 0
+  while (i < 100000) {
+    const value = BigInt(Math.round(Math.random() * i)) * 1000000000000n
+    getTestCase(value)
+    i += 10
+  }
+
+  i = 0
+  while (i < 100000) {
+    const value = BigInt(Math.round(Math.random() * i)) * 100000000000000000000n
+    getTestCase(value)
+    i += 10
+  }
+
+  fs.writeFileSync(path.join(BIGNUMS_VECTOR_FILE_PATH), JSON.stringify(testCases, null, 2))
+}
+
 generateAddresses()
 generateTransactions()
+generateBigNums()

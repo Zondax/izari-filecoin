@@ -6,6 +6,11 @@ export type AddressTestCase = {
   payload: string
 }
 
+export type BigNumTestCase = {
+  numString: string
+  numSerialized: string
+}
+
 export type TransactionJSON = {
   To: string
   From: string
