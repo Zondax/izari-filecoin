@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin)
 [![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin)
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=Zondax_izari-filecoin)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
 
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/hyperspace.yaml)
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/calibration.yaml)
