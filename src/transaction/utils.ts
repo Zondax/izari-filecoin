@@ -11,5 +11,6 @@ export const serializeBigNum = (value: string, base = 10): Buffer => {
 
   const valueBN = new BN(value, base)
   const valueBuffer = valueBN.toArrayLike(Buffer, 'be', valueBN.byteLength())
-  return Buffer.concat([Buffer.from('00', 'hex'), valueBuffer])
+  const signFlagBuffer = Buffer.from(valueBN.isNeg() ? '01' : '00', 'hex')
+  return Buffer.concat([signFlagBuffer, valueBuffer])
 }
