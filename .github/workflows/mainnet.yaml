@@ -13,17 +13,13 @@ jobs:
   test-mainnet:
     name: "Test on Mainnet Network"
     runs-on: "self-hosted"
-    strategy:
-      max-parallel: 1
-      matrix:
-        version: [16, 18]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install node
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.version }}
+          node-version: 18
       - name: Install yarn
         run: npm install -g yarn
       - name: Install yalc
