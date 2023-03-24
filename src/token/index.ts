@@ -31,7 +31,7 @@ export class Token {
    * @param value - attoFil value to parse
    * @returns new Token instance
    */
-  static deserialize = (value: Buffer) => new Token(new BN(deserializeBigNum(value)))
+  static deserialize = (value: Buffer) => new Token(new BN(deserializeBigNum(value, 10), 10))
 
   /**
    * Parse string value as attoFil
@@ -196,5 +196,5 @@ export class Token {
    * 1 byte sign (0x00 positive - 0x01 negative) + arbitrary buffer length (big endian)
    * @returns serialized value
    */
-  serialize = () => serializeBigNum(this.value.toString())
+  serialize = () => serializeBigNum(this.value.toString(10), 10)
 }
