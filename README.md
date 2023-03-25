@@ -250,12 +250,28 @@ from a raw input file, just run the following command.
 yarn test:generate
 ```
 
-Finally, in order to run tests, just do it by simply running the next command. 
-```yarn
-yarn test
-```
+Finally, in order to run tests, there are a variaty of commands you can run 
+based on the scenario you want to check. Please, take a look at the following table. 
+
+| Test                             | Link                     |
+|----------------------------------|--------------------------|
+| All                              | `yarn test`              |
+| All / Silent                     | `yarn test:silent`       |
+| Jest / Node NO Required          | `yarn test:logic`        |
+| Jest / Node NO Required / Silent | `yarn test:logic:silent` |
+| Jest / Node Required             | `yarn test:rpc`          |
+| Jest / Node Required / Silent    | `yarn test:rpc:silent`   |
+| NodeJS (CJS and ESM)             | `yarn test:node`         |
+| NodeJS (CJS)                     | `yarn test:node:cjs`     |
+| NodeJS (ESM)                     | `yarn test:node:esm`     |
+| React                            | `yarn test:react`        |
 
 ### Notes
+
+#### Silent mode
+There are many test cases that are run on Jest. In order to make the output cleaner, silent mode uses a custom reporter [:link:](https://www.npmjs.com/package/jest-silent-reporter),
+which silents results where the case passed.
+
 #### Environmental vars
 Please, there are some env vars you need to set first in order to run the tests: 
   - Some tests will try to connect to a node in order to run some transactions. Therefore, **a node rpc url and token will be required.**

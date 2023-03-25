@@ -2,13 +2,13 @@ import fs from 'fs'
 import path from 'path'
 import BN from 'bn.js'
 
-import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, FilEthAddress } from '../../src/address'
-import { NetworkPrefix, ProtocolIndicator } from '../../src/artifacts/address'
-import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../src/address/errors'
+import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, FilEthAddress } from '../../../src/address'
+import { NetworkPrefix, ProtocolIndicator } from '../../../src/artifacts/address'
+import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../../src/address/errors'
 
 jest.setTimeout(60 * 1000)
 
-const ADDRESSES_VECTOR = './vectors/addresses.json'
+const ADDRESSES_VECTOR = '../vectors/addresses.json'
 
 type AddressTestCase = {
   string: string

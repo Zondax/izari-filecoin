@@ -1,12 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 
-import { NetworkPrefix, Transaction } from '../../src'
-import { TransactionJSON } from '../../src/artifacts/transaction'
+import { NetworkPrefix, Transaction } from '../../../src'
+import { TransactionJSON } from '../../../src/artifacts/transaction'
 
 jest.setTimeout(60 * 1000)
 
-const TXS_VECTOR = './vectors/txs.json'
+const TXS_VECTOR = '../vectors/txs.json'
 
 type TxTestCase = {
   tx: TransactionJSON
