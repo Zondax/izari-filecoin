@@ -1,13 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 
-import { NetworkPrefix, Transaction, Wallet, Signature } from '../../src'
-import { TransactionJSON, SignatureType } from '../../src/artifacts'
+import { NetworkPrefix, Transaction, Wallet, Signature } from '../../../src'
+import { TransactionJSON, SignatureType } from '../../../src/artifacts'
 
 jest.setTimeout(60 * 1000)
 
-const WALLET_TEST_CASES_PATH = './vectors/wallets.json'
-const TXS_TEST_CASES_PATH = './vectors/txs.json'
+const WALLET_TEST_CASES_PATH = '../vectors/wallets.json'
+const TXS_TEST_CASES_PATH = '../vectors/txs.json'
 
 type WalletTestCase = {
   mnemonic: string

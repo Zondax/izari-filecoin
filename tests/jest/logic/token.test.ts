@@ -1,4 +1,4 @@
-import { Token } from '../../src/token'
+import { Token } from '../../../src/token'
 
 jest.setTimeout(60 * 1000)
 
@@ -30,7 +30,6 @@ describe('Token', () => {
       expect(Token.fromWhole('100').toMicro()).toBe('100000000')
       expect(Token.fromWhole('100').toMilli()).toBe('100000')
       expect(Token.fromWhole('100').toWhole()).toBe('100')
-
 
       expect(Token.fromWhole('10000').toAtto()).toBe('10000000000000000000000')
       expect(Token.fromWhole('10000').toFemto()).toBe('10000000000000000000')

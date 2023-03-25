@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 
-import { serializeBigNum, deserializeBigNum } from '../../src/transaction/utils'
+import { serializeBigNum, deserializeBigNum } from '../../../src/transaction/utils'
 
 jest.setTimeout(60 * 1000)
 
-const BIGNUMS_VECTOR = './vectors/bigNums.json'
+const BIGNUMS_VECTOR = '../vectors/bigNums.json'
 
 type BigNumTestCase = {
   numString: string

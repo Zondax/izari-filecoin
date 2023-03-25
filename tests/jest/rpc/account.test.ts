@@ -1,10 +1,10 @@
-import { Account } from '../../src/account'
-import { Address } from '../../src/address'
-import { RPC } from '../../src/rpc'
-import { Wallet } from '../../src/wallet'
-import { Token } from '../../src/token'
-import { SignatureType } from '../../src/artifacts'
-import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
+import { Account } from '../../../src/account'
+import { Address } from '../../../src/address'
+import { RPC } from '../../../src/rpc'
+import { Wallet } from '../../../src/wallet'
+import { Token } from '../../../src/token'
+import { SignatureType } from '../../../src/artifacts'
+import { getNetworkPrefix, validateNetwork } from '../../../src/address/utils'
 
 jest.setTimeout(240 * 1000)
 

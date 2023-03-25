@@ -1,9 +1,9 @@
-import { PaymentChannel } from '../../src/payment'
-import { RPC } from '../../src/rpc'
-import { Wallet } from '../../src/wallet'
-import { SignatureType } from '../../src/artifacts'
-import { getNetworkPrefix, validateNetwork } from '../../src/address/utils'
-import { retry } from '../../src/utils/retry'
+import { PaymentChannel } from '../../../src/payment'
+import { RPC } from '../../../src/rpc'
+import { Wallet } from '../../../src/wallet'
+import { SignatureType } from '../../../src/artifacts'
+import { getNetworkPrefix, validateNetwork } from '../../../src/address/utils'
+import { retry } from '../../../src/utils/retry'
 
 jest.setTimeout(240 * 1000)
 
