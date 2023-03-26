@@ -1,0 +1,12 @@
+name: "Mainnet"
+on:
+  schedule:
+    # Runs every sunday at 00:00 to ensure everything is still working
+    - cron: "0 0 * * 0"
+
+concurrency: mainnet
+
+jobs:
+  test-mainnet:
+    uses: ./.github/workflows/mainnet_reusable.yaml
+    secrets: inherit
