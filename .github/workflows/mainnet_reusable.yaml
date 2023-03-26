@@ -1,4 +1,4 @@
-name: "Mainnet"
+name: "Mainnet - Reusable Workflow"
 on:
   workflow_call
 

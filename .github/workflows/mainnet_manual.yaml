@@ -1,9 +1,10 @@
-name: "Mainnet"
+name: "Mainnet - Manual"
 on: workflow_dispatch
 
 concurrency: mainnet
 
 jobs:
   test-mainnet:
+    name: "Manual test on Mainnet Network"
     uses: ./.github/workflows/mainnet_reusable.yaml
     secrets: inherit
