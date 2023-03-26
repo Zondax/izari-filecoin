@@ -6,7 +6,7 @@
 
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/hyperspace.yaml)
 [![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/calibration.yaml)
-[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/mainnet.yaml)
+[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/mainnet_reusable.yaml)
 
 
 ---
