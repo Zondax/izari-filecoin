@@ -1,0 +1,9 @@
+name: "Mainnet"
+on: workflow_dispatch
+
+concurrency: mainnet
+
+jobs:
+  test-mainnet:
+    uses: ./.github/workflows/mainnet_reusable.yaml
+    secrets: inherit
