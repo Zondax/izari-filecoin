@@ -62,8 +62,8 @@
     "test:rpc:silent": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest/rpc --reporters=jest-silent-reporter --coverage=true",
     "test:jest": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest --coverage=true",
     "test:jest:silent": "yarn node --experimental-vm-modules $(yarn bin jest) ./tests/jest --reporters=jest-silent-reporter --coverage=true",
-    "test": "yarn test:logic && yarn test:rpc && yarn test:node && yarn test:react",
-    "test:silent": "yarn test:logic:silent && yarn test:rpc:silent && yarn test:node && yarn test:react"
+    "test": "yarn test:jest && yarn test:node && yarn test:react",
+    "test:silent": "yarn test:jest:silent && yarn test:node && yarn test:react"
   },
   "repository": {
     "type": "git",
