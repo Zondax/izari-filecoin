@@ -1,4 +1,4 @@
-name: "Mainnet"
+name: "Mainnet - Cron"
 on:
   schedule:
     # Runs every sunday at 00:00 to ensure everything is still working
@@ -8,5 +8,6 @@ concurrency: mainnet
 
 jobs:
   test-mainnet:
+    name: "Cron test on Mainnet Network"
     uses: ./.github/workflows/mainnet_reusable.yaml
     secrets: inherit
