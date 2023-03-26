@@ -258,6 +258,8 @@ based on the scenario you want to check. Please, take a look at the following ta
 |----------------------------------|--------------------------|
 | All                              | `yarn test`              |
 | All / Silent                     | `yarn test:silent`       |
+| Jest / All                       | `yarn test:jest`        |
+| Jest / All / Silent              | `yarn test:jest:silent`  |
 | Jest / Node NO Required          | `yarn test:logic`        |
 | Jest / Node NO Required / Silent | `yarn test:logic:silent` |
 | Jest / Node Required             | `yarn test:rpc`          |
