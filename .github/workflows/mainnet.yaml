@@ -1,4 +1,4 @@
-name: "Mainnet - Cron"
+name: "Mainnet"
 on:
   schedule:
     # Runs every sunday at 00:00 to ensure everything is still working
