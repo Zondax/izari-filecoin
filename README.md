@@ -4,11 +4,9 @@
 [![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
 
-[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/hyperspace.yaml)
-[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/calibration.yaml)
-[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/mainnet_cron.yaml)
-[![GithubActions](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/blob/master/.github/workflows/mainnet_manual.yaml)
-
+[![Hyperspace](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml)
+[![Calibration](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml)
+[![Mainnet](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml)
 
 ---
 
@@ -258,6 +256,8 @@ based on the scenario you want to check. Please, take a look at the following ta
 |----------------------------------|--------------------------|
 | All                              | `yarn test`              |
 | All / Silent                     | `yarn test:silent`       |
+| Jest / All                       | `yarn test:jest`        |
+| Jest / All / Silent              | `yarn test:jest:silent`  |
 | Jest / Node NO Required          | `yarn test:logic`        |
 | Jest / Node NO Required / Silent | `yarn test:logic:silent` |
 | Jest / Node Required             | `yarn test:rpc`          |
