@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 
-import { NetworkPrefix, Transaction, Wallet, Signature } from '../../../src'
-import { TransactionJSON, SignatureType } from '../../../src/artifacts'
+import { Account, NetworkPrefix, Signature, Token, Transaction, Wallet } from '../../../src'
+import { SignatureType, TransactionJSON } from '../../../src/artifacts'
 
 jest.setTimeout(60 * 1000)
 
@@ -32,6 +32,38 @@ describe('Wallet', () => {
       const words = data.split(' ')
       expect(words.length).toBe(24)
     }
+  })
+
+  describe('BLS not supported', () => {
+    test('Derive Account', () => {
+      const path = "44'/461'/0'/0/1"
+
+      expect(() => {
+        Wallet.deriveAccount('asadsd', SignatureType.BLS, path)
+      }).toThrow(new RegExp(/not supported yet/))
+    })
+
+    test('Recover Account', () => {
+      expect(() => {
+        Wallet.recoverAccount(NetworkPrefix.Mainnet, SignatureType.BLS, '')
+      }).toThrow(new RegExp(/not supported yet/))
+    })
+
+    test('Sign Transaction', async () => {
+      const path = "44'/461'/0'/0/1"
+      const account = Wallet.deriveAccount('asadsd', SignatureType.SECP256K1, path)
+
+      const tx = Transaction.getNew(account.address, account.address, Token.fromAtto('1'), 0)
+      await expect(Wallet.signTransaction({ privateKey: Buffer.alloc(0), type: SignatureType.BLS }, tx)).rejects.toThrow(new RegExp(/not supported yet/))
+    })
+
+    test('Verify Signature', async () => {
+      const path = "44'/461'/0'/0/1"
+      const account = Wallet.deriveAccount('asadsd', SignatureType.SECP256K1, path)
+
+      const tx = Transaction.getNew(account.address, account.address, Token.fromAtto('1'), 0)
+      await expect(Wallet.verifySignature(new Signature(SignatureType.BLS, Buffer.alloc(0)), tx)).rejects.toThrow(new RegExp(/not supported yet/))
+    })
   })
 
   describe('Derive addresses', () => {

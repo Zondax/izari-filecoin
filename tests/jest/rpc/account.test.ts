@@ -39,6 +39,26 @@ describe('Account', () => {
     await rpcNode.waitMsgState({ '/': cid }, 2, 100)
   })
 
+  test('Negative amount', async () => {
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
+    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+
+    await expect(Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('-100'))).rejects.toThrow(
+      new RegExp(/value cannot be negative/)
+    )
+  })
+
+  test('Zero amount', async () => {
+    const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
+    const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
+
+    const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
+
+    await expect(Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('0'))).rejects.toThrow(new RegExp(/value cannot be zero/))
+  })
+
   test('Send to t410 (eth address)', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAddress = Address.fromEthAddress(networkPrefix, '0x689c9B3232210aa9B84Ef444D0Ef35D11102AD1F')
