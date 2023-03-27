@@ -1,9 +1,14 @@
-name: "Mainnet - Reusable Workflow"
+name: "Mainnet - Cron"
 on:
-  workflow_call
+  schedule:
+    # Runs every sunday at 00:00 to ensure everything is still working
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+concurrency: mainnet
 
 jobs:
-  mainnet_reusable:
+  test-mainnet:
     name: "Test on Mainnet Network"
     runs-on: "self-hosted"
     steps:
