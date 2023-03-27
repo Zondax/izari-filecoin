@@ -56,9 +56,7 @@ describe('Account', () => {
 
     const rpcNode = new RPC(network, { url: nodeUrl, token: nodeToken })
 
-    await expect(Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('-100'))).rejects.toThrow(
-      new RegExp(/value cannot be zero/)
-    )
+    await expect(Account.send(rpcNode, senderAccountData, receiverAccountData.address, Token.fromAtto('0'))).rejects.toThrow(new RegExp(/value cannot be zero/))
   })
 
   test('Send to t410 (eth address)', async () => {
