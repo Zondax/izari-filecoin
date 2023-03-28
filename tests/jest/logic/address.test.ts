@@ -33,8 +33,8 @@ describe('Address', () => {
           expect(addr.getNetworkPrefix()).toBe(network)
           expect(addr.getPayload().toString('hex')).toBe(payload)
 
-          if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.slice(2))
-          if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.slice(2, string.indexOf(network, 1)))
+          if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.substring(2))
+          if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.substring(2, string.indexOf(network, 1)))
         })
       })
     })
@@ -53,8 +53,8 @@ describe('Address', () => {
           expect(addr.getNetworkPrefix()).toBe(network)
           expect(addr.getPayload().toString('hex')).toBe(payload)
 
-          if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.slice(2))
-          if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.slice(2, string.indexOf(network, 1)))
+          if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.substring(2))
+          if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.substring(2, string.indexOf(network, 1)))
         })
       })
     })

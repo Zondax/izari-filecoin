@@ -18,7 +18,7 @@ const sender_path = "44'/461'/0'/0/0"
 if (!validateNetwork(network)) throw new Error('invalid network')
 const networkPrefix = getNetworkPrefix(network)
 
-const normalizeAddressByNetwork = (networkPrefix: NetworkPrefix, add: string) => `${networkPrefix}${add.slice(1)}`
+const normalizeAddressByNetwork = (networkPrefix: NetworkPrefix, add: string) => `${networkPrefix}${add.substring(1)}`
 
 describe('Filecoin RPC', () => {
   test('Unauthorized', async () => {

@@ -3,6 +3,7 @@ import path from 'path'
 
 import { Account, NetworkPrefix, Signature, Token, Transaction, Wallet } from '../../../src'
 import { SignatureType, TransactionJSON } from '../../../src/artifacts'
+import { getCoinTypeFromPath } from '../../../src/wallet/utils'
 
 jest.setTimeout(60 * 1000)
 
@@ -184,6 +185,15 @@ describe('Wallet', () => {
       const isValid = await Wallet.verifySignature(sig, tx)
 
       expect(isValid).toBeFalsy()
+    })
+  })
+
+  describe('Utils', () => {
+    test('getCoinTypeFromPath', () => {
+      expect(getCoinTypeFromPath("44'/461'/0'/0/1")).toBe('0')
+      expect(getCoinTypeFromPath("44'/461'/0/0/1")).toBe('0')
+      expect(getCoinTypeFromPath("44'/461'/461/0/1")).toBe('461')
+      expect(getCoinTypeFromPath("44'/461'/461'/0/1")).toBe('461')
     })
   })
 })
