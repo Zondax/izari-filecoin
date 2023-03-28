@@ -10,7 +10,10 @@ const CID_LEN = 32
  * @param path - path to parse
  * @returns coin type
  */
-export const getCoinTypeFromPath = (path: string): string => path.split('/')[2].slice(0, -1)
+export const getCoinTypeFromPath = (path: string): string => {
+  const split = path.split('/')
+  return split[2].includes("'") ? split[2].substring(0, split[2].length - 1) : split[2]
+}
 
 /**
  * Calculate the CID (content identifier) from a raw data (buffer)
@@ -46,7 +49,7 @@ export function getDigest(message: Buffer): Buffer {
 export const tryToPrivateKeyBuffer = (privateKey: string | Buffer): Buffer => {
   if (typeof privateKey === 'string') {
     // We should have a padding!
-    if (privateKey.slice(-1) === '=') privateKey = Buffer.from(privateKey, 'base64')
+    if (privateKey.substring(privateKey.length - 1) === '=') privateKey = Buffer.from(privateKey, 'base64')
     else throw new InvalidPrivateKeyFormat()
   }
 
