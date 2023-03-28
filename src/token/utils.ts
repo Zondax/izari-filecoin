@@ -26,8 +26,8 @@ export const bnToString = (value: BN, precision: number): string => {
  */
 export const trimTrailingZeros = (value: string): string => {
   for (let i = value.length - 1; i >= 0; i--) {
-    if (value[i] == '.') return value.substr(0, i)
-    if (value[i] != '0' || i === 1) return value.substr(0, i + 1)
+    if (value[i] == '.') return value.substring(0, i)
+    if (value[i] != '0' || i === 1) return value.substring(0, i + 1)
   }
   throw new Error('invalid value')
 }

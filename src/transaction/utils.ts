@@ -26,7 +26,7 @@ export const deserializeBigNum = (value: Buffer, base = 10): string => {
   if (value[0] != 0x00 && value[0] != 0x01) throw new Error('invalid bigint')
 
   const sign = value[0] === 0x01 ? '-' : ''
-  const valueBN = new BN(value.slice(1))
+  const valueBN = new BN(value.subarray(1))
 
   return sign + valueBN.toString(base)
 }
