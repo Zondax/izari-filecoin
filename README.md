@@ -2,11 +2,16 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 ![node-current](https://img.shields.io/node/v/@zondax/izari-filecoin)
 [![Package](https://badge.fury.io/js/%40zondax%2Fizari-filecoin.svg)](https://badge.fury.io/js/%40zondax%2Fizari-filecoin)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
+
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
 
 [![Hyperspace](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml)
 [![Calibration](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml)
 [![Mainnet](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml)
+
 
 ---
 
