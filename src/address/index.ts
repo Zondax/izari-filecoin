@@ -352,7 +352,7 @@ export class AddressId extends Address {
     if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
     if (parseInt(protocolIndicator) != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
 
-    const payload = leb.unsigned.encode(address.substr(2))
+    const payload = leb.unsigned.encode(address.substring(2))
     return new AddressId(networkPrefix, payload)
   }
 
