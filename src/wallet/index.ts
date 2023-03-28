@@ -194,9 +194,10 @@ export class Signature {
    * @param input - raw JSON input
    * @returns new Signature instance
    */
-  fromJSON = (input: unknown): Signature => {
+  static fromJSON = (input: unknown): Signature => {
     if (typeof input !== 'object' || input === null) throw new Error('input should be an object')
-    if (!('Type' in input) || typeof input.Type !== 'number' || isSignatureType(input.Type)) throw new Error("'Type' should be a number")
+    if (!('Type' in input) || typeof input.Type !== 'number') throw new Error("'Type' should be a number")
+    if (!isSignatureType(input.Type)) throw new Error('invalid signature type')
     if (!('Data' in input) || typeof input.Data !== 'string') throw new Error("'Data' should be a base64 encoded string")
 
     return new Signature(input.Type, Buffer.from(input.Data, 'base64'))
