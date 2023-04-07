@@ -3,7 +3,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "dist/cjs",
-    "target": "es2015",
-    "moduleResolution": "NodeNext"
+    "target": "ES2015",
+    "moduleResolution": "Node"
   }
 }
