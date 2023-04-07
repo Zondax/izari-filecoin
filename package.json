@@ -4,6 +4,19 @@
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",
+  "types": "dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "address": "./dist/types/address/index.d.ts",
+      "rpc": "./dist/types/rpc/index.d.ts",
+      "transaction": "./dist/types/transaction/index.d.ts",
+      "wallet": "./dist/types/wallet/index.d.ts",
+      "token": "./dist/types/token/index.d.ts",
+      "account": "./dist/types/account/index.d.ts",
+      "artifacts": "./dist/types/artifacts/index.d.ts",
+      "payment": "./dist/types/payment/index.d.ts"
+    }
+  },
   "exports": {
     ".": {
       "import": "./dist/mjs/index.js",
@@ -43,8 +56,8 @@
     }
   },
   "scripts": {
-    "build:mjs": "rm -fr dist/mjs && tsc -p tsconfig.json && echo '{ \"type\": \"module\" }' > dist/mjs/package.json",
-    "build:cjs": "rm -fr dist/cjs && tsc -p tsconfig-cjs.json && echo '{ \"type\": \"commonjs\" }' > dist/cjs/package.json",
+    "build:mjs": "rm -fr dist/mjs && rm -fr dist/types && tsc -p tsconfig.json && echo '{ \"type\": \"module\" }' > dist/mjs/package.json",
+    "build:cjs": "rm -fr dist/cjs && rm -fr dist/types && tsc -p tsconfig-cjs.json && echo '{ \"type\": \"commonjs\" }' > dist/cjs/package.json",
     "build": "yarn build:mjs && yarn build:cjs",
     "lint": "eslint .",
     "lint:fix": "eslint --fix . ",
