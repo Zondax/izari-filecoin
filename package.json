@@ -7,6 +7,7 @@
   "types": "dist/types/index.d.ts",
   "typesVersions": {
     "*": {
+      "actors": "./dist/types/actors/index.d.ts",
       "address": "./dist/types/address/index.d.ts",
       "rpc": "./dist/types/rpc/index.d.ts",
       "transaction": "./dist/types/transaction/index.d.ts",
@@ -53,6 +54,10 @@
     "./payment": {
       "import": "./dist/mjs/payment/index.js",
       "require": "./dist/cjs/payment/index.js"
+    },
+    "./actors": {
+      "import": "./dist/mjs/actors/index.js",
+      "require": "./dist/cjs/actors/index.js"
     }
   },
   "scripts": {
