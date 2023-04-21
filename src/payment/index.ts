@@ -51,7 +51,7 @@ export class PaymentChannel {
 
     // Get payment channel data
     const payChanCid = getActorCidsFromNetwork(rpc.getNetwork()).PaymentChannel
-    const payChanParams = await new ConstructorParams(from, to).serialize()
+    const payChanParams = new ConstructorParams(from, to).serialize()
 
     // Create exec tx to init new actor
     const execParams = new ExecParams(payChanCid, payChanParams)
@@ -112,7 +112,7 @@ export class PaymentChannel {
     await tx.prepareToSend(rpc)
 
     // Sign tx
-    const signature = await Wallet.signTransaction(accountData, tx)
+    const signature = Wallet.signTransaction(accountData, tx)
 
     // Broadcast tx
     const response1 = await rpc.broadcastTransaction(tx, signature)

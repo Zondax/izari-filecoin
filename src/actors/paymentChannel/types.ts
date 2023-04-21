@@ -1,15 +1,6 @@
-import { Address } from '../../address/index.js'
-import { IpldDagCbor } from '../../external/dag-cbor.js'
-import { waitFor } from '../../utils/sleep.js'
+import cbor from 'cbor'
 
-let globalCbor: IpldDagCbor | undefined
-import('@ipld/dag-cbor')
-  .then(localCbor => {
-    globalCbor = localCbor
-  })
-  .catch(e => {
-    throw e
-  })
+import { Address } from '../../address/index.js'
 
 /**
  * Allows to create and serialize parameters related to the constructor method of the payment channel actor.
@@ -27,10 +18,5 @@ export class ConstructorParams {
    * Serialize to cbor. Required to sign and send an exec transaction to the blockchain
    * @returns serialized data
    */
-  serialize = async () => {
-    const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return cbor.encode([this.from.toBytes(), this.to.toBytes()])
-  }
+  serialize = () => cbor.encode([this.from.toBytes(), this.to.toBytes()])
 }

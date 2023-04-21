@@ -108,8 +108,8 @@ export class Wallet {
    * @param tx - transaction to sign
    * @returns generated signature
    */
-  static signTransaction = async (accountData: Pick<AccountData, 'privateKey' | 'type'>, tx: Transaction): Promise<Signature> => {
-    const serializedTx = await tx.serialize()
+  static signTransaction = (accountData: Pick<AccountData, 'privateKey' | 'type'>, tx: Transaction): Signature => {
+    const serializedTx = tx.serialize()
     const txDigest = getDigest(serializedTx)
     const { privateKey, type } = accountData
 
@@ -131,8 +131,8 @@ export class Wallet {
    * @param tx - transaction data
    * @returns whether the signature is valid or not
    */
-  static verifySignature = async (signature: Signature, tx: Transaction): Promise<boolean> => {
-    const serializedTx = await tx.serialize()
+  static verifySignature = (signature: Signature, tx: Transaction): boolean => {
+    const serializedTx = tx.serialize()
     const txDigest = getDigest(serializedTx)
 
     switch (signature.getType()) {

@@ -26,7 +26,7 @@ export class Account {
     const tx = Transaction.getNew(to, fromAccount.address, value, method)
     await tx.prepareToSend(nodeRpc)
 
-    const signature = await Wallet.signTransaction(fromAccount, tx)
+    const signature = Wallet.signTransaction(fromAccount, tx)
 
     const response = await nodeRpc.broadcastTransaction(tx, signature)
     if ('error' in response) throw new Error(response.error.message)

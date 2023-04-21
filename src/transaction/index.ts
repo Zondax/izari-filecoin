@@ -44,10 +44,10 @@ export class Transaction {
    * @param cborMessage - cbor encoded tx to parse
    * @returns a new Transaction instance
    */
-  static fromCBOR = async (networkPrefix: NetworkPrefix, cborMessage: Buffer | string): Promise<Transaction> => {
+  static fromCBOR = (networkPrefix: NetworkPrefix, cborMessage: Buffer | string): Transaction => {
     if (typeof cborMessage === 'string') cborMessage = Buffer.from(cborMessage, 'hex')
 
-    const decoded = cbor.decode(cborMessage)
+    const decoded = cbor.decode(cborMessage) as TxInputData
     if (!(decoded instanceof Array)) throw new Error('Decoded raw tx should be an array')
     if (decoded.length < 10) throw new Error('The cbor is missing some fields... please verify you have 9 fields.')
 
@@ -134,7 +134,7 @@ export class Transaction {
    * Encode the current transaction as CBOR following filecoin specifications. This is the format required as input to sign it.
    * @returns a cbor encoded transaction (as buffer)
    */
-  serialize = async (): Promise<Buffer> => {
+  serialize = (): Buffer => {
     const message_to_encode: TxInputData = [
       this.version,
       this.to.toBytes(),
