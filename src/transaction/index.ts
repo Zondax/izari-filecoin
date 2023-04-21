@@ -1,24 +1,11 @@
 import BN from 'bn.js'
+import cbor from 'cbor'
 
 import { Address } from '../address/index.js'
 import { serializeBigNum } from './utils.js'
 import { RPC } from '../rpc/index.js'
 import { TransactionJSON, TxInputData, TxVersion, NetworkPrefix } from '../artifacts/index.js'
-import { IpldDagCbor } from '../external/dag-cbor.js'
-import { waitFor } from '../utils/sleep.js'
 import { Token } from '../token/index.js'
-
-// Loading this module dynamically as it has no support to CJS
-// The only way to keep CJS supported on our side is to load it dynamically
-// The interface IpldDagCbor has been copied from the repo itself
-let globalCbor: IpldDagCbor | undefined
-import('@ipld/dag-cbor')
-  .then(localCbor => {
-    globalCbor = localCbor
-  })
-  .catch(e => {
-    throw e
-  })
 
 /**
  * Represents a transaction in the filecoin blockchain.
@@ -60,9 +47,7 @@ export class Transaction {
   static fromCBOR = async (networkPrefix: NetworkPrefix, cborMessage: Buffer | string): Promise<Transaction> => {
     if (typeof cborMessage === 'string') cborMessage = Buffer.from(cborMessage, 'hex')
 
-    const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
-
-    const decoded = cbor.decode<TxInputData>(cborMessage)
+    const decoded = cbor.decode(cborMessage)
     if (!(decoded instanceof Array)) throw new Error('Decoded raw tx should be an array')
     if (decoded.length < 10) throw new Error('The cbor is missing some fields... please verify you have 9 fields.')
 
@@ -150,8 +135,6 @@ export class Transaction {
    * @returns a cbor encoded transaction (as buffer)
    */
   serialize = async (): Promise<Buffer> => {
-    const cbor: IpldDagCbor = await waitFor<IpldDagCbor>(() => globalCbor)
-
     const message_to_encode: TxInputData = [
       this.version,
       this.to.toBytes(),
