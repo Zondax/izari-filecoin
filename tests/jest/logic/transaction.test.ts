@@ -21,8 +21,8 @@ describe('Transaction', () => {
 
   describe('From CBOR encoded', () => {
     vectors.forEach(({ cbor, tx }, i) => {
-      test('Tx ' + i, async () => {
-        const parseTx = await Transaction.fromCBOR(NetworkPrefix.Mainnet, cbor)
+      test('Tx ' + i, () => {
+        const parseTx = Transaction.fromCBOR(NetworkPrefix.Mainnet, cbor)
 
         expect(parseTx.to.toString()).toBe(tx.To)
         expect(parseTx.from.toString()).toBe(tx.From)
@@ -38,9 +38,9 @@ describe('Transaction', () => {
 
   describe('From raw JSON', () => {
     vectors.forEach(({ cbor, tx }, i) => {
-      test('Tx ' + i, async () => {
+      test('Tx ' + i, () => {
         const parseTx = Transaction.fromJSON(tx)
-        const serializedTx = await parseTx.serialize()
+        const serializedTx = parseTx.serialize()
 
         expect(serializedTx.toString('hex')).toBe(cbor)
       })

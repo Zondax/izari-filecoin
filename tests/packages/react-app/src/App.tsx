@@ -25,7 +25,6 @@ const rawTx = {
 }
 
 function App() {
-  const [signature, setSignature] = useState<Signature | null>(null)
   const address = Address.fromString('t08666')
   const mnemonic = Wallet.generateMnemonic()
   const account = Wallet.deriveAccount(
@@ -33,13 +32,8 @@ function App() {
     SignatureType.SECP256K1,
     "44'/461'/1'/0/0"
   )
-
-  useEffect(() => {
-    const partialAccount = { privateKey: Buffer.from(rawTx.privKey, 'base64'), type: 1 }
-    Wallet.signTransaction(partialAccount, Transaction.fromJSON(rawTx.tx)).then(sig => {
-      setSignature(sig)
-    })
-  }, [])
+  const partialAccount = { privateKey: Buffer.from(rawTx.privKey, 'base64'), type: 1 }
+  const signature = Wallet.signTransaction(partialAccount, Transaction.fromJSON(rawTx.tx))
 
   return (
     <div className="App">
@@ -58,8 +52,8 @@ function App() {
 
         <br />
 
-        {signature ? <div id={'signature-data'}>{`Signature Data: ${signature.toJSON().Data}`}</div> : null}
-        {signature ? <div id={'signature-type'}>{`Signature Type: ${signature.toJSON().Type}`}</div> : null}
+        <div id={'signature-data'}>{`Signature Data: ${signature.toJSON().Data}`}</div>
+        <div id={'signature-type'}>{`Signature Type: ${signature.toJSON().Type}`}</div>
       </header>
     </div>
   )

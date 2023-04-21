@@ -123,10 +123,10 @@ describe('Wallet', () => {
 
     describe('From raw JSON', () => {
       vectors.forEach(({ tx: txJSON, signature, privateKey }, i) => {
-        test('Tx ' + i, async () => {
+        test('Tx ' + i, () => {
           const tx = Transaction.fromJSON(txJSON)
           const account = Wallet.recoverAccount(NetworkPrefix.Mainnet, signature.type, privateKey)
-          const sig = await Wallet.signTransaction(account, tx)
+          const sig = Wallet.signTransaction(account, tx)
 
           expect(sig.toJSON().Data).toBe(signature.data)
           expect(sig.toJSON().Type).toBe(signature.type)
@@ -136,10 +136,10 @@ describe('Wallet', () => {
 
     describe('From CBOR encoded', () => {
       vectors.forEach(({ cbor, signature, privateKey }, i) => {
-        test('Tx ' + i, async () => {
-          const tx = await Transaction.fromCBOR(NetworkPrefix.Mainnet, cbor)
+        test('Tx ' + i, () => {
+          const tx = Transaction.fromCBOR(NetworkPrefix.Mainnet, cbor)
           const account = Wallet.recoverAccount(NetworkPrefix.Mainnet, signature.type, privateKey)
-          const sig = await Wallet.signTransaction(account, tx)
+          const sig = Wallet.signTransaction(account, tx)
 
           expect(sig.toJSON().Data).toBe(signature.data)
           expect(sig.toJSON().Type).toBe(signature.type)
@@ -153,36 +153,36 @@ describe('Wallet', () => {
 
     describe('From raw JSON', () => {
       vectors.forEach(({ tx: txJSON, signature, privateKey }, i) => {
-        test('Tx ' + i, async () => {
+        test('Tx ' + i, () => {
           const tx = Transaction.fromJSON(txJSON)
           const sig = new Signature(signature.type, Buffer.from(signature.data, 'base64'))
-          const isValid = await Wallet.verifySignature(sig, tx)
+          const isValid = Wallet.verifySignature(sig, tx)
 
           expect(isValid).toBeTruthy()
         })
       })
     })
 
-    test('Invalid signature (different tx, different sender)', async () => {
+    test('Invalid signature (different tx, different sender)', () => {
       const testCaseA = vectors[0]
       const testCaseB = vectors.find(value => value.privateKey != testCaseA.privateKey)
       if (!testCaseB) throw new Error('there is no different txs with different senders')
 
       const tx = Transaction.fromJSON(testCaseA.tx)
       const sig = new Signature(testCaseB.signature.type, Buffer.from(testCaseB.signature.data, 'base64'))
-      const isValid = await Wallet.verifySignature(sig, tx)
+      const isValid = Wallet.verifySignature(sig, tx)
 
       expect(isValid).toBeFalsy()
     })
 
-    test('Invalid signature (different tx, same sender)', async () => {
+    test('Invalid signature (different tx, same sender)', () => {
       const testCaseA = vectors[0]
       const testCaseB = vectors.find(value => value.privateKey === testCaseA.privateKey && value.cbor !== testCaseA.cbor)
       if (!testCaseB) throw new Error('there is no different txs with same senders')
 
       const tx = Transaction.fromJSON(testCaseA.tx)
       const sig = new Signature(testCaseB.signature.type, Buffer.from(testCaseB.signature.data, 'base64'))
-      const isValid = await Wallet.verifySignature(sig, tx)
+      const isValid = Wallet.verifySignature(sig, tx)
 
       expect(isValid).toBeFalsy()
     })
