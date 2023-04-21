@@ -55,7 +55,7 @@ describe('Wallet', () => {
       const account = Wallet.deriveAccount('asadsd', SignatureType.SECP256K1, path)
 
       const tx = Transaction.getNew(account.address, account.address, Token.fromAtto('1'), 0)
-      await expect(Wallet.signTransaction({ privateKey: Buffer.alloc(0), type: SignatureType.BLS }, tx)).rejects.toThrow(new RegExp(/not supported yet/))
+      expect(() => Wallet.signTransaction({ privateKey: Buffer.alloc(0), type: SignatureType.BLS }, tx)).toThrow(new RegExp(/not supported yet/))
     })
 
     test('Verify Signature', async () => {
@@ -63,7 +63,7 @@ describe('Wallet', () => {
       const account = Wallet.deriveAccount('asadsd', SignatureType.SECP256K1, path)
 
       const tx = Transaction.getNew(account.address, account.address, Token.fromAtto('1'), 0)
-      await expect(Wallet.verifySignature(new Signature(SignatureType.BLS, Buffer.alloc(0)), tx)).rejects.toThrow(new RegExp(/not supported yet/))
+      expect(() => Wallet.verifySignature(new Signature(SignatureType.BLS, Buffer.alloc(0)), tx)).toThrow(new RegExp(/not supported yet/))
     })
   })
 
