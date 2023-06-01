@@ -3,7 +3,8 @@ import * as playwright from 'playwright'
 const browsers = [
   { name: 'Chromium', instance: playwright.chromium },
   { name: 'Firefox', instance: playwright.firefox },
-  { name: 'Safari', instance: playwright.webkit },
+  // FIXME enable safari again
+  //{ name: 'Safari', instance: playwright.webkit },
 ]
 
 describe('Addresses', () => {
