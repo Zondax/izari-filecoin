@@ -3,6 +3,7 @@ import * as playwright from 'playwright'
 const browsers = [
   { name: 'Chromium', instance: playwright.chromium },
   { name: 'Firefox', instance: playwright.firefox },
+  // FIXME enable safari again
   //{ name: 'Safari', instance: playwright.webkit },
 ]
 
