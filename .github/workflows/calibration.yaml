@@ -38,10 +38,6 @@ jobs:
         run: |
           yarn install
           npx playwright install-deps
-          npx playwright install chromium
-          npx playwright install chrome
-          npx playwright install firefox
-          npx playwright install webkit
       - name: Lint
         run: yarn lint
       - name: Format
