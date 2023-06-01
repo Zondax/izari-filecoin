@@ -34,7 +34,6 @@ export enum Network {
   Mainnet = 'mainnet',
   Calibration = 'calibration',
   Butterfly = 'butterfly',
-  Hyperspace = 'hyperspace',
 }
 
 /**

@@ -8,7 +8,6 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Zondax_izari-filecoin&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Zondax_izari-filecoin)
 
-[![Hyperspace](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/hyperspace.yaml)
 [![Calibration](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/calibration.yaml)
 [![Mainnet](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml/badge.svg)](https://github.com/Zondax/izari-filecoin/actions/workflows/mainnet.yaml)
 
@@ -291,7 +290,6 @@ Here you can find faucets for each testnet you want to test the library on
 | Network     | Link                                                               |
 |-------------|--------------------------------------------------------------------|
 | Devnet      | :x:                                                                |
-| Hypersapce  | [:link:](https://beryx.zondax.ch/faucet)                           |
 | Butterfly   | :x:                                                                |
 | Calibration | [:link:](https://faucet.triangleplatform.com/filecoin/calibration) |
 | Mainnet     | :heavy_minus_sign:                                                 |
@@ -308,7 +306,6 @@ right away.
 | Network     | Tested?             |
 |-------------|---------------------|
 | Devnet      | :x:                 |
-| Hypersapce  | :white_check_mark:  |
 | Butterfly   | :x:                 |
 | Calibration | :white_check_mark:  |
 | Mainnet     | :white_check_mark:  |

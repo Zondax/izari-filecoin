@@ -316,12 +316,3 @@ export class ButterflyRPC extends RPC {
     super(Network.Butterfly, args)
   }
 }
-
-/**
- * Filecoin RPC connection preloaded to interact with hyperspace network
- */
-export class HyperspaceRPC extends RPC {
-  constructor(args: Args) {
-    super(Network.Hyperspace, args)
-  }
-}
