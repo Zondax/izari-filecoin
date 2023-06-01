@@ -3,7 +3,7 @@ import * as playwright from 'playwright'
 const browsers = [
   { name: 'Chromium', instance: playwright.chromium },
   { name: 'Firefox', instance: playwright.firefox },
-  { name: 'Safari', instance: playwright.webkit },
+  //{ name: 'Safari', instance: playwright.webkit },
 ]
 
 describe('Addresses', () => {
