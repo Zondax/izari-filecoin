@@ -108,7 +108,7 @@ export abstract class Address {
         return addr
       }
       default:
-        throw new UnknownProtocolIndicator()
+        throw new UnknownProtocolIndicator(type)
     }
   }
 
@@ -137,7 +137,7 @@ export abstract class Address {
         return addr
       }
       default:
-        throw new UnknownProtocolIndicator()
+        throw new UnknownProtocolIndicator(type)
     }
   }
 
@@ -161,7 +161,7 @@ export abstract class Address {
       let i = 12
       while (ethAddr[i] == 0) i += 1
 
-      return new AddressId(networkPrefix, ethAddr.subarray(i))
+      return new AddressId(networkPrefix, Buffer.from(ethAddr.subarray(i)))
     }
 
     return new FilEthAddress(networkPrefix, ethAddr)
@@ -230,7 +230,7 @@ export class AddressBls extends Address {
   constructor(networkPrefix: NetworkPrefix, payload: Buffer) {
     super(networkPrefix, ProtocolIndicator.BLS)
 
-    if (payload.byteLength !== BLS_PAYLOAD_LEN) throw new InvalidPayloadLength()
+    if (payload.byteLength !== BLS_PAYLOAD_LEN) throw new InvalidPayloadLength(payload.byteLength)
     this.payload = payload
   }
 
@@ -264,15 +264,16 @@ export class AddressBls extends Address {
     const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
-    if (parseInt(protocolIndicator) != ProtocolIndicator.BLS) throw new InvalidProtocolIndicator()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork(networkPrefix)
+    if (parseInt(protocolIndicator) != ProtocolIndicator.BLS) throw new InvalidProtocolIndicator(parseInt(protocolIndicator))
 
     const decodedData = Buffer.from(base32Decode(address.substring(2).toUpperCase(), 'RFC4648'))
-    const payload = decodedData.subarray(0, -4)
-    const checksum = decodedData.subarray(-4)
+    const payload = Buffer.from(decodedData.subarray(0, -4))
+    const checksum = Buffer.from(decodedData.subarray(-4))
 
     const newAddress = new AddressBls(networkPrefix, payload)
-    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
+    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex'))
+      throw new InvalidChecksumAddress(newAddress.getChecksum().toString('hex'), checksum.toString('hex'))
 
     return newAddress
   }
@@ -284,7 +285,7 @@ export class AddressBls extends Address {
    * @returns a new instance of AddressBls
    */
   static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressBls {
-    if (bytes[0] != ProtocolIndicator.BLS) throw new InvalidProtocolIndicator()
+    if (bytes[0] != ProtocolIndicator.BLS) throw new InvalidProtocolIndicator(bytes[0])
 
     const payload = Buffer.from(bytes.subarray(1))
     return new AddressBls(networkPrefix, payload)
@@ -317,7 +318,7 @@ export class AddressId extends Address {
 
     const payloadBuff = typeof payload === 'string' ? leb.unsigned.encode(payload) : payload
 
-    if (payloadBuff.length > ID_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength()
+    if (payloadBuff.length > ID_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength(payloadBuff.length)
 
     this.payload = payloadBuff
     this.id = this.toString().substring(2)
@@ -349,8 +350,8 @@ export class AddressId extends Address {
     const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
-    if (parseInt(protocolIndicator) != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork(networkPrefix)
+    if (parseInt(protocolIndicator) != ProtocolIndicator.ID) throw new InvalidProtocolIndicator(parseInt(protocolIndicator))
 
     const payload = leb.unsigned.encode(address.substring(2))
     return new AddressId(networkPrefix, payload)
@@ -363,9 +364,9 @@ export class AddressId extends Address {
    * @returns a new instance of AddressId
    */
   static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressId {
-    if (bytes[0] != ProtocolIndicator.ID) throw new InvalidProtocolIndicator()
+    if (bytes[0] != ProtocolIndicator.ID) throw new InvalidProtocolIndicator(bytes[0])
 
-    const payload = bytes.subarray(1)
+    const payload = Buffer.from(bytes.subarray(1))
     return new AddressId(networkPrefix, payload)
   }
 
@@ -402,7 +403,7 @@ export class AddressSecp256k1 extends Address {
    */
   constructor(networkPrefix: NetworkPrefix, payload: Buffer) {
     super(networkPrefix, ProtocolIndicator.SECP256K1)
-    if (payload.byteLength !== SECP256K1_PAYLOAD_LEN) throw new InvalidPayloadLength()
+    if (payload.byteLength !== SECP256K1_PAYLOAD_LEN) throw new InvalidPayloadLength(payload.byteLength)
     this.payload = payload
   }
 
@@ -436,15 +437,16 @@ export class AddressSecp256k1 extends Address {
     const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
-    if (parseInt(protocolIndicator) != ProtocolIndicator.SECP256K1) throw new InvalidProtocolIndicator()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork(networkPrefix)
+    if (parseInt(protocolIndicator) != ProtocolIndicator.SECP256K1) throw new InvalidProtocolIndicator(parseInt(protocolIndicator))
 
     const decodedData = Buffer.from(base32Decode(address.substring(2).toUpperCase(), 'RFC4648'))
-    const payload = decodedData.subarray(0, -4)
-    const checksum = decodedData.subarray(-4)
+    const payload = Buffer.from(decodedData.subarray(0, -4))
+    const checksum = Buffer.from(decodedData.subarray(-4))
 
     const newAddress = new AddressSecp256k1(networkPrefix, payload)
-    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
+    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex'))
+      throw new InvalidChecksumAddress(newAddress.getChecksum().toString('hex'), checksum.toString('hex'))
 
     return newAddress
   }
@@ -456,7 +458,7 @@ export class AddressSecp256k1 extends Address {
    * @returns a new instance of AddressSecp256k1
    */
   static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressSecp256k1 {
-    if (bytes[0] != ProtocolIndicator.SECP256K1) throw new InvalidProtocolIndicator()
+    if (bytes[0] != ProtocolIndicator.SECP256K1) throw new InvalidProtocolIndicator(bytes[0])
 
     const payload = Buffer.from(bytes.subarray(1))
     return new AddressSecp256k1(networkPrefix, payload)
@@ -481,7 +483,7 @@ export class AddressActor extends Address {
    */
   constructor(networkPrefix: NetworkPrefix, payload: Buffer) {
     super(networkPrefix, ProtocolIndicator.ACTOR)
-    if (payload.byteLength !== ACTOR_PAYLOAD_LEN) throw new InvalidPayloadLength()
+    if (payload.byteLength !== ACTOR_PAYLOAD_LEN) throw new InvalidPayloadLength(payload.byteLength)
 
     this.payload = payload
   }
@@ -516,15 +518,16 @@ export class AddressActor extends Address {
     const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
-    if (parseInt(protocolIndicator) != ProtocolIndicator.ACTOR) throw new InvalidProtocolIndicator()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork(networkPrefix)
+    if (parseInt(protocolIndicator) != ProtocolIndicator.ACTOR) throw new InvalidProtocolIndicator(parseInt(protocolIndicator))
 
     const decodedData = Buffer.from(base32Decode(address.substring(2).toUpperCase(), 'RFC4648'))
-    const payload = decodedData.subarray(0, -4)
-    const checksum = decodedData.subarray(-4)
+    const payload = Buffer.from(decodedData.subarray(0, -4))
+    const checksum = Buffer.from(decodedData.subarray(-4))
 
     const newAddress = new AddressActor(networkPrefix, payload)
-    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
+    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex'))
+      throw new InvalidChecksumAddress(newAddress.getChecksum().toString('hex'), checksum.toString('hex'))
 
     return newAddress
   }
@@ -536,7 +539,7 @@ export class AddressActor extends Address {
    * @returns a new instance of AddressActor
    */
   static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressActor {
-    if (bytes[0] != ProtocolIndicator.ACTOR) throw new InvalidProtocolIndicator()
+    if (bytes[0] != ProtocolIndicator.ACTOR) throw new InvalidProtocolIndicator(bytes[0])
 
     const payload = Buffer.from(bytes.subarray(1))
     return new AddressActor(networkPrefix, payload)
@@ -574,12 +577,12 @@ export class AddressDelegated extends Address {
   constructor(networkPrefix: NetworkPrefix, namespace: string, subAddress: Buffer) {
     super(networkPrefix, ProtocolIndicator.DELEGATED)
 
-    if (new BN(namespace).gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidNamespace()
+    if (new BN(namespace).gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidNamespace(namespace)
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
 
     this.namespace = namespace
     this.subAddress = subAddress
-    this.payload = this.toBytes().subarray(1)
+    this.payload = Buffer.from(this.toBytes().subarray(1))
   }
 
   /**
@@ -630,8 +633,8 @@ export class AddressDelegated extends Address {
     const networkPrefix = address[0]
     const protocolIndicator = address[1]
 
-    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork()
-    if (parseInt(protocolIndicator) != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
+    if (!validateNetworkPrefix(networkPrefix)) throw new InvalidNetwork(networkPrefix)
+    if (parseInt(protocolIndicator) != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator(parseInt(protocolIndicator))
 
     const namespace = address.substring(2, address.indexOf('f', 2))
     const dataEncoded = address.substring(address.indexOf('f', 2) + 1)
@@ -642,7 +645,8 @@ export class AddressDelegated extends Address {
 
     const newAddress = new AddressDelegated(networkPrefix, namespace, subAddress)
 
-    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex')) throw new InvalidChecksumAddress()
+    if (newAddress.getChecksum().toString('hex') !== checksum.toString('hex'))
+      throw new InvalidChecksumAddress(newAddress.getChecksum().toString('hex'), checksum.toString('hex'))
 
     return newAddress
   }
@@ -654,11 +658,11 @@ export class AddressDelegated extends Address {
    * @returns a new instance of AddressDelegated
    */
   static fromBytes(networkPrefix: NetworkPrefix, bytes: Buffer): AddressDelegated {
-    if (bytes[0] != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator()
+    if (bytes[0] != ProtocolIndicator.DELEGATED) throw new InvalidProtocolIndicator(bytes[0])
 
-    const namespaceLength = getLeb128Length(bytes.subarray(1))
-    const namespace = leb.unsigned.decode(bytes.subarray(1, 1 + namespaceLength))
-    const subAddress = bytes.subarray(namespaceLength + 1)
+    const namespaceLength = getLeb128Length(Buffer.from(bytes.subarray(1)))
+    const namespace = leb.unsigned.decode(Buffer.from(bytes.subarray(1, 1 + namespaceLength)))
+    const subAddress = Buffer.from(bytes.subarray(namespaceLength + 1))
 
     return new AddressDelegated(networkPrefix, namespace, subAddress)
   }

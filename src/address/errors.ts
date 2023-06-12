@@ -1,34 +1,34 @@
 export class InvalidProtocolIndicator extends Error {
-  constructor() {
+  constructor(value: number) {
     super()
-    this.message = 'Invalid protocol indicator byte.'
+    this.message = `Invalid protocol indicator byte [${value}]`
   }
 }
 
 export class UnknownProtocolIndicator extends Error {
-  constructor() {
+  constructor(value: number) {
     super()
-    this.message = 'Unknown protocol indicator byte.'
+    this.message = 'Unknown protocol indicator byte [${value}]'
   }
 }
 
 export class InvalidPayloadLength extends Error {
-  constructor() {
+  constructor(len: number) {
     super()
-    this.message = 'Invalid payload length.'
+    this.message = `Invalid payload length [${len}]`
   }
 }
 
 export class InvalidNamespace extends Error {
-  constructor() {
+  constructor(value: string) {
     super()
-    this.message = 'Invalid namespace.'
+    this.message = `Invalid namespace [${value}]`
   }
 }
 export class InvalidNetwork extends Error {
-  constructor() {
+  constructor(value: string) {
     super()
-    this.message = 'Invalid network'
+    this.message = `Invalid network [${value}]`
   }
 }
 
@@ -47,9 +47,9 @@ export class ProtocolNotSupported extends Error {
 }
 
 export class InvalidChecksumAddress extends Error {
-  constructor() {
+  constructor(checksum1: string, checksum2: string) {
     super()
-    this.message = `Invalid address (checksum not matching the payload).`
+    this.message = `Invalid address (checksum not matching the payload). ${checksum1} vs ${checksum2}`
   }
 }
 
