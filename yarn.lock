@@ -2664,10 +2664,10 @@ multiformats@^11.0.0:
   resolved "https://registry.yarnpkg.com/multiformats/-/multiformats-11.0.1.tgz#ba58c3f69f032ab67dab4b48cc70f01ac2ca07fe"
   integrity sha512-atWruyH34YiknSdL5yeIir00EDlJRpHzELYQxG7Iy29eCyL+VrZHpPrX5yqlik3jnuqpLpRKVZ0SGVb9UzKaSA==
 
-multiformats@^11.0.2:
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/multiformats/-/multiformats-11.0.2.tgz#b14735efc42cd8581e73895e66bebb9752151b60"
-  integrity sha512-b5mYMkOkARIuVZCpvijFj9a6m5wMVLC7cf/jIPd5D/ARDOfLC5+IFkbgDXQgcU2goIsTD/O9NY4DI/Mt4OGvlg==
+multiformats@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/multiformats/-/multiformats-12.0.0.tgz#53a0ab1500b9b9cff395e77e087f73b6e66307e1"
+  integrity sha512-u6dXASUkqC6eMkPOKzf6C0R2SBmgEIyBm8bHR1prycl985AL2sixBkY96PSMMJGtHCfKieFcGWfsWYtQjc2yGg==
 
 natural-compare-lite@^1.4.0:
   version "1.4.0"
