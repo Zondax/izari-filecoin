@@ -131,7 +131,7 @@
     "blakejs": "^1.2.1",
     "bn.js": "^5.2.1",
     "leb128": "^0.0.5",
-    "multiformats": "^11.0.2",
+    "multiformats": "^12.1.3",
     "secp256k1": "^5.0.0"
   },
   "files": [
