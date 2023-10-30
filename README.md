@@ -20,6 +20,11 @@
 _Please visit our website at [zondax.ch](https://www.zondax.ch)_
 
 ---
+## 🚫 PROJECT NO LONGER MAINTAINED 🚫
+
+As of **2023-09-30**, this package is no longer actively maintained. The last version of the software will remain available, but future updates or bug fixes should not be expected. Users are encouraged to seek alternative solutions and are welcome to fork the project for continued development.
+
+--- 
 
 ## Introduction
 Izari Filecoin is a comprehensive set of tools designed to interact with Blockchains. With its focus on compatibility, it provides developers with a versatile and flexible solution that can be used across a range of environments, 
