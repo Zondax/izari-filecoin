@@ -20,9 +20,9 @@
 _Please visit our website at [zondax.ch](https://www.zondax.ch)_
 
 ---
-## 🚫 PROJECT NO LONGER MAINTAINED 🚫
+## 🚫 PROJECT MAINTENANCE NOTICE 🚫
 
-As of **2023-09-30**, this package is no longer actively maintained. The last version of the software will remain available, but future updates or bug fixes should not be expected. Users are encouraged to seek alternative solutions and are welcome to fork the project for continued development.
+This package will continue to be actively maintained until **2023-12-31**. After this date, it will no longer receive updates or bug fixes. Users are encouraged to seek alternative solutions after this period and are welcome to fork the project for continued development.
 
 --- 
 
