@@ -37,6 +37,29 @@ export enum PayChActorMethods {
 }
 
 /**
+ * Actor content IDs version 12 for calibration network
+ * For more information about the actors cid v10, please refer to this {@link https://github.com/filecoin-project/lotus/releases/tag/v1.20.0|link}
+ */
+export enum ActorsCalibrationV12 {
+  Account = 'bafk2bzacechwwxdqvggkdylm37zldjsra2ivkdzwp7fee56bzxbzs544wv6u6',
+  Cron = 'bafk2bzacec4gdxxkqwxqqodsv6ug5dmdbqdfqwyqfek3yhxc2wweh5psxaeq6',
+  DataCap = 'bafk2bzacecq5ppfskxgv3iea3jarsix6jdduuhwsn4fbvngtbmzelzmlygorm',
+  EAM = 'bafk2bzacecb6cnwftvavpph4p34zs4psuy5xvbrhf7vszkva4npw6mw3c42xe',
+  EthAccount = 'bafk2bzaceajmc3y3sedsqymfla3dzzqzmbu5kmr2iskm26ga2u34ll5fpztfw',
+  EVM = 'bafk2bzaced4sozr7m6rzcgpobzeiupghthfw6afumysu3oz6bxxirv74uo3vw',
+  Init = 'bafk2bzaceaewh7b6zl2egclm7fqzx2lsqr57i75lb6cj43ndoa4mal3k5ld3m',
+  Multisig = 'bafk2bzacednkwcpw5yzxjceoaliajgupzj6iqxe7ks2ll3unspbprbo5f2now',
+  PaymentChannel = 'bafk2bzacebaxhk4itfiuvbftg7kz5zxugqnvdgerobitjq4vl6q4orcwk6wqg',
+  Placeholder = 'bafk2bzacedfvut2myeleyq67fljcrw4kkmn5pb5dpyozovj7jpoez5irnc3ro',
+  Reward = 'bafk2bzacedra77pcglf7vdca2itcaa4vd6xrxynxmgfgdjdxqxfwqyhtoxehy',
+  StorageMarket = 'bafk2bzacea7g46y7xxu2zjq2h75x6mmx3utz2uxnlvnwi6tzpsvulna3bmiva',
+  StorageMiner = 'bafk2bzaced7emkbbnrewv5uvrokxpf5tlm4jslu2jsv77ofw2yqdglg657uie',
+  StoragePower = 'bafk2bzacedd3ka44k7d46ckbinjhv3diyuu2epgbyvhqqyjkc64qlrg3wlgzi',
+  System = 'bafk2bzacecioupndtcnyw6iq2hbrxag3aufvczlv5nobnfbkbywqzcyfaa376',
+  VerifiedRegistry = 'bafk2bzaceavldupmf7bimeeacs67z5xdfdlfca6p7sn6bev3mt5ggepfqvhqo',
+}
+
+/**
  * Actor content IDs version 11 for calibration network
  * For more information about the actors cid v10, please refer to this {@link https://github.com/filecoin-project/lotus/releases/tag/v1.20.0|link}
  */
