@@ -51,8 +51,3 @@ jobs:
           NODE_RPC_URL: ${{ secrets.CALIBRATION_NODE_RPC_URL }}
           NODE_RPC_TOKEN: ${{ secrets.CALIBRATION_NODE_RPC_TOKEN }}
           ACCOUNT_MNEMONIC: ${{ secrets.ACCOUNT_MNEMONIC }}
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
