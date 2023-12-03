@@ -16,7 +16,7 @@ concurrency: calibration
 jobs:
   test-calibration:
     name: "Test on Calibration Network"
-    runs-on: "self-hosted"
+    runs-on: zondax-runners
     strategy:
       max-parallel: 1
       matrix:
