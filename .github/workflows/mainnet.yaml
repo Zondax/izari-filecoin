@@ -10,7 +10,7 @@ concurrency: mainnet
 jobs:
   test-mainnet:
     name: "Test on Mainnet Network"
-    runs-on: "self-hosted"
+    runs-on: zondax-runners
     steps:
       - name: Checkout
         uses: actions/checkout@v2
