@@ -261,7 +261,7 @@ describe('Address', () => {
       })
 
       test('To ethereum address (ID)', async () => {
-        const addr = Address.fromString('f046')
+        const addr = Address.fromString('f0101')
 
         expect(Address.isAddressId(addr)).toBeTruthy()
         if (Address.isAddressId(addr)) {
