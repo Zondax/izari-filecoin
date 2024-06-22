@@ -242,8 +242,26 @@ describe('Address', () => {
         expect(addr.toString()).toBe('t08666')
       })
 
+      test('From ethereum address (ID) 4', async () => {
+        try {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000000000000000000a43')
+          expect(false).toBeTruthy()
+        } catch (e: any) {
+          expect(e.toString()).toBe('Error: invalid leb128 encoded payload')
+        }
+      })
+
+      test('From ethereum address (ID) 5', async () => {
+        try {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff000000000000000000000000000000002ec8fa')
+          expect(false).toBeTruthy()
+        } catch (e: any) {
+          expect(e.toString()).toBe('Error: invalid leb128 encoded payload')
+        }
+      })
+
       test('To ethereum address (ID)', async () => {
-        const addr = Address.fromString('f0101')
+        const addr = Address.fromString('f046')
 
         expect(Address.isAddressId(addr)).toBeTruthy()
         if (Address.isAddressId(addr)) {
@@ -254,6 +272,14 @@ describe('Address', () => {
 
       test('From ethereum address (EthFilAddress)', async () => {
         const addr = Address.fromEthAddress(NetworkPrefix.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da')
+
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.DELEGATED)
+        expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Mainnet)
+        expect(addr.toString()).toBe('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
+      })
+
+      test('From ethereum address (EthFilAddress) 22', async () => {
+        const addr = Address.fromString('0xd4c5fb16488aa48081296299d54b0c648c9333da00')
 
         expect(addr.getProtocol()).toBe(ProtocolIndicator.DELEGATED)
         expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Mainnet)

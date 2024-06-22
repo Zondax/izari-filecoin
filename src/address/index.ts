@@ -316,7 +316,16 @@ export class AddressId extends Address {
   constructor(networkPrefix: NetworkPrefix, payload: string | Buffer) {
     super(networkPrefix, ProtocolIndicator.ID)
 
-    const payloadBuff = typeof payload === 'string' ? leb.unsigned.encode(payload) : payload
+    let payloadBuff: Buffer
+    if (typeof payload === 'string') {
+      payloadBuff = leb.unsigned.encode(payload)
+    } else {
+      // Check if the payload is a valid leb128-encoded data
+      payloadBuff = leb.unsigned.encode(leb.unsigned.decode(payload))
+      if (payloadBuff.compare(payload) !== 0) {
+        throw new Error('invalid leb128 encoded payload')
+      }
+    }
 
     if (payloadBuff.length > ID_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength(payloadBuff.length)
 
