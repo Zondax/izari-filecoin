@@ -278,12 +278,13 @@ describe('Address', () => {
         expect(addr.toString()).toBe('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
       })
 
-      test('From ethereum address (EthFilAddress) 22', async () => {
-        const addr = Address.fromString('0xd4c5fb16488aa48081296299d54b0c648c9333da00')
-
-        expect(addr.getProtocol()).toBe(ProtocolIndicator.DELEGATED)
-        expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Mainnet)
-        expect(addr.toString()).toBe('f410f2tc7wfsirksibajjmkm5ksymmsgjgm62hjnomwa')
+      test('From ethereum address (EthFilAddress) - 2', async () => {
+        try {
+          const addr = Address.fromEthAddress(NetworkPrefix.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da00')
+          expect(false).toBeTruthy()
+        } catch (e: any) {
+          expect(e.toString()).toBe('Error: invalid ethereum address: length should be 20 bytes')
+        }
       })
 
       test('To ethereum address (EthFilAddress)', async () => {
