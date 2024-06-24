@@ -155,11 +155,8 @@ export abstract class Address {
       ethAddr = Buffer.from(tmp, 'hex')
     }
 
-    const idMask = Buffer.alloc(12)
-    idMask[0] = ACTOR_ID_ETHEREUM_MASK
-
-    if (idMask.compare(ethAddr, 0, 12) == 0) {
-      let i = 12
+    if (isMaskedIdEthAddress(ethAddr)) {
+      let i = ACTOR_ID_ETHEREUM_MASK_LEN
       while (ethAddr[i] == 0) i += 1
 
       return new AddressId(networkPrefix, Buffer.from(ethAddr.subarray(i)))
