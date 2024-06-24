@@ -694,7 +694,7 @@ export class FilEthAddress extends AddressDelegated {
   constructor(networkPrefix: NetworkPrefix, ethAddress: Buffer) {
     super(networkPrefix, DelegatedNamespace.ETH, ethAddress)
 
-    if (ethAddress.length !== ETH_ADDRESS_LEN) throw new Error('invalid ethereum address: length should be 32 bytes')
+    if (ethAddress.length !== ETH_ADDRESS_LEN) throw new Error(`invalid ethereum address: length should be ${ETH_ADDRESS_LEN} bytes`)
     if (isMaskedIdEthAddress(ethAddress)) throw new Error('masked-id eth addresses not allowed')
   }
 
