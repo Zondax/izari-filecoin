@@ -26,7 +26,7 @@ const networkPrefix = getNetworkPrefix(network)
 const rpcTimeout = 15 * 1000
 
 describe('Payment channel', () => {
-  test.skip('Create, Settle and Collect', async () => {
+  test('Create, Settle and Collect', async () => {
     const senderAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, sender_path, '', networkPrefix)
     const receiverAccountData = Wallet.deriveAccount(mnemonic, SignatureType.SECP256K1, receiver_path, '', networkPrefix)
 
