@@ -62,5 +62,5 @@ export const isMaskedIdEthAddress = (ethAddr: Buffer) => {
   const idMask = Buffer.alloc(ACTOR_ID_ETHEREUM_MASK_LEN)
   idMask[0] = ACTOR_ID_ETHEREUM_MASK
 
-  return ethAddr.length == ETH_ADDRESS_LEN && idMask.compare(ethAddr, 0, 12) == 0
+  return ethAddr.length === ETH_ADDRESS_LEN && idMask.compare(ethAddr, 0, ACTOR_ID_ETHEREUM_MASK_LEN) === 0
 }
