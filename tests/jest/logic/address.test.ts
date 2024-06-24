@@ -183,6 +183,12 @@ describe('Address', () => {
           AddressDelegated.fromString('f08666')
         }).toThrow(InvalidProtocolIndicator)
       })
+
+      test('Masked-id eth address', async () => {
+        expect(() => {
+          new AddressDelegated(NetworkPrefix.Mainnet, '10', Buffer.from('ff00000000000000000000000000000000000001', 'hex'))
+        }).toThrow('masked-id eth addresses not allowed')
+      })
     })
 
     describe('Type Filecoin Ethereum', () => {
@@ -204,6 +210,12 @@ describe('Address', () => {
           const addr = new AddressDelegated(NetworkPrefix.Mainnet, '10', Buffer.from('111111', 'hex'))
           FilEthAddress.fromString(addr.toString())
         }).toThrow()
+      })
+
+      test('Masked-id eth address', async () => {
+        expect(() => {
+          new FilEthAddress(NetworkPrefix.Mainnet, Buffer.from('ff00000000000000000000000000000000000001', 'hex'))
+        }).toThrow('masked-id eth addresses not allowed')
       })
 
       test('Correct eth address', async () => {
@@ -243,21 +255,15 @@ describe('Address', () => {
       })
 
       test('From ethereum address (ID) 4', async () => {
-        try {
+        expect(() => {
           Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000000000000000000a43')
-          expect(false).toBeTruthy()
-        } catch (e: any) {
-          expect(e.toString()).toBe('Error: invalid leb128 encoded payload')
-        }
+        }).toThrow('invalid leb128 encoded payload')
       })
 
       test('From ethereum address (ID) 5', async () => {
-        try {
+        expect(() => {
           Address.fromEthAddress(NetworkPrefix.Testnet, '0xff000000000000000000000000000000002ec8fa')
-          expect(false).toBeTruthy()
-        } catch (e: any) {
-          expect(e.toString()).toBe('Error: invalid leb128 encoded payload')
-        }
+        }).toThrow('invalid leb128 encoded payload')
       })
 
       test('To ethereum address (ID)', async () => {
@@ -279,12 +285,9 @@ describe('Address', () => {
       })
 
       test('From ethereum address (EthFilAddress) - 2', async () => {
-        try {
+        expect(() => {
           const addr = Address.fromEthAddress(NetworkPrefix.Mainnet, '0xd4c5fb16488aa48081296299d54b0c648c9333da00')
-          expect(false).toBeTruthy()
-        } catch (e: any) {
-          expect(e.toString()).toBe('Error: invalid ethereum address: length should be 20 bytes')
-        }
+        }).toThrow('invalid ethereum address: length should be 20 bytes')
       })
 
       test('To ethereum address (EthFilAddress)', async () => {
