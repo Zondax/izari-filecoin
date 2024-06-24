@@ -28,7 +28,7 @@ import {
   InvalidSubAddress,
   UnknownProtocolIndicator,
 } from './errors.js'
-import { getChecksum, getLeb128Length, validateNetworkPrefix } from './utils.js'
+import { getChecksum, getLeb128Length, validateNetworkPrefix, isMaskedIdEthAddress } from './utils.js'
 
 /**
  * Address is an abstract class that holds fundamental fields that a filecoin address is composed by.
