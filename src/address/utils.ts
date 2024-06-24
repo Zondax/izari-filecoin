@@ -1,5 +1,5 @@
 import blake from 'blakejs'
-import { Network, NetworkPrefix } from '../artifacts/address.js'
+import { ACTOR_ID_ETHEREUM_MASK, ACTOR_ID_ETHEREUM_MASK_LEN, ETH_ADDRESS_LEN, Network, NetworkPrefix } from '../artifacts/address.js'
 
 /**
  * Calculates the checksum of a given payload according to filecoin specifications
@@ -57,3 +57,10 @@ export const getNetworkPrefix = (network: Network): NetworkPrefix => (network ==
  * @returns network prefix
  */
 export const isTestnet = (network: Network): boolean => network !== Network.Mainnet
+
+export const isMaskedIdEthAddress = (ethAddr: Buffer) => {
+  const idMask = Buffer.alloc(ACTOR_ID_ETHEREUM_MASK_LEN)
+  idMask[0] = ACTOR_ID_ETHEREUM_MASK
+
+  return ethAddr.length == ETH_ADDRESS_LEN && idMask.compare(ethAddr, 0, 12) == 0
+}

@@ -6,6 +6,7 @@ import { encode as base32Encode } from '../utils/base32.js'
 
 import {
   ACTOR_ID_ETHEREUM_MASK,
+  ACTOR_ID_ETHEREUM_MASK_LEN,
   ACTOR_PAYLOAD_LEN,
   BLS_PAYLOAD_LEN,
   DelegatedNamespace,
@@ -589,6 +590,11 @@ export class AddressDelegated extends Address {
     if (new BN(namespace).gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidNamespace(namespace)
     if (subAddress.length === 0 || subAddress.length > SUB_ADDRESS_MAX_LEN) throw new InvalidSubAddress()
 
+    // Special check to prevent users from using DelegatedAddress with ETH namespace, and masked-id addresses
+    if (namespace === DelegatedNamespace.ETH && isMaskedIdEthAddress(subAddress)) {
+      throw new Error('masked-id eth addresses not allowed')
+    }
+
     this.namespace = namespace
     this.subAddress = subAddress
     this.payload = Buffer.from(this.toBytes().subarray(1))
@@ -692,6 +698,7 @@ export class FilEthAddress extends AddressDelegated {
     super(networkPrefix, DelegatedNamespace.ETH, ethAddress)
 
     if (ethAddress.length !== ETH_ADDRESS_LEN) throw new Error('invalid ethereum address: length should be 32 bytes')
+    if (isMaskedIdEthAddress(ethAddress)) throw new Error('masked-id eth addresses not allowed')
   }
 
   /**
