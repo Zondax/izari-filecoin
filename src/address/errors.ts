@@ -39,6 +39,13 @@ export class InvalidSubAddress extends Error {
   }
 }
 
+export class InvalidId extends Error {
+  constructor(id: string) {
+    super()
+    this.message = `Invalid id [${id}]`
+  }
+}
+
 export class ProtocolNotSupported extends Error {
   constructor(protocolName: string) {
     super()

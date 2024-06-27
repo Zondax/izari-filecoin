@@ -4,7 +4,7 @@ import BN from 'bn.js'
 
 import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, FilEthAddress } from '../../../src/address'
 import { NetworkPrefix, ProtocolIndicator } from '../../../src/artifacts/address'
-import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../../src/address/errors'
+import { InvalidId, InvalidPayloadLength, InvalidProtocolIndicator } from '../../../src/address/errors'
 
 jest.setTimeout(60 * 1000)
 
@@ -126,11 +126,11 @@ describe('Address', () => {
 
           expect(() => {
             Address.fromString(addrStr)
-          }).toThrow(InvalidPayloadLength)
+          }).toThrow(InvalidId)
 
           expect(() => {
             new AddressId(NetworkPrefix.Mainnet, aboveMax.toString())
-          }).toThrow(InvalidPayloadLength)
+          }).toThrow(InvalidId)
         })
 
         test('Max allowed value', async () => {
@@ -165,7 +165,7 @@ describe('Address', () => {
         test('Exceed max value', async () => {
           expect(() => {
             Address.fromBytes(NetworkPrefix.Mainnet, Buffer.from('0080808080808080808001', 'hex'))
-          }).toThrow(InvalidPayloadLength)
+          }).toThrow(InvalidId)
         })
 
         test('Max allowed value', async () => {
@@ -307,6 +307,38 @@ describe('Address', () => {
         expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
         expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Testnet)
         expect(addr.toString()).toBe('t09876')
+      })
+
+      test('From ethereum address (ID) 7', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000007ffffffffffffff')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) 8', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff0000000000000000000000ffffffffffffffff11')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) 9', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff0000000000000000000000ffffffffffffffff1')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) 10', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000008FFFFFFFFFFFFFFF')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) - max value', async () => {
+        const addr = Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000007FFFFFFFFFFFFFFF')
+
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Testnet)
+        expect(addr.toString()).toBe('t09223372036854775807')
       })
 
       test('To ethereum address (ID)', async () => {
