@@ -387,7 +387,7 @@ export class AddressId extends Address {
     const buf = Buffer.alloc(ETH_ADDRESS_LEN)
     buf[0] = ACTOR_ID_ETHEREUM_MASK
 
-    const decodedPayload = new BN(leb128.unsigned.decode(this.payload)).toBuffer()
+    const decodedPayload = new BN(leb.unsigned.decode(this.payload)).toBuffer()
     buf.set(decodedPayload, ETH_ADDRESS_LEN - decodedPayload.byteLength)
 
     return `${hexPrefix ? '0x' : ''}${buf.toString('hex')}`
