@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@glif/filecoin-address": "^2.0.37",
+    "@glif/filecoin-address": "^2.0.43",
     "@zondax/filecoin-signing-tools": "^2.3.0"
   }
 }
