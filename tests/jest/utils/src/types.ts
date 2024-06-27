@@ -4,6 +4,7 @@ export type AddressTestCase = {
   network: string
   protocol: number
   payload: string
+  eth?: string
 }
 
 export type BigNumTestCase = {
