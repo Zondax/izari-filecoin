@@ -159,7 +159,8 @@ export abstract class Address {
       let i = ACTOR_ID_ETHEREUM_MASK_LEN
       while (ethAddr[i] == 0) i += 1
 
-      return new AddressId(networkPrefix, Buffer.from(ethAddr.subarray(i)))
+      const payload = leb.unsigned.encode(Buffer.from(ethAddr.subarray(i)))
+      return new AddressId(networkPrefix, payload)
     }
 
     return new FilEthAddress(networkPrefix, ethAddr)
@@ -386,7 +387,8 @@ export class AddressId extends Address {
     const buf = Buffer.alloc(ETH_ADDRESS_LEN)
     buf[0] = ACTOR_ID_ETHEREUM_MASK
 
-    buf.set(this.payload, ETH_ADDRESS_LEN - this.payload.length)
+    const decodedPayload = new BN(leb128.unsigned.decode(this.payload)).toBuffer()
+    buf.set(decodedPayload, ETH_ADDRESS_LEN - decodedPayload.byteLength)
 
     return `${hexPrefix ? '0x' : ''}${buf.toString('hex')}`
   }
