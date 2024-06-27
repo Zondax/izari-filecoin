@@ -4,7 +4,7 @@ import BN from 'bn.js'
 
 import { Address, AddressActor, AddressBls, AddressDelegated, AddressId, AddressSecp256k1, FilEthAddress } from '../../../src/address'
 import { NetworkPrefix, ProtocolIndicator } from '../../../src/artifacts/address'
-import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../../src/address/errors'
+import { InvalidId, InvalidPayloadLength, InvalidProtocolIndicator } from '../../../src/address/errors'
 
 jest.setTimeout(60 * 1000)
 
@@ -126,11 +126,11 @@ describe('Address', () => {
 
           expect(() => {
             Address.fromString(addrStr)
-          }).toThrow(InvalidPayloadLength)
+          }).toThrow(InvalidId)
 
           expect(() => {
             new AddressId(NetworkPrefix.Mainnet, aboveMax.toString())
-          }).toThrow(InvalidPayloadLength)
+          }).toThrow(InvalidId)
         })
 
         test('Max allowed value', async () => {
@@ -165,7 +165,7 @@ describe('Address', () => {
         test('Exceed max value', async () => {
           expect(() => {
             Address.fromBytes(NetworkPrefix.Mainnet, Buffer.from('0080808080808080808001', 'hex'))
-          }).toThrow(InvalidPayloadLength)
+          }).toThrow(InvalidId)
         })
 
         test('Max allowed value', async () => {
