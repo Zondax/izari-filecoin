@@ -17,6 +17,7 @@ type AddressTestCase = {
   network: string
   protocol: number
   payload: string
+  eth?: string
 }
 
 type AddressEthTestCase = {
@@ -29,7 +30,7 @@ describe('Address', () => {
     describe('From string', () => {
       const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_VECTOR), 'utf-8')) as AddressTestCase[]
 
-      vectors.forEach(({ string, payload, bytes, protocol, network }, index) => {
+      vectors.forEach(({ string, payload, bytes, protocol, network, eth }, index) => {
         test(`Test case ${index}: ${string}`, () => {
           const addr = Address.fromString(string)
 
@@ -39,7 +40,10 @@ describe('Address', () => {
           expect(addr.getNetworkPrefix()).toBe(network)
           expect(addr.getPayload().toString('hex')).toBe(payload)
 
-          if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.substring(2))
+          if (Address.isAddressId(addr)) {
+            expect(addr.getId()).toBe(string.substring(2))
+            expect(addr.toEthAddressHex(true)).toBe(eth)
+          }
           if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.substring(2, string.indexOf(network, 1)))
         })
       })

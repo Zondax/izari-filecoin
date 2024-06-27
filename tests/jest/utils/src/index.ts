@@ -1,11 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 
-import glif, { ethAddressFromID, newIDAddress } from '@glif/filecoin-address'
+import glif, { ethAddressFromID, newIDAddress, Protocol } from '@glif/filecoin-address'
 import * as fst from '@zondax/filecoin-signing-tools/js'
 
 import { AddressTestCase, BigNumTestCase, TxTestCase } from './types'
-import BN from 'bn.js'
 
 const RAW_TXS_FILE_PATH = './raw/txs.json'
 const ADDRESSES_VECTOR_FILE_PATH = './output/addresses.json'
@@ -32,6 +31,7 @@ function generateAddresses() {
       network: addr.network(),
       protocol: addr.protocol(),
       payload: payload,
+      eth: addr.protocol() === Protocol.ID ? ethAddressFromID(addr.toString()) : undefined,
     }
   }
 
