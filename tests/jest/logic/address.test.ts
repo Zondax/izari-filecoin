@@ -309,6 +309,38 @@ describe('Address', () => {
         expect(addr.toString()).toBe('t09876')
       })
 
+      test('From ethereum address (ID) 7', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000007ffffffffffffff')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) 8', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff0000000000000000000000ffffffffffffffff11')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) 9', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff0000000000000000000000ffffffffffffffff1')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) 10', async () => {
+        expect(() => {
+          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000008FFFFFFFFFFFFFFF')
+        }).toThrow()
+      })
+
+      test('From ethereum address (ID) - max value', async () => {
+        const addr = Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000007FFFFFFFFFFFFFFF')
+
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Testnet)
+        expect(addr.toString()).toBe('t09223372036854775807')
+      })
+
       test('To ethereum address (ID)', async () => {
         const addr = Address.fromString('f0101')
 

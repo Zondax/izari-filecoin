@@ -11,7 +11,6 @@ import {
   BLS_PAYLOAD_LEN,
   DelegatedNamespace,
   ETH_ADDRESS_LEN,
-  ID_PAYLOAD_MAX_LEN,
   ID_PAYLOAD_MAX_NUM,
   NetworkPrefix,
   ProtocolIndicator,
@@ -27,6 +26,7 @@ import {
   InvalidProtocolIndicator,
   InvalidSubAddress,
   UnknownProtocolIndicator,
+  InvalidId,
 } from './errors.js'
 import { getChecksum, getLeb128Length, validateNetworkPrefix, isMaskedIdEthAddress } from './utils.js'
 
@@ -152,6 +152,10 @@ export abstract class Address {
   static fromEthAddress = (networkPrefix: NetworkPrefix, ethAddr: Buffer | string): AddressId | FilEthAddress => {
     if (typeof ethAddr === 'string') {
       const tmp = ethAddr.startsWith('0x') ? ethAddr.substring(2) : ethAddr
+      if (tmp.length % 2 !== 0) {
+        throw new Error('invalid eth address')
+      }
+
       ethAddr = Buffer.from(tmp, 'hex')
     }
 
@@ -326,7 +330,8 @@ export class AddressId extends Address {
       }
     }
 
-    if (payloadBuff.length > ID_PAYLOAD_MAX_LEN) throw new InvalidPayloadLength(payloadBuff.length)
+    const idNum = new BN(leb.unsigned.decode(payloadBuff))
+    if (idNum.gt(ID_PAYLOAD_MAX_NUM)) throw new InvalidId(idNum.toString())
 
     this.payload = payloadBuff
     this.id = this.toString().substring(2)

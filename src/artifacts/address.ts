@@ -77,11 +77,6 @@ export const ACTOR_PAYLOAD_LEN = 20
 export const SECP256K1_PAYLOAD_LEN = 20
 
 /**
- *  Maximum payload length for type one (f0/t0) addresses
- */
-export const ID_PAYLOAD_MAX_LEN = 9
-
-/**
  *  Maximum actor id (decimal) for type one (f0/t0) addresses
  */
 export const ID_PAYLOAD_MAX_NUM = new BN(2).pow(new BN(63)).sub(new BN(1))
