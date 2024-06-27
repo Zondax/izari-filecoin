@@ -9,6 +9,7 @@ import { InvalidPayloadLength, InvalidProtocolIndicator } from '../../../src/add
 jest.setTimeout(60 * 1000)
 
 const ADDRESSES_VECTOR = '../vectors/addresses.json'
+const ADDRESSES_ETH_VECTOR = '../vectors/addresses_eth.json'
 
 type AddressTestCase = {
   string: string
@@ -16,6 +17,11 @@ type AddressTestCase = {
   network: string
   protocol: number
   payload: string
+}
+
+type AddressEthTestCase = {
+  string: string
+  eth: string
 }
 
 describe('Address', () => {
@@ -55,6 +61,27 @@ describe('Address', () => {
 
           if (Address.isAddressId(addr)) expect(addr.getId()).toBe(string.substring(2))
           if (Address.isAddressDelegated(addr)) expect(addr.getNamespace()).toBe(string.substring(2, string.indexOf(network, 1)))
+        })
+      })
+    })
+
+    describe('Eth <-> Id Address ', () => {
+      const vectors = JSON.parse(fs.readFileSync(path.join(__dirname, ADDRESSES_ETH_VECTOR), 'utf-8')) as AddressEthTestCase[]
+
+      vectors.forEach(({ string, eth }, index) => {
+        test(`Test case ${string}: 0x${eth}`, () => {
+          const addrId1 = Address.fromEthAddress(NetworkPrefix.Mainnet, eth)
+
+          expect(addrId1.toString()).toBe(string)
+          expect(addrId1.toEthAddressHex(true)).toBe(eth)
+
+          const addrId2 = Address.fromString(string)
+
+          expect(addrId2.toString()).toBe(string)
+          expect(Address.isAddressId(addrId2)).toBeTruthy()
+          if (Address.isAddressId(addrId2)) {
+            expect(addrId2.toEthAddressHex(true)).toBe(eth)
+          }
         })
       })
     })
@@ -251,22 +278,54 @@ describe('Address', () => {
 
         expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
         expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Testnet)
-        expect(addr.toString()).toBe('t08666')
+        expect(addr.toString()).toBe('t055875')
       })
 
       test('From ethereum address (ID) 4', async () => {
-        expect(() => {
-          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000000000000000000a43')
-        }).toThrow('invalid leb128 encoded payload')
+        const addr = Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000000000000000000a43')
+
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Testnet)
+        expect(addr.toString()).toBe('t02627')
       })
 
       test('From ethereum address (ID) 5', async () => {
-        expect(() => {
-          Address.fromEthAddress(NetworkPrefix.Testnet, '0xff000000000000000000000000000000002ec8fa')
-        }).toThrow('invalid leb128 encoded payload')
+        const addr = Address.fromEthAddress(NetworkPrefix.Testnet, '0xff000000000000000000000000000000002ec8fa')
+
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Testnet)
+        expect(addr.toString()).toBe('t03066106')
+      })
+
+      test('From ethereum address (ID) 6', async () => {
+        const addr = Address.fromEthAddress(NetworkPrefix.Testnet, '0xff00000000000000000000000000000000002694')
+
+        expect(addr.getProtocol()).toBe(ProtocolIndicator.ID)
+        expect(addr.getNetworkPrefix()).toBe(NetworkPrefix.Testnet)
+        expect(addr.toString()).toBe('t09876')
       })
 
       test('To ethereum address (ID)', async () => {
+        const addr = Address.fromString('f0101')
+
+        expect(Address.isAddressId(addr)).toBeTruthy()
+        if (Address.isAddressId(addr)) {
+          expect(addr.toEthAddressHex(true)).toBe('0xff00000000000000000000000000000000000065')
+          expect(addr.toEthAddressHex(false)).toBe('ff00000000000000000000000000000000000065')
+        }
+      })
+
+      test('To ethereum address (ID) - 2', async () => {
+        const addr = Address.fromString('f0101')
+
+        expect(Address.isAddressId(addr)).toBeTruthy()
+        if (Address.isAddressId(addr)) {
+          expect(addr.toEthAddressHex(true)).toBe('0xff00000000000000000000000000000000000065')
+          expect(addr.toEthAddressHex(false)).toBe('ff00000000000000000000000000000000000065')
+        }
+      })
+
+      test('To ethereum address (ID) - 3', async () => {
         const addr = Address.fromString('f0101')
 
         expect(Address.isAddressId(addr)).toBeTruthy()

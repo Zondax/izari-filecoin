@@ -1,13 +1,15 @@
 import fs from 'fs'
 import path from 'path'
 
-import glif from '@glif/filecoin-address'
+import glif, { ethAddressFromID, newIDAddress } from '@glif/filecoin-address'
 import * as fst from '@zondax/filecoin-signing-tools/js'
 
 import { AddressTestCase, BigNumTestCase, TxTestCase } from './types'
+import BN from 'bn.js'
 
 const RAW_TXS_FILE_PATH = './raw/txs.json'
 const ADDRESSES_VECTOR_FILE_PATH = './output/addresses.json'
+const ADDRESSES_ETH_VECTOR_FILE_PATH = './output/addresses_eth.json'
 const TXS_VECTOR_FILE_PATH = './output/txs.json'
 const BIGNUMS_VECTOR_FILE_PATH = './output/bigNums.json'
 
@@ -40,6 +42,27 @@ function generateAddresses() {
   }
 
   fs.writeFileSync(path.join(ADDRESSES_VECTOR_FILE_PATH), JSON.stringify(testCases, null, 2))
+}
+
+function generateAddressesEth() {
+  const ranges = [
+    { min: 0, max: 10000, count: 333 },
+    { min: 10000, max: 100000, count: 333 },
+    { min: 100000, max: 1000000000, count: 334 },
+  ]
+  const testCases: any = []
+
+  ranges.forEach(range => {
+    for (let i = 0; i < range.count; i++) {
+      const randomValue = Math.floor(Math.random() * (range.max - range.min)) + range.min
+      const addr = newIDAddress(randomValue.toString())
+      const addrStr = addr.toString()
+
+      testCases.push({ string: addr.toString(), eth: ethAddressFromID(addrStr) })
+    }
+  })
+
+  fs.writeFileSync(path.join(ADDRESSES_ETH_VECTOR_FILE_PATH), JSON.stringify(testCases, null, 2))
 }
 
 function generateTransactions() {
@@ -127,3 +150,4 @@ function generateBigNums() {
 generateAddresses()
 generateTransactions()
 generateBigNums()
+generateAddressesEth()
